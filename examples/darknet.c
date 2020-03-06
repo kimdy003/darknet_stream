@@ -453,8 +453,8 @@ int main()
 
 #ifdef THREAD
     //변수 동적할당
-    cond_t = (pthread_cond_t*)malloc(sizeof(pthread_cond_t) * n_net*2);
-    mutex_t = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * n_net*2);
+    cond_t = (pthread_cond_t*)malloc(sizeof(pthread_cond_t) * n_net*4);
+    mutex_t = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * n_net*4);
     cond_i = (int*)malloc(sizeof(int) * n_net * 2);
 
 
