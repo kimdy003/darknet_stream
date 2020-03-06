@@ -506,6 +506,8 @@ int main()
     double time = what_time_is_it_now();
     pthread_t networkArray_des[n_net];
     pthread_t networkArray_res[n_net];
+    pthread_t networkArray_vgg[n_net];
+    pthread_t networkArray_alex[n_net];
 
 
     // for(int i=0; i<vggCount; ++i){
