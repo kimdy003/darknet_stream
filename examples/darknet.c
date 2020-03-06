@@ -444,9 +444,12 @@ int main()
     char * vggName = "VGG";
     char * denseName = "Dense";
     char * resName = "Res";
+    char * alexName = "Alex";
 
     network *denseNetwork[n_net];
     network *resNetwork[n_net];
+    network *vggNetwork[n_net];
+    network *alexNetwork[n_net];
 
 #ifdef THREAD
     //변수 동적할당
@@ -467,6 +470,10 @@ int main()
         denseNetwork[k]->index_n = k;
         resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
         resNetwork[k]->index_n = k+n_net;
+        vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
+        vggNetwork[k]->index_n = k+(n_net*2);
+        alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
+        alexNetwork[k]->index_n = k+(n_net*3);
     }
 
     list *options = read_data_cfg("cfg/imagenet1k.data");
@@ -482,6 +489,8 @@ int main()
     char *input = buff;
     test *net_input_des[n_net];
     test *net_input_res[n_net];
+    test *net_input_vgg[n_net];
+    test *net_input_alex[n_net];
 
     while(1){
         printf("Enter Image Path: ");
@@ -540,8 +549,38 @@ int main()
     }
 
     for(int i=0; i<n_net; i++){
+        net_input_vgg[i] = (test*)malloc(sizeof(test));
+        net_input_vgg[i]->net = vggNetwork[i];
+	    net_input_vgg[i]->input_path = input;
+        net_input_vgg[i]->names = names;
+        net_input_vgg[i]->netName = vggName;
+
+	    printf(" It's turn for vgg i = %d\n",i);
+        if(pthread_create(&networkArray_vgg[i], NULL,(void *)predict_classifier2, net_input_vgg[i])<0){
+            perror("thread error");
+            exit(0);
+        }
+    }
+
+    for(int i=0; i<n_net; i++){
+        net_input_alex[i] = (test*)malloc(sizeof(test));
+        net_input_alex[i]->net = alexNetwork[i];
+	    net_input_alex[i]->input_path = input;
+        net_input_alex[i]->names = names;
+        net_input_alex[i]->netName = alexName;
+
+	    printf(" It's turn for alex i = %d\n",i);
+        if(pthread_create(&networkArray_alex[i], NULL,(void *)predict_classifier2, net_input_alex[i])<0){
+            perror("thread error");
+            exit(0);
+        }
+    }
+
+    for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
         pthread_join(networkArray_res[i], NULL);
+        pthread_join(networkArray_vgg[i], NULL);
+        pthread_join(networkArray_alex[i], NULL);
     } 
 #if 0
     //kmsjames 2020 0215
