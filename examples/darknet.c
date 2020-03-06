@@ -458,7 +458,7 @@ int main()
     cond_i = (int*)malloc(sizeof(int) * n_net * 2);
 
 
-    for(int i=0; i<n_net*2; i++){
+    for(int i=0; i<n_net*4; i++){
         pthread_cond_init(&cond_t[i], NULL);
         pthread_mutex_init(&mutex_t[i], NULL);
         cond_i[i] = 0;
@@ -563,7 +563,7 @@ int main()
             exit(0);
         }
     }
-
+/*
     for(int i=0; i<n_net; i++){
         net_input_alex[i] = (test*)malloc(sizeof(test));
         net_input_alex[i]->net = alexNetwork[i];
@@ -577,12 +577,12 @@ int main()
             exit(0);
         }
     }
-
+*/
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
         pthread_join(networkArray_res[i], NULL);
         pthread_join(networkArray_vgg[i], NULL);
-        pthread_join(networkArray_alex[i], NULL);
+        //pthread_join(networkArray_alex[i], NULL);
     } 
 #if 0
     //kmsjames 2020 0215
