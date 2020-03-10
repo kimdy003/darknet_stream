@@ -138,7 +138,6 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 #ifdef THREAD
 extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input)
 {
-     
 
     network net = input->net;
     layer l = input->layer;

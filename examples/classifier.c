@@ -629,18 +629,19 @@ void* predict_classifier2(test * input){
         double time = what_time_is_it_now();
         int *indexes = calloc(top, sizeof(int));
 
-
         image r = letterbox_image(im, net->w, net->h);
         float *X = r.data;
-
-        float *predictions = network_predict(net, X);
-
+        fprintf(stderr, "@@@@@@@@@@@@@ prediction start\n");
+	float *predictions = network_predict(net, X);
+	fprintf(stderr, "@@@@@@@@@@@@@ prediction end\n");
         if (net->hierarchy)
-            hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
-        top_k(predictions, net->outputs, top, indexes);
+	    	hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
+        print_network(net);
+	top_k(predictions, net->outputs, top, indexes);
         fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, what_time_is_it_now() - time);
-        for (i = 0; i < top; ++i)
+	for (i = 0; i < top; ++i)
         {
+		fprintf(stderr, "@@@@@@@@@@@@@@@@@");
             int index = indexes[i];
 
             printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);

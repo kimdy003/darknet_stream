@@ -494,7 +494,6 @@ void forward_convolutional_layer(convolutional_layer l, network net)
 #ifdef THREAD
 void forward_convolutional_layer_thread(netlayer * input){
      
-
     network net = input->net;
     layer l = input->layer;
 
