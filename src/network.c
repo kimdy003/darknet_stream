@@ -275,6 +275,7 @@ void forward_network(network *netp)
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
 
+        print_network(nl.net);
         net.input = l.output;
         //net.input_gpu = nl.layer.output_gpu;
 
