@@ -443,6 +443,7 @@ int main()
 
     char * denseName = "Dense";
 <<<<<<< HEAD
+<<<<<<< HEAD
     char * resName = "Res";
     //char * vggName = "VGG";
     //char * alexName = "Alex";
@@ -452,6 +453,8 @@ int main()
     //network *vggNetwork[n_net];
     //network *alexNetwork[n_net];
 =======
+=======
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     //char * resName = "Res";
    // char * vggName = "VGG";
     //char * alexName = "Alex";
@@ -460,7 +463,20 @@ int main()
     //network *resNetwork[n_net];
     //network *vggNetwork[n_net];
    // network *alexNetwork[n_net];
+<<<<<<< HEAD
 >>>>>>> e5f2f46583dc8f568cb6502c986d5df070645a99
+=======
+=======
+    char * resName = "Res";
+    //char * vggName = "VGG";
+    //char * alexName = "Alex";
+
+    network *denseNetwork[n_net];
+    network *resNetwork[n_net];
+    //network *vggNetwork[n_net];
+    //network *alexNetwork[n_net];
+>>>>>>> 2b5472158423f8b4f97ea6671fc0ebc0cd16d95e
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
 
 #ifdef THREAD
     //변수 동적할당
@@ -480,6 +496,7 @@ int main()
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
 <<<<<<< HEAD
+<<<<<<< HEAD
         resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
         resNetwork[k]->index_n = k+n_net;
         //vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
@@ -487,13 +504,26 @@ int main()
         //alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
         //alexNetwork[k]->index_n = k+(n_net*3);
 =======
+=======
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
       //  resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
       //  resNetwork[k]->index_n = k;
         //vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
         //vggNetwork[k]->index_n = k+(n_net*2);
        // alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
        // alexNetwork[k]->index_n = k+(n_net*3);
+<<<<<<< HEAD
 >>>>>>> e5f2f46583dc8f568cb6502c986d5df070645a99
+=======
+=======
+        resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
+        resNetwork[k]->index_n = k+n_net;
+        //vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
+        //vggNetwork[k]->index_n = k+(n_net*2);
+        //alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
+        //alexNetwork[k]->index_n = k+(n_net*3);
+>>>>>>> 2b5472158423f8b4f97ea6671fc0ebc0cd16d95e
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     }
 
     list *options = read_data_cfg("cfg/imagenet1k.data");
@@ -509,10 +539,17 @@ int main()
     char *input = buff;
     test *net_input_des[n_net];
 <<<<<<< HEAD
+<<<<<<< HEAD
     test *net_input_res[n_net];
 =======
     //test *net_input_res[n_net];
 >>>>>>> e5f2f46583dc8f568cb6502c986d5df070645a99
+=======
+    //test *net_input_res[n_net];
+=======
+    test *net_input_res[n_net];
+>>>>>>> 2b5472158423f8b4f97ea6671fc0ebc0cd16d95e
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     //test *net_input_vgg[n_net];
     //test *net_input_alex[n_net];
 
@@ -530,15 +567,26 @@ int main()
     double time = what_time_is_it_now();
     pthread_t networkArray_des[n_net];
 <<<<<<< HEAD
+<<<<<<< HEAD
     pthread_t networkArray_res[n_net];
 =======
     //pthread_t networkArray_res[n_net];
 >>>>>>> e5f2f46583dc8f568cb6502c986d5df070645a99
+=======
+    //pthread_t networkArray_res[n_net];
+=======
+    pthread_t networkArray_res[n_net];
+>>>>>>> 2b5472158423f8b4f97ea6671fc0ebc0cd16d95e
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     //pthread_t networkArray_vgg[n_net];
     //pthread_t networkArray_alex[n_net];
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     // for(int i=0; i<vggCount; ++i){
     //     test * input = (test*)malloc(sizeof(test));
     //     input->net = *vggNetwork;
@@ -550,8 +598,12 @@ int main()
     //     ++count;
     // }
     // 
+<<<<<<< HEAD
 =======
 >>>>>>> e5f2f46583dc8f568cb6502c986d5df070645a99
+=======
+>>>>>>> 2b5472158423f8b4f97ea6671fc0ebc0cd16d95e
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     
     for(int i=0; i<n_net; i++){
         net_input_des[i] = (test*)malloc(sizeof(test));
@@ -612,6 +664,7 @@ int main()
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
 <<<<<<< HEAD
+<<<<<<< HEAD
         pthread_join(networkArray_res[i], NULL);
         //pthread_join(networkArray_vgg[i], NULL);
         //pthread_join(networkArray_alex[i], NULL);
@@ -620,6 +673,16 @@ int main()
   //      pthread_join(networkArray_vgg[i], NULL);
   //      pthread_join(networkArray_alex[i], NULL);
 >>>>>>> e5f2f46583dc8f568cb6502c986d5df070645a99
+=======
+  //      pthread_join(networkArray_res[i], NULL);
+  //      pthread_join(networkArray_vgg[i], NULL);
+  //      pthread_join(networkArray_alex[i], NULL);
+=======
+        pthread_join(networkArray_res[i], NULL);
+        //pthread_join(networkArray_vgg[i], NULL);
+        //pthread_join(networkArray_alex[i], NULL);
+>>>>>>> 2b5472158423f8b4f97ea6671fc0ebc0cd16d95e
+>>>>>>> 58cbae27a95bc17b2d80c6dbedcee2444fba94bc
     } 
 #if 0
     //kmsjames 2020 0215
