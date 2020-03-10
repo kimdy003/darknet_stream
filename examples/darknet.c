@@ -442,23 +442,23 @@ int main()
     //char** resnet = {"darknet", "classfier", "predict", "cfg/imagenet1k.data", "cfg/", "", "data/eagle.jpg"};
 
     char * denseName = "Dense";
-    //char * resName = "Res";
+    char * resName = "Res";
     //char * vggName = "VGG";
     //char * alexName = "Alex";
 
     network *denseNetwork[n_net];
-    //network *resNetwork[n_net];
+    network *resNetwork[n_net];
     //network *vggNetwork[n_net];
     //network *alexNetwork[n_net];
 
 #ifdef THREAD
     //변수 동적할당
-    cond_t = (pthread_cond_t*)malloc(sizeof(pthread_cond_t) * n_net);
-    mutex_t = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * n_net);
-    cond_i = (int*)malloc(sizeof(int) * n_net );
+    cond_t = (pthread_cond_t*)malloc(sizeof(pthread_cond_t) * n_net*2);
+    mutex_t = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * n_net*2);
+    cond_i = (int*)malloc(sizeof(int) * n_net*2);
 
 
-    for(int i=0; i<n_net; i++){
+    for(int i=0; i<n_net*2; i++){
         pthread_cond_init(&cond_t[i], NULL);
         pthread_mutex_init(&mutex_t[i], NULL);
         cond_i[i] = 0;
@@ -468,12 +468,14 @@ int main()
     for(unsigned int k=0; k<n_net; k++){
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
-      //  resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
-      //  resNetwork[k]->index_n = k;
+        resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
+        resNetwork[k]->index_n = k+n_net;
         //vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
         //vggNetwork[k]->index_n = k+(n_net*2);
        // alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
+       // alexNetwork[k]->index_n = k+(n_net*3);
 	}
+    
     list *options = read_data_cfg("cfg/imagenet1k.data");
     char *name_list = option_find_str(options, "names", 0);
     if(!name_list) name_list = option_find_str(options, "labels", "data/labels.list");
@@ -486,7 +488,7 @@ int main()
     char buff[256];
     char *input = buff;
     test *net_input_des[n_net];
-    //test *net_input_res[n_net];
+    test *net_input_res[n_net];
     //test *net_input_vgg[n_net];
     //test *net_input_alex[n_net];
 
@@ -503,6 +505,8 @@ int main()
 
     double time = what_time_is_it_now();
     pthread_t networkArray_des[n_net];
+    pthread_t networkArray_res[n_net];
+    //pthread_t networkArray_vgg[n_net];
     //pthread_t networkArray_alex[n_net];
 
 
@@ -520,7 +524,7 @@ int main()
             exit(0);
         }
     }
-/*
+
     for(int i=0; i<n_net; i++){
         net_input_res[i] = (test*)malloc(sizeof(test));
         net_input_res[i]->net = resNetwork[i];
@@ -534,7 +538,7 @@ int main()
            exit(0);
           }
     }
-    
+/*    
     for(int i=0; i<n_net; i++){
         net_input_vgg[i] = (test*)malloc(sizeof(test));
         net_input_vgg[i]->net = vggNetwork[i];
@@ -565,7 +569,7 @@ int main()
 */
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
-  //      pthread_join(networkArray_res[i], NULL);
+        pthread_join(networkArray_res[i], NULL);
   //      pthread_join(networkArray_vgg[i], NULL);
   //      pthread_join(networkArray_alex[i], NULL);
     } 

@@ -157,12 +157,12 @@ struct thpool_* thpool_init(int num_threads){
 	for (n=0; n<num_threads; n++){
 		thread_init(thpool_p, &thpool_p->threads[n], n);
 
-		if(n == (num_threads-1)){
+		//if(n == (num_threads-1)){
 			thpool_p->threads[n]->flag = 1;
-		}
-		else{
-			thpool_p->threads[n]->flag = 0;
-		}
+		//}
+		//else{
+		//	thpool_p->threads[n]->flag = 0;
+		//}
 			
  
 		/* kmsjames 2020 0215 bug fix for pinning each thread on a specified CPU */
