@@ -194,7 +194,57 @@ void forward_batchnorm_layer_gpu(layer l, network net)
 #ifdef CUDNN
         float one = 1;
         float zero = 0;
-        cudnnBatchNormalizationForwardTraining(cudnn_handle(),
+        cudnnBatchNormalizationForwardTraining(cudnn_handle(0, __LINE__),
+                CUDNN_BATCHNORM_SPATIAL,
+                &one,
+                &zero,
+                l.dstTensorDesc,
+                l.x_gpu,
+                l.dstTensorDesc,
+                l.output_gpu,
+                l.normTensorDesc,
+                l.scales_gpu,
+                l.biases_gpu,
+                .01,
+                l.rolling_mean_gpu,
+                l.rolling_variance_gpu,
+                .00001,
+                l.mean_gpu,
+                l.variance_gpu);
+#else
+        fast_mean_gpu(l.output_gpu, l.batch, l.out_c, l.out_h*l.out_w, l.mean_gpu);
+        fast_variance_gpu(l.output_gpu, l.mean_gpu, l.batch, l.out_c, l.out_h*l.out_w, l.variance_gpu);
+
+        scal_gpu(l.out_c, .99, l.rolling_mean_gpu, 1);
+        axpy_gpu(l.out_c, .01, l.mean_gpu, 1, l.rolling_mean_gpu, 1);
+        scal_gpu(l.out_c, .99, l.rolling_variance_gpu, 1);
+        axpy_gpu(l.out_c, .01, l.variance_gpu, 1, l.rolling_variance_gpu, 1);
+
+        copy_gpu(l.outputs*l.batch, l.output_gpu, 1, l.x_gpu, 1);
+        normalize_gpu(l.output_gpu, l.mean_gpu, l.variance_gpu, l.batch, l.out_c, l.out_h*l.out_w);
+        copy_gpu(l.outputs*l.batch, l.output_gpu, 1, l.x_norm_gpu, 1);
+
+        scale_bias_gpu(l.output_gpu, l.scales_gpu, l.batch, l.out_c, l.out_h*l.out_w);
+        add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.out_c, l.out_w*l.out_h);
+#endif
+    } else {
+        normalize_gpu(l.output_gpu, l.rolling_mean_gpu, l.rolling_variance_gpu, l.batch, l.out_c, l.out_h*l.out_w);
+        scale_bias_gpu(l.output_gpu, l.scales_gpu, l.batch, l.out_c, l.out_h*l.out_w);
+        add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.out_c, l.out_w*l.out_h);
+    }
+
+}
+
+//2020 0311 doyoung
+void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
+{
+    if(l.type == BATCHNORM) copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
+    copy_gpu(l.outputs*l.batch, l.output_gpu, 1, l.x_gpu, 1);
+    if (net.train) {
+#ifdef CUDNN
+        float one = 1;
+        float zero = 0;
+        cudnnBatchNormalizationForwardTraining(cudnn_handle(0, __LINE__),
                 CUDNN_BATCHNORM_SPATIAL,
                 &one,
                 &zero,
@@ -244,7 +294,7 @@ void backward_batchnorm_layer_gpu(layer l, network net)
 #ifdef CUDNN
     float one = 1;
     float zero = 0;
-    cudnnBatchNormalizationBackward(cudnn_handle(),
+    cudnnBatchNormalizationBackward(cudnn_handle(0, __LINE__),
             CUDNN_BATCHNORM_SPATIAL,
             &one,
             &zero,

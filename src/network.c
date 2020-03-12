@@ -209,7 +209,8 @@ network *make_network(int n)
 }
 
 #ifdef THREAD
-void forward_function(th_arg * input){
+void forward_function(th_arg * input, int id){
+    int thidx = id;
     netlayer * nl = input->arg;
     pthread_mutex_lock(&mutex_t[nl->net.index_n]);
 	//input->flag == 1;
@@ -221,8 +222,10 @@ void forward_function(th_arg * input){
         if(nl->layer.delta_gpu){
             fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
         }
-        nl->layer.forward_gpu_thread(nl);
-	cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+        nl->layer.forward_gpu_thread(nl, thidx);
+    //2020 0311 doyoung
+	//cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+	cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx, __LINE__);
 	//fprintf(stderr, "GPU end\n");
     }
     else if(input->flag == 0){

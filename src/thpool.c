@@ -368,6 +368,8 @@ static void* thread_do(struct thread* thread_p){
 			pthread_mutex_unlock(&thpool_p->thcount_lock);
 
 			/* Read job from queue and execute it */
+			//2020 0311 doyoung
+		#if 0
 			void (*func_buff)(void*);
 			void*  arg_buff;
 			job* job_p = jobqueue_pull(&thpool_p->jobqueue);
@@ -378,6 +380,18 @@ static void* thread_do(struct thread* thread_p){
 				func_buff(arg_buff);
 				free(job_p);
 			}
+		#else
+			void (*func_buff)(void*, int);
+			void*  arg_buff;
+			job* job_p = jobqueue_pull(&thpool_p->jobqueue);
+			if (job_p) {
+				func_buff = job_p->function;
+				arg_buff  = job_p->arg;
+				((th_arg*)arg_buff)->flag = thread_p->flag;
+				func_buff(arg_buff, thread_p->id);
+				free(job_p);
+			}
+		#endif
 
 			pthread_mutex_lock(&thpool_p->thcount_lock);
 			thpool_p->num_threads_working--;
