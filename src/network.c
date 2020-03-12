@@ -242,117 +242,122 @@ void forward_function(th_arg * input){
 
 }
 #endif
-//2020 0213 cheolsun 네트워크 상태 변수 추가 및 network 쓰레드화 
+//2020 0213 cheolsun 네트워크 상태 변수 추가 및 network 쓰레드화
 void forward_network(network *netp)
 {
 #ifdef GPU
-    #ifdef THREAD
+#ifdef THREAD
     network net = *netp;
     int i;
     int lastFlag = 0;
     cuda_set_device(net.gpu_index);
 
-        if(net.truth){
-            cuda_push_array(net.truth_gpu, net.truth, net.truths*net.batch);
-        }
-        
-    
+    if (net.truth)
+    {
+        cuda_push_array(net.truth_gpu, net.truth, net.truths * net.batch);
+    }
 
-    for(i = 0; i < net.n; ++i){
+    for (i = 0; i < net.n; ++i)
+    {
         pthread_mutex_lock(&mutex_t[net.index_n]);
-	cuda_push_array(net.input_gpu, net.input, net.inputs*net.batch);
+        cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
 
-	//fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
+        //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
         cond_i[net.index_n] = 1;
         net.index = i;
         layer l = net.layers[i];
-        
+
         netlayer nl;
 
         nl.layer = l;
         nl.net = net;
-        
+
         th_arg input;
         input.arg = &nl;
         input.flag = 0;
 
         thpool_add_work(thpool, forward_function, &input);
-        while(cond_i[net.index_n] == 1){
+        while (cond_i[net.index_n] == 1)
+        {
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
-	lastFlag = input.flag;
-	
-	net.input = l.output;
-	net.input_gpu = l.output_gpu;
-	net.inputs = l.outputs;
+        lastFlag = input.flag;
 
-	
-        if(l.truth) {
+        net.input = l.output;
+        net.input_gpu = l.output_gpu;
+        net.inputs = l.outputs;
+
+        if (l.truth)
+        {
             //net.truth = l.output;
-	    //net.truth_gpu = l.output_gpu;
+            //net.truth_gpu = l.output_gpu;
         }
-        
+
         //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
         pthread_mutex_unlock(&mutex_t[net.index_n]);
     }
-	//if(lastFlag == 1)
-	//	pull_network_output(netp);
+    //if(lastFlag == 1)
+    //	pull_network_output(netp);
 
-
-    #else
-    if(netp->gpu_index >= 0){
-        forward_network_gpu(netp);   
+#else
+    if (netp->gpu_index >= 0)
+    {
+        forward_network_gpu(netp);
         return;
     }
-    #endif
+#endif
 #else
     network net = *netp;
     int i;
-    #ifdef THREAD
-        for(i = 0; i < net.n; ++i){
+#ifdef THREAD
+    for (i = 0; i < net.n; ++i)
+    {
 
-            pthread_mutex_lock(&mutex_t[net.index_n]);
+        pthread_mutex_lock(&mutex_t[net.index_n]);
 
-            cond_i[net.index_n] = 1;
-            net.index = i;
-            layer l = net.layers[i];
-            netlayer nl;
+        cond_i[net.index_n] = 1;
+        net.index = i;
+        layer l = net.layers[i];
+        netlayer nl;
 
-            nl.layer = l;
-            nl.net = net;
-            
-            th_arg input;
-            input.arg = &nl;
-            input.flag = 0;
+        nl.layer = l;
+        nl.net = net;
 
-            thpool_add_work(thpool, forward_function, &input);
-            while(cond_i[net.index_n] == 1){
-                pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
-            }
+        th_arg input;
+        input.arg = &nl;
+        input.flag = 0;
 
-
-            net.input = l.output;
-            if(l.truth) {
-                net.truth = l.output;
-            }
-            pthread_mutex_unlock(&mutex_t[net.index_n]);
-
+        thpool_add_work(thpool, forward_function, &input);
+        while (cond_i[net.index_n] == 1)
+        {
+            pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
-    #else
-        for(i = 0; i < net.n; ++i){
-            net.index = i;
-            layer l = net.layers[i];
-            if(l.delta){
-                fill_cpu(l.outputs * l.batch, 0, l.delta, 1);
-            }
-            
-            l.forward(l, net);
-            net.input = l.output;
-            if(l.truth) {
-                net.truth = l.output;
-            }
+
+        net.input = l.output;
+        if (l.truth)
+        {
+            net.truth = l.output;
         }
-    #endif
+        pthread_mutex_unlock(&mutex_t[net.index_n]);
+    }
+#else
+    for (i = 0; i < net.n; ++i)
+    {
+        net.index = i;
+        layer l = net.layers[i];
+        if (l.delta)
+        {
+            fill_cpu(l.outputs * l.batch, 0, l.delta, 1);
+        }
+
+        l.forward(l, net);
+        net.input = l.output;
+        if (l.truth)
+        {
+            net.truth = l.output;
+        }
+    }
+#endif
 #endif
     //calc_network_cost(netp);
 }
