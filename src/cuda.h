@@ -6,6 +6,8 @@
 #ifdef GPU
 
 void check_error(cudaError_t status);
+//2020 0311 doyoung error line
+void check_error_line(cudaError_t status, int line);
 cublasHandle_t blas_handle();
 int *cuda_make_int_array(int *x, size_t n);
 void cuda_random(float *x_gpu, size_t n);

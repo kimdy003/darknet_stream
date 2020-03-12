@@ -49,6 +49,31 @@ void check_error(cudaError_t status)
     } 
 }
 
+//2020 0311 doyoung
+void check_error_line(cudaError_t status, int line)
+{
+    //cudaDeviceSynchronize();
+    cudaError_t status2 = cudaGetLastError();
+    if (status != cudaSuccess)
+    {   
+        const char *s = cudaGetErrorString(status);
+        char buffer[256];
+        printf("CUDA Error: %s, LINE : %d\n", s, line);
+        assert(0);
+        snprintf(buffer, 256, "CUDA Error: %s", s);
+        error(buffer);
+    } 
+    if (status2 != cudaSuccess)
+    {   
+        const char *s = cudaGetErrorString(status);
+        char buffer[256];
+        printf("CUDA Error Prev: %s, LINE : %d\n", s, line);
+        assert(0);
+        snprintf(buffer, 256, "CUDA Error Prev: %s, LINE : %d\n", s, line);
+        error(buffer);
+    } 
+}
+
 dim3 cuda_gridsize(size_t n){
     size_t k = (n-1) / BLOCK + 1;
     size_t x = k;
@@ -65,11 +90,27 @@ dim3 cuda_gridsize(size_t n){
 #ifdef CUDNN
 cudnnHandle_t cudnn_handle()
 {
-    static int init[16] = {0};
-    static cudnnHandle_t handle[16];
+    static int init[8] = {0};
+    static cudnnHandle_t handle[8];
     int i = cuda_get_device();
     if(!init[i]) {
         cudnnCreate(&handle[i]);
+        init[i] = 1;
+    }
+    return handle[i];
+}
+
+//2020 0311 doyoung
+cudnnHandle_t cudnn_handle_stream(int id, int line)
+{
+    static int init[8] = {0};
+    static cudnnHandle_t handle[8];
+    static cudastream_t stream[8];
+    int i = id;
+    if(!init[i]) {
+        cudnnCreate(&handle[i]);
+        cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+        check_error_line(status, line);
         init[i] = 1;
     }
     return handle[i];
@@ -93,6 +134,9 @@ float *cuda_make_array(float *x, size_t n)
     float *x_gpu;
     size_t size = sizeof(float)*n;
     cudaError_t status = cudaMalloc((void **)&x_gpu, size);
+    //2020 0311 doyoung
+    cudaMemset(x_gpu, .0, size);
+
     check_error(status);
     if(x){
         status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice);
@@ -173,6 +217,20 @@ float cuda_mag_array(float *x_gpu, size_t n)
     free(temp);
     return m;
 }
+
+//2020 0311 doyoung 
+void cuda_malloc_int_host(int * x_host, size_t size, int line){
+    cudaError_t status = cudaMallocHost((void **)&x_host, size);
+    check_error_line(status, line);
+}
+
+void cuda_malloc_float_host(float * x_host, size_t size, int line){
+    cudaError_t status = cudaMallocHost((void **)&x_host, size);
+    check_error_line(status, line);
+}
+
+
+
 #else
 void cuda_set_device(int n){}
 
