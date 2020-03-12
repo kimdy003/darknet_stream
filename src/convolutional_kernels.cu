@@ -175,7 +175,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     #else
     //static 변수를 사용하기 위해 같은 함수 사용
     //true - cudnnHandle, false - cudaStreamSynchronize
-    cudnnConvolutionForward(cudnn_handle(0, __LINE__),
+    cudnnConvolutionForward(cudnn_handle(id, __LINE__),
                 &one,
                 l.srcTensorDesc,
                 net.input_gpu,
