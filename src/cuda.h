@@ -16,6 +16,7 @@ dim3 cuda_gridsize(size_t n);
 
 #ifdef CUDNN
 cudnnHandle_t cudnn_handle();
+cudnnHandle_t cudnn_handle_stream(int id, int line);
 #endif
 
 #endif
