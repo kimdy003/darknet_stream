@@ -198,18 +198,11 @@ void cuda_push_array(float *x_gpu, float *x, size_t n)
 }
 
 //2020 0311 doyoung
-void cuda_pull_array(float *x_gpu, float *x, size_t n)
-{
-    size_t size = sizeof(float)*n;
-    cudaError_t status = cudaMemcpy(x, x_gpu, size, cudaMemcpyDeviceToHost);
-    check_error(status);
-}
-
 void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line)
 {
     size_t size = sizeof(float)*n;
     cudaError_t status = cudaMemcpyAsync(x, x_gpu, size, cudaMemcpyDeviceToHost, stream[id]);
-    check_error(status, line);
+    check_error_line(status, line);
 }
 
 float cuda_mag_array(float *x_gpu, size_t n)
