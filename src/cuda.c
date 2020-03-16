@@ -215,7 +215,7 @@ float cuda_mag_array(float *x_gpu, size_t n)
 }
 
 //2020 0311 doyoung 
-void cuda_malloc_host_int(int * x_host, size_t size, int line){
+void cuda_malloc_int_host(int * x_host, size_t size, int line){
     cudaError_t status = cudaMallocHost((void **)&x_host, size);
     check_error_line(status, line);
 }

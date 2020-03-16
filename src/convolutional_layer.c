@@ -241,7 +241,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     #endif
 
     //2020 0311 doyoung
-#if 0
+#ifndef GPU
     if(binary){
         l.binary_weights = calloc(l.nweights, sizeof(float));
         l.cweights = calloc(l.nweights, sizeof(char));
@@ -278,11 +278,12 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
         l.bias_v = calloc(n, sizeof(float));
         l.scale_v = calloc(n, sizeof(float));
     }
-#else
+#endif
+#ifdef GPU
     if(binary){
         cuda_malloc_float_host(l.binary_weights, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_host_int(l.cweights, l.nweights*sizeof(char), __LINE__);
-        cuda_malloc_host_int(l.scales, n*sizeof(float), __LINE__);
+        cuda_malloc_int_host(l.cweights, l.nweights*sizeof(char), __LINE__);
+        cuda_malloc_int_host(l.scales, n*sizeof(float), __LINE__);
     }
     if(xnor){
         cuda_malloc_float_host(l.binary_weights, l.nweights*sizeof(float), __LINE__);
@@ -315,9 +316,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
         cuda_malloc_float_host(l.bias_v, n*sizeof(float), __LINE__);
         cuda_malloc_float_host(l.scale_v, n*sizeof(float), __LINE__);
     }
-#endif
-
-#ifdef GPU
+    
     l.forward_gpu = forward_convolutional_layer_gpu;
     #ifdef THREAD
     l.forward_gpu_thread = forward_convolutional_layer_gpu_thread;

@@ -671,7 +671,7 @@ void cuda_free(float *x_gpu);
 float *cuda_make_array(float *x, size_t n);
 
 //2020 0311 doyoung  cudaMallocHost use
-void cuda_malloc_host_int(float * x_host, size_t size, int line);
+void cuda_malloc_int_host(float * x_host, size_t size, int line);
 void cuda_malloc_float_host(float * x_host, size_t size, int line);
 
 void cuda_pull_array(float *x_gpu, float *x, size_t n);
