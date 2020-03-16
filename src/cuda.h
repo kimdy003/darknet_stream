@@ -4,6 +4,9 @@
 #include "darknet.h"
 
 #ifdef GPU
+//2020 0311 doyoung  cudaMallocHost use
+void cuda_malloc_int_host(float * x_host, size_t size, int line);
+void cuda_malloc_float_host(float * x_host, size_t size, int line);
 
 void check_error(cudaError_t status);
 //2020 0311 doyoung error line
