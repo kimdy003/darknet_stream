@@ -291,8 +291,8 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     }
 
     if(batch_normalize){
-        cuda_malloc_float_host(l.scales, n, sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.scale_updates, n, sizeof(float), __LINE__);
+        cuda_malloc_float_host(l.scales, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(l.scale_updates, n*sizeof(float), __LINE__);
         for(i = 0; i < n; ++i){
             l.scales[i] = 1;
         }
