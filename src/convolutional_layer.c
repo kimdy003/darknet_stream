@@ -203,7 +203,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     cuda_malloc_float_host(l.weights, c/groups*n*size*size*sizeof(float), __LINE__);
     cuda_malloc_float_host(l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
 
-    cuda_malloc_float_host(l.biaes, n*sizeof(float), __LINE__);
+    cuda_malloc_float_host(l.biases, n*sizeof(float), __LINE__);
     cuda_malloc_gloat_host(l.biad_updates, n*sizeof(float), __LINE__);
 #endif
 
@@ -316,7 +316,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
         cuda_malloc_float_host(l.bias_v, n*sizeof(float), __LINE__);
         cuda_malloc_float_host(l.scale_v, n*sizeof(float), __LINE__);
     }
-    
+
     l.forward_gpu = forward_convolutional_layer_gpu;
     #ifdef THREAD
     l.forward_gpu_thread = forward_convolutional_layer_gpu_thread;
