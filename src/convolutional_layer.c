@@ -204,7 +204,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     cuda_malloc_float_host(l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
 
     cuda_malloc_float_host(l.biases, n*sizeof(float), __LINE__);
-    cuda_malloc_gloat_host(l.biad_updates, n*sizeof(float), __LINE__);
+    cuda_malloc_float_host(l.bias_updates, n*sizeof(float), __LINE__);
 #endif
 
     l.nweights = c/groups*n*size*size;
