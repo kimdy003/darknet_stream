@@ -281,8 +281,8 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
 #else
     if(binary){
         cuda_malloc_float_host(l.binary_weights, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_int_host(l.cweights, l.nweights*sizeof(char), __LINE__);
-        cuda_malloc_int_host(l.scales, n*sizeof(float), __LINE__);
+        cuda_malloc_host_int(l.cweights, l.nweights*sizeof(char), __LINE__);
+        cuda_malloc_host_int(l.scales, n*sizeof(float), __LINE__);
     }
     if(xnor){
         cuda_malloc_float_host(l.binary_weights, l.nweights*sizeof(float), __LINE__);

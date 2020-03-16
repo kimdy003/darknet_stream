@@ -218,7 +218,7 @@ void forward_function(th_arg * input, int id){
     if(input->flag == 1){
 	//fprintf(stderr, "GPU start\n");
         //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
-       
+        
         if(nl->layer.delta_gpu){
             fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
         }

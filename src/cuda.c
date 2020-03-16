@@ -197,13 +197,6 @@ void cuda_push_array(float *x_gpu, float *x, size_t n)
     check_error(status);
 }
 
-void cuda_pull_array(float *x_gpu, float *x, size_t n)
-{
-    size_t size = sizeof(float)*n;
-    cudaError_t status = cudaMemcpy(x, x_gpu, size, cudaMemcpyDeviceToHost);
-    check_error(status);
-}
-
 //2020 0311 doyoung
 void cuda_pull_array(float *x_gpu, float *x, size_t n)
 {
@@ -229,7 +222,7 @@ float cuda_mag_array(float *x_gpu, size_t n)
 }
 
 //2020 0311 doyoung 
-void cuda_malloc_int_host(int * x_host, size_t size, int line){
+void cuda_malloc_host_int(int * x_host, size_t size, int line){
     cudaError_t status = cudaMallocHost((void **)&x_host, size);
     check_error_line(status, line);
 }
