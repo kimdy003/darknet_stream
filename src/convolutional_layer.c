@@ -193,20 +193,20 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.batch_normalize = batch_normalize;
    
     //2020 0311 doyoung
-#if 0
+#ifndef GPU
     l.weights = calloc(c/groups*n*size*size, sizeof(float));
     l.weight_updates = calloc(c/groups*n*size*size, sizeof(float));
 
     l.biases = calloc(n, sizeof(float));
     l.bias_updates = calloc(n, sizeof(float));
-#else
+#endif
+#ifdef GPU
     fprintf(stderr, "malloc_float_host start \n");
     cuda_malloc_float_host(&l.weights, c/groups*n*size*size*sizeof(float), __LINE__);
-    //l.weights = calloc(c/groups*n*size*size, sizeof(float));
-    //cuda_malloc_float_host(l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
+    cuda_malloc_float_host(&l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
 
-    //cuda_malloc_float_host(l.biases, n*sizeof(float), __LINE__);
-    //cuda_malloc_float_host(l.bias_updates, n*sizeof(float), __LINE__);
+    cuda_malloc_float_host(&l.biases, n*sizeof(float), __LINE__);
+    cuda_malloc_float_host(&l.bias_updates, n*sizeof(float), __LINE__);
 #endif
 
     l.nweights = c/groups*n*size*size;
@@ -216,12 +216,8 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     //printf("convscale %f\n", scale);
     //scale = .02;
     //for(i = 0; i < c*n*size*size; ++i) l.weights[i] = scale*rand_uniform(-1, 1);
-  fprintf(stderr, "for weights[i] \n");
- fprintf(stderr, "sdadfs %d ,, %lf   %lf\n", l.nweights, l.weights[0], l.weights[1]); 
-    for(i = 0; i < l.nweights; ++i){
-	    l.weights[i] = scale*rand_normal();
-	    fprintf(stderr, "weights[%d] : %lf", i, l.weights[i]);
-    }
+    for(i = 0; i < l.nweights; ++i) l.weights[i] = scale*rand_normal();
+    
 
     int out_w = convolutional_out_width(l);
     int out_h = convolutional_out_height(l);
@@ -232,12 +228,13 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.inputs = l.w * l.h * l.c;
 
     //2020 0311 doyoung
-#if 0
+#ifndef GPU
     l.output = calloc(l.batch*l.outputs, sizeof(float));
     l.delta  = calloc(l.batch*l.outputs, sizeof(float));
-#else
-    cuda_malloc_float_host(l.output, l.batch*l.outputs*sizeof(float), __LINE__);
-    cuda_malloc_float_host(l.delta, l.batch*l.outputs*sizeof(float), __LINE__);
+#endif
+#ifdef GPU
+    cuda_malloc_float_host(&l.output, l.batch*l.outputs*sizeof(float), __LINE__);
+    cuda_malloc_float_host(&l.delta, l.batch*l.outputs*sizeof(float), __LINE__);
 #endif
 
     l.forward = forward_convolutional_layer;
@@ -287,40 +284,40 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
 #endif
 #ifdef GPU
     if(binary){
-        cuda_malloc_float_host(l.binary_weights, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_int_host(l.cweights, l.nweights*sizeof(char), __LINE__);
-        cuda_malloc_int_host(l.scales, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.binary_weights, l.nweights*sizeof(float), __LINE__);
+        cuda_malloc_int_host(&l.cweights, l.nweights*sizeof(char), __LINE__);
+        cuda_malloc_int_host(&l.scales, n*sizeof(float), __LINE__);
     }
     if(xnor){
-        cuda_malloc_float_host(l.binary_weights, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.binary_input, l.inputs*l.batch*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.binary_weights, l.nweights*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.binary_input, l.inputs*l.batch*sizeof(float), __LINE__);
     }
 
     if(batch_normalize){
-        cuda_malloc_float_host(l.scales, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.scale_updates, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.scales, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.scale_updates, n*sizeof(float), __LINE__);
         for(i = 0; i < n; ++i){
             l.scales[i] = 1;
         }
 
-        cuda_malloc_float_host(l.mean, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.variance, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.mean, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.variance, n*sizeof(float), __LINE__);
 
-        cuda_malloc_float_host(l.mean_delta, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.variance_delta, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.mean_delta, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.variance_delta, n*sizeof(float), __LINE__);
 
-        cuda_malloc_float_host(l.rolling_mean, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.rolling_variance, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.x, l.batch*l.outputs*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.x_norm, l.batch*l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.rolling_mean, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.rolling_variance, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.x, l.batch*l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.x_norm, l.batch*l.outputs*sizeof(float), __LINE__);
     }
     if(adam){
-        cuda_malloc_float_host(l.m, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.v, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.bias_m, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.scale_m, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.bias_v, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(l.scale_v, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.m, l.nweights*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.v, l.nweights*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.bias_m, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.scale_m, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.bias_v, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.scale_v, n*sizeof(float), __LINE__);
     }
 
     l.forward_gpu = forward_convolutional_layer_gpu;
