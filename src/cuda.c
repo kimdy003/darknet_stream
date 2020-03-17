@@ -230,7 +230,6 @@ void cuda_malloc_int_host(int * x_host, size_t size, int line){
 void cuda_malloc_float_host(float ** x_host, size_t size, int line){
     cudaError_t status = cudaMallocHost((void **)x_host, size);
     check_error_line(status, line);
-    fprintf(stderr, "%d end\n", line);
 }
 
 

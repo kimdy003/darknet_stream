@@ -644,14 +644,15 @@ void* predict_classifier2(test * input){
 
             printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
         }
-        fprintf(stderr, "rdata != im.data\n");
         if (r.data != im.data)
             free_image(r);
     }
-    fprintf(stderr, "n_loop end\n");
     free_image(im);
+    fprintf(stderr, "im end\n");
     free_network(net);
+    fprintf(stderr, "net end \n");
     free(input);
+    fprintf(stderr, "input end \n");
     //hojin
     //while(1);
 }
