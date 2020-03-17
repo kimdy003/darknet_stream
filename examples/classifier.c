@@ -648,11 +648,8 @@ void* predict_classifier2(test * input){
             free_image(r);
     }
     free_image(im);
-    fprintf(stderr, "im end\n");
     free_network(net);
-    fprintf(stderr, "net end \n");
     free(input);
-    fprintf(stderr, "input end \n");
     //hojin
     //while(1);
 }
