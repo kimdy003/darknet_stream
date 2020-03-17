@@ -201,11 +201,12 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.bias_updates = calloc(n, sizeof(float));
 #else
     fprintf(stderr, "malloc_float_host start \n");
-    cuda_malloc_float_host(l.weights, c/groups*n*size*size*sizeof(float), __LINE__);
-    cuda_malloc_float_host(l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
+    cuda_malloc_float_host(&l.weights, c/groups*n*size*size*sizeof(float), __LINE__);
+    //l.weights = calloc(c/groups*n*size*size, sizeof(float));
+    //cuda_malloc_float_host(l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
 
-    cuda_malloc_float_host(l.biases, n*sizeof(float), __LINE__);
-    cuda_malloc_float_host(l.bias_updates, n*sizeof(float), __LINE__);
+    //cuda_malloc_float_host(l.biases, n*sizeof(float), __LINE__);
+    //cuda_malloc_float_host(l.bias_updates, n*sizeof(float), __LINE__);
 #endif
 
     l.nweights = c/groups*n*size*size;
@@ -216,12 +217,12 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     //scale = .02;
     //for(i = 0; i < c*n*size*size; ++i) l.weights[i] = scale*rand_uniform(-1, 1);
   fprintf(stderr, "for weights[i] \n");
- fprintf(stderr, "sdadfs %d ,, %ld\n", l.nweights, sizeof(l.weights)); 
+ fprintf(stderr, "sdadfs %d ,, %lf   %lf\n", l.nweights, l.weights[0], l.weights[1]); 
     for(i = 0; i < l.nweights; ++i){
 	    l.weights[i] = scale*rand_normal();
 	    fprintf(stderr, "weights[%d] : %lf", i, l.weights[i]);
     }
-   
+
     int out_w = convolutional_out_width(l);
     int out_h = convolutional_out_height(l);
     l.out_h = out_h;
