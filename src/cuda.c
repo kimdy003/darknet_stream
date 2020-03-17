@@ -190,6 +190,11 @@ void cuda_free(float *x_gpu)
     check_error(status);
 }
 
+void cuda_freehost(float *x_gpu){
+    cudaError_t status = cudaFreeHost(x_gpu);
+    check_error(status);
+}
+
 void cuda_push_array(float *x_gpu, float *x, size_t n)
 {
     size_t size = sizeof(float)*n;

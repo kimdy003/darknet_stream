@@ -669,6 +669,10 @@ void copy_gpu(int N, float * X, int INCX, float * Y, int INCY);
 
 void cuda_set_device(int n);
 void cuda_free(float *x_gpu);
+
+//2020 0317 doyoung
+void cuda_freehost(float *x_gpu);
+
 float *cuda_make_array(float *x, size_t n);
 
 //2020 0311 doyoung  cudaMallocHost use
