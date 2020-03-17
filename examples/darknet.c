@@ -464,7 +464,7 @@ int main()
         cond_i[i] = 0;
     }
 #endif
-
+fprintf(stderr, "load network start \n");
     for(unsigned int k=0; k<n_net; k++){
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
@@ -475,6 +475,7 @@ int main()
        // alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
        // alexNetwork[k]->index_n = k+(n_net*3);
 	}
+    fprintf(stderr, "load network end\n ");
     
     list *options = read_data_cfg("cfg/imagenet1k.data");
     char *name_list = option_find_str(options, "names", 0);

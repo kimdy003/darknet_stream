@@ -191,7 +191,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.size = size;
     l.pad = padding;
     l.batch_normalize = batch_normalize;
-    
+   
     //2020 0311 doyoung
 #if 0
     l.weights = calloc(c/groups*n*size*size, sizeof(float));
@@ -200,6 +200,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.biases = calloc(n, sizeof(float));
     l.bias_updates = calloc(n, sizeof(float));
 #else
+    fprintf(stderr, "malloc_float_host start \n");
     cuda_malloc_float_host(l.weights, c/groups*n*size*size*sizeof(float), __LINE__);
     cuda_malloc_float_host(l.weight_updates, c/groups*n*size*size*sizeof(float), __LINE__);
 
@@ -209,13 +210,18 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
 
     l.nweights = c/groups*n*size*size;
     l.nbiases = n;
-
     // float scale = 1./sqrt(size*size*c);
     float scale = sqrt(2./(size*size*c/l.groups));
     //printf("convscale %f\n", scale);
     //scale = .02;
     //for(i = 0; i < c*n*size*size; ++i) l.weights[i] = scale*rand_uniform(-1, 1);
-    for(i = 0; i < l.nweights; ++i) l.weights[i] = scale*rand_normal();
+  fprintf(stderr, "for weights[i] \n");
+ fprintf(stderr, "sdadfs %d ,, %ld\n", l.nweights, sizeof(l.weights)); 
+    for(i = 0; i < l.nweights; ++i){
+	    l.weights[i] = scale*rand_normal();
+	    fprintf(stderr, "weights[%d] : %lf", i, l.weights[i]);
+    }
+   
     int out_w = convolutional_out_width(l);
     int out_h = convolutional_out_height(l);
     l.out_h = out_h;
@@ -251,7 +257,6 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
         l.binary_weights = calloc(l.nweights, sizeof(float));
         l.binary_input = calloc(l.inputs*l.batch, sizeof(float));
     }
-
     if(batch_normalize){
         l.scales = calloc(n, sizeof(float));
         l.scale_updates = calloc(n, sizeof(float));
@@ -544,7 +549,6 @@ void forward_convolutional_layer(convolutional_layer l, network net)
     activate_array(l.output, l.outputs*l.batch, l.activation);
     if(l.binary || l.xnor) swap_binary(&l);
 }
-
 #ifdef THREAD
 void forward_convolutional_layer_thread(netlayer * input){
      
