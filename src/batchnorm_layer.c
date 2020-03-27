@@ -194,7 +194,7 @@ void forward_batchnorm_layer_gpu(layer l, network net)
 #ifdef CUDNN
         float one = 1;
         float zero = 0;
-        cudnnBatchNormalizationForwardTraining(cudnn_handle(0, __LINE__),
+        cudnnBatchNormalizationForwardTraining(cudnn_handle(),
                 CUDNN_BATCHNORM_SPATIAL,
                 &one,
                 &zero,
@@ -294,6 +294,7 @@ void backward_batchnorm_layer_gpu(layer l, network net)
 #ifdef CUDNN
     float one = 1;
     float zero = 0;
+    #ifdef STREAM
     cudnnBatchNormalizationBackward(cudnn_handle(0, __LINE__),
             CUDNN_BATCHNORM_SPATIAL,
             &one,
@@ -313,6 +314,27 @@ void backward_batchnorm_layer_gpu(layer l, network net)
             .00001,
             l.mean_gpu,
             l.variance_gpu);
+    #else
+    cudnnBatchNormalizationBackward(cudnn_handle(),
+            CUDNN_BATCHNORM_SPATIAL,
+            &one,
+            &zero,
+            &one,
+            &one,
+            l.dstTensorDesc,
+            l.x_gpu,
+            l.dstTensorDesc,
+            l.delta_gpu,
+            l.dstTensorDesc,
+            l.x_norm_gpu,
+            l.normTensorDesc,
+            l.scales_gpu,
+            l.scale_updates_gpu,
+            l.bias_updates_gpu,
+            .00001,
+            l.mean_gpu,
+            l.variance_gpu);
+    #endif
     copy_gpu(l.outputs*l.batch, l.x_norm_gpu, 1, l.delta_gpu, 1);
 #else
     backward_bias_gpu(l.bias_updates_gpu, l.delta_gpu, l.batch, l.out_c, l.out_w*l.out_h);
