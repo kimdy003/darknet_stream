@@ -325,7 +325,7 @@ void backward_convolutional_layer_gpu(convolutional_layer l, network net)
             l.dweightDesc,
             l.weight_updates_gpu);
     #else
-    cudnnConvolutionBackwardFilter(cudnn_handle()),
+    cudnnConvolutionBackwardFilter(cudnn_handle(),
             &one,
             l.srcTensorDesc,
             net.input_gpu,
