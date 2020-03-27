@@ -185,7 +185,7 @@ void push_batchnorm_layer(layer l)
     cuda_push_array(l.rolling_mean_gpu, l.rolling_mean, l.c);
     cuda_push_array(l.rolling_variance_gpu, l.rolling_variance, l.c);
 }
-#ifndef STREAM
+
 void forward_batchnorm_layer_gpu(layer l, network net)
 {
     if(l.type == BATCHNORM) copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
@@ -194,6 +194,7 @@ void forward_batchnorm_layer_gpu(layer l, network net)
 #ifdef CUDNN
         float one = 1;
         float zero = 0;
+        #ifndef STREAM
         cudnnBatchNormalizationForwardTraining(cudnn_handle(),
                 CUDNN_BATCHNORM_SPATIAL,
                 &one,
@@ -211,6 +212,25 @@ void forward_batchnorm_layer_gpu(layer l, network net)
                 .00001,
                 l.mean_gpu,
                 l.variance_gpu);
+        #else
+        cudnnBatchNormalizationForwardTraining(cudnn_handle(id, __LINE__),
+                CUDNN_BATCHNORM_SPATIAL,
+                &one,
+                &zero,
+                l.dstTensorDesc,
+                l.x_gpu,
+                l.dstTensorDesc,
+                l.output_gpu,
+                l.normTensorDesc,
+                l.scales_gpu,
+                l.biases_gpu,
+                .01,
+                l.rolling_mean_gpu,
+                l.rolling_variance_gpu,
+                .00001,
+                l.mean_gpu,
+                l.variance_gpu);
+        #endif
 #else
         fast_mean_gpu(l.output_gpu, l.batch, l.out_c, l.out_h*l.out_w, l.mean_gpu);
         fast_variance_gpu(l.output_gpu, l.mean_gpu, l.batch, l.out_c, l.out_h*l.out_w, l.variance_gpu);
@@ -234,7 +254,7 @@ void forward_batchnorm_layer_gpu(layer l, network net)
     }
 
 }
-#else
+
 //2020 0311 doyoung
 void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
 {
@@ -284,7 +304,7 @@ void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
     }
 
 }
-#endif
+
 void backward_batchnorm_layer_gpu(layer l, network net)
 {
     if(!net.train){

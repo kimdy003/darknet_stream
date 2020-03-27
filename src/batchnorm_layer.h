@@ -14,12 +14,9 @@ void forward_batchnorm_layer_thread(netlayer* input);
 #endif
 
 #ifdef GPU
-#ifdef STREAM
 //2020 0311 doyoung
 void forward_batchnorm_layer_gpu_stream(layer l, network net, int id);
-#else
 void forward_batchnorm_layer_gpu(layer l, network net);
-#endif
 void backward_batchnorm_layer_gpu(layer l, network net);
 void pull_batchnorm_layer(layer l);
 void push_batchnorm_layer(layer l);
