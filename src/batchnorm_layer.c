@@ -185,7 +185,7 @@ void push_batchnorm_layer(layer l)
     cuda_push_array(l.rolling_mean_gpu, l.rolling_mean, l.c);
     cuda_push_array(l.rolling_variance_gpu, l.rolling_variance, l.c);
 }
-
+#ifndef STREAM
 void forward_batchnorm_layer_gpu(layer l, network net)
 {
     if(l.type == BATCHNORM) copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
@@ -234,7 +234,7 @@ void forward_batchnorm_layer_gpu(layer l, network net)
     }
 
 }
-
+#else
 //2020 0311 doyoung
 void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
 {
@@ -284,7 +284,7 @@ void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
     }
 
 }
-
+#endif
 void backward_batchnorm_layer_gpu(layer l, network net)
 {
     if(!net.train){
