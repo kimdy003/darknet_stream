@@ -147,7 +147,11 @@ struct layer{
         void (*forward_thread) (netlayer*);
         //2020 0223 hojin gpu threadbody function add
 	//2020 0316 doyoung arguments add
-        void (*forward_gpu_thread) (netlayer*, int id);
+        #ifdef STREAM
+            void (*forward_gpu_thread) (netlayer*, int id);
+        #else
+            void (*forward_gpu_thread) (netlayer*);
+        #endif
     #endif
     void (*backward)  (struct layer, struct network);
     void (*update)    (struct layer, update_args);

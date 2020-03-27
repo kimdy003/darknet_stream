@@ -158,7 +158,24 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 #ifdef CUDNN
     float one = 1;
     //2020 0311 doyoung
-    #if 0
+    #ifdef STREAM
+    //static 변수를 사용하기 위해 같은 함수 사용
+    //true - cudnnHandle, false - cudaStreamSynchronize
+    cudnnConvolutionForward(cudnn_handle(id, __LINE__),
+    &one,
+    l.srcTensorDesc,
+    net.input_gpu,
+    l.weightDesc,
+    l.weights_gpu,
+    l.convDesc,
+    l.fw_algo,
+    net.workspace_gpu,
+    l.workspace_size,
+    &one,
+    l.dstTensorDesc,
+    l.output_gpu);
+    cuda_syncronize(id, __LINE__);
+    #else
     cudnnConvolutionForward(cudnn_handle(),
                 &one,
                 l.srcTensorDesc,
@@ -172,23 +189,6 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                 &one,
                 l.dstTensorDesc,
                 l.output_gpu);
-    #else
-    //static 변수를 사용하기 위해 같은 함수 사용
-    //true - cudnnHandle, false - cudaStreamSynchronize
-    cudnnConvolutionForward(cudnn_handle(id, __LINE__),
-                &one,
-                l.srcTensorDesc,
-                net.input_gpu,
-                l.weightDesc,
-                l.weights_gpu,
-                l.convDesc,
-                l.fw_algo,
-                net.workspace_gpu,
-                l.workspace_size,
-                &one,
-                l.dstTensorDesc,
-                l.output_gpu);
-    cuda_syncronize(id, __LINE__);
     #endif
 
 #else
@@ -215,7 +215,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 
     if (l.batch_normalize) {
         //2020 0311 doyoung
-        #if 0
+        #ifndef STREAM
             forward_batchnorm_layer_gpu(l, net);
         #else
             forward_batchnorm_layer_gpu_stream(l, net, id);

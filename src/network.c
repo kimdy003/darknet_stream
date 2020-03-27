@@ -224,9 +224,12 @@ void forward_function(th_arg * input, int id){
         }
         nl->layer.forward_gpu_thread(nl, thidx);
     //2020 0311 doyoung
-	//cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
-	cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx, __LINE__);
-	//fprintf(stderr, "GPU end\n");
+    #ifdef STREAM
+	    cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx, __LINE__);
+	#else
+        cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+	#endif
+    //fprintf(stderr, "GPU end\n");
     }
     else if(input->flag == 0){
 #endif

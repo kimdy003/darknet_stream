@@ -88,28 +88,42 @@ dim3 cuda_gridsize(size_t n){
 }
 
 #ifdef CUDNN
-static cudaStream_t stream[8];
+    #ifdef STREAM
+    static cudaStream_t stream[8];
 
-//2020 0311 doyoung
-cudnnHandle_t cudnn_handle(int id, int line)
-{
-    static int init[8] = {0};
-    static cudnnHandle_t handle[8];
-    int i = id;
-    if(!init[i]) {
-        cudnnCreate(&handle[i]);
-        cudaError_t status = cudnnSetStream(handle[i], stream[i]);
-        check_error_line(status, line);
-        init[i] = 1;
+    //2020 0311 doyoung
+    cudnnHandle_t cudnn_handle(int id, int line)
+    {
+        static int init[8] = {0};
+        static cudnnHandle_t handle[8];
+        int i = id;
+        if(!init[i]) {
+            cudnnCreate(&handle[i]);
+            cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+            check_error_line(status, line);
+            init[i] = 1;
+        }
+        
+        return handle[i];
     }
-    
-    return handle[i];
-}
 
-void cuda_syncronize(int id, int line){
-    cudaError_t status = cudaStreamSynchronize(stream[id]);
-    check_error_line(status, line);
-}
+    void cuda_syncronize(int id, int line){
+        cudaError_t status = cudaStreamSynchronize(stream[id]);
+        check_error_line(status, line);
+    }
+    #else
+    cudnnHandle_t cudnn_handle()
+    {
+        static int init[16] = {0};
+        static cudnnHandle_t handle[16];
+        int i = cuda_get_device();
+        if(!init[i]) {
+            cudnnCreate(&handle[i]);
+            init[i] = 1;
+        }
+        return handle[i];
+    }
+    #endif   
 #endif
 
 cublasHandle_t blas_handle()
@@ -129,8 +143,10 @@ float *cuda_make_array(float *x, size_t n)
     float *x_gpu;
     size_t size = sizeof(float)*n;
     cudaError_t status = cudaMalloc((void **)&x_gpu, size);
+    #ifdef STREAM
     //2020 0311 doyoung
     cudaMemset(x_gpu, .0, size);
+    #endif
 
     check_error(status);
     if(x){
@@ -201,14 +217,7 @@ void cuda_push_array(float *x_gpu, float *x, size_t n)
     cudaError_t status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice);
     check_error(status);
 }
-
-void cuda_pull_array(float *x_gpu, float *x, size_t n)
-{
-    size_t size = sizeof(float)*n;
-    cudaError_t status = cudaMemcpy(x, x_gpu, size, cudaMemcpyDeviceToHost);
-    check_error(status);
-}
-
+#ifdef STREAM
 //2020 0311 doyoung
 void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line)
 {
@@ -216,7 +225,14 @@ void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line)
     cudaError_t status = cudaMemcpyAsync(x, x_gpu, size, cudaMemcpyDeviceToHost, stream[id]);
     check_error_line(status, line);
 }
-
+#else
+void cuda_pull_array(float *x_gpu, float *x, size_t n)
+{
+    size_t size = sizeof(float)*n;
+    cudaError_t status = cudaMemcpy(x, x_gpu, size, cudaMemcpyDeviceToHost);
+    check_error(status);
+}
+#endif
 float cuda_mag_array(float *x_gpu, size_t n)
 {
     float *temp = calloc(n, sizeof(float));

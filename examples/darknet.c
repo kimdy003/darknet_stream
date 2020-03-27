@@ -437,9 +437,6 @@ int main()
     thpool = thpool_init(THREAD_NUM_POOL);
 #endif
 
-    //char** vgg = {"darknet", "classfier", "predict", "cfg/imagenet1k.data", "cfg/","", "data/eagle.jpg"};
-    //char** densenet = {"darknet", "classfier", "predict", "cfg/imagenet1k.data", "cfg/", "", "data/eagle.jpg"};
-    //char** resnet = {"darknet", "classfier", "predict", "cfg/imagenet1k.data", "cfg/", "", "data/eagle.jpg"};
 
     char * denseName = "Dense";
     char * resName = "Res";
@@ -584,7 +581,7 @@ int main()
     free(mutex_t);
     free(cond_i);
     return 0;
-/*
+#if 0
     if (0 == strcmp(argv[1], "average")){
         average(argc, argv);
     } else if (0 == strcmp(argv[1], "yolo")){
@@ -663,6 +660,7 @@ int main()
         test_resize(argv[2]);
     } else {
         fprintf(stderr, "Not an option: %s\n", argv[1]);
-    }*/
+    }
+#endif
 }
 
