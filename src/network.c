@@ -209,7 +209,8 @@ network *make_network(int n)
 }
 
 #ifdef THREAD
-void forward_function(th_arg * input, int id){
+#ifdef STREAM
+void forward_function_stream(th_arg * input, int id){
     int thidx = id;
     netlayer * nl = input->arg;
     pthread_mutex_lock(&mutex_t[nl->net.index_n]);
@@ -223,6 +224,44 @@ void forward_function(th_arg * input, int id){
             fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
         }
         nl->layer.forward_gpu_thread(nl, thidx);
+    //2020 0311 doyoung
+    #ifdef STREAM
+	    cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx, __LINE__);
+	#else
+        cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+	#endif
+    //fprintf(stderr, "GPU end\n");
+    }
+    else if(input->flag == 0){
+#endif
+        //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
+	//fprintf(stderr, "cpu\n");
+        if(nl->layer.delta){
+            fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
+        }
+        nl->layer.forward_thread(nl);
+#ifdef GPU
+    }
+#endif
+    cond_i[nl->net.index_n] = 0;
+    pthread_cond_signal(&cond_t[nl->net.index_n]);
+    pthread_mutex_unlock(&mutex_t[nl->net.index_n]);
+
+}
+#else
+void forward_function(th_arg * input){
+    netlayer * nl = input->arg;
+    pthread_mutex_lock(&mutex_t[nl->net.index_n]);
+	//input->flag == 1;
+#ifdef GPU
+    if(input->flag == 1){
+	//fprintf(stderr, "GPU start\n");
+        //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
+        
+        if(nl->layer.delta_gpu){
+            fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
+        }
+        nl->layer.forward_gpu_thread(nl);
     //2020 0311 doyoung
     #ifdef STREAM
 	    cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx, __LINE__);
@@ -281,8 +320,11 @@ void forward_network(network *netp)
         th_arg input;
         input.arg = &nl;
         input.flag = 0;
-
+    #ifdef STREAM
+        thpool_add_work(thpool, forward_function_stream, &input);
+    #else
         thpool_add_work(thpool, forward_function, &input);
+    #endif
         while (cond_i[net.index_n] == 1)
         {
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
