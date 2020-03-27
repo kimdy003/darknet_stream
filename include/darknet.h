@@ -684,7 +684,9 @@ void cuda_malloc_int_host(int * x_host, size_t size, int line);
 void cuda_malloc_float_host(float ** x_host, size_t size, int line);
 
 void cuda_pull_array(float *x_gpu, float *x, size_t n);
+#ifdef STREAM
 void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line);
+#endif
 float cuda_mag_array(float *x_gpu, size_t n);
 void cuda_push_array(float *x_gpu, float *x, size_t n);
 

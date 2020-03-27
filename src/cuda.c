@@ -217,7 +217,7 @@ void cuda_push_array(float *x_gpu, float *x, size_t n)
     cudaError_t status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice);
     check_error(status);
 }
-
+#ifdef STREAM
 //2020 0311 doyoung
 void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line)
 {
@@ -225,7 +225,7 @@ void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line)
     cudaError_t status = cudaMemcpyAsync(x, x_gpu, size, cudaMemcpyDeviceToHost, stream[id]);
     check_error_line(status, line);
 }
-
+#endif
 void cuda_pull_array(float *x_gpu, float *x, size_t n)
 {
     size_t size = sizeof(float)*n;
