@@ -142,7 +142,11 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 
      fprintf(stderr , "%d - end\n", net.index_n);
     if (l.batch_normalize) {
-        forward_batchnorm_layer_gpu(l, net);
+        #ifndef STREAM
+            forward_batchnorm_layer_gpu(l, net);
+        #else
+            forward_batchnorm_layer_gpu_stream(l, net, id);
+        #endif
     } else {
         add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.n, l.out_w*l.out_h);
     }
