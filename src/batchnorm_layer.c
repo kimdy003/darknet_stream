@@ -213,7 +213,7 @@ void forward_batchnorm_layer_gpu(layer l, network net)
                 l.mean_gpu,
                 l.variance_gpu);
         #else
-        cudnnBatchNormalizationForwardTraining(cudnn_handle(id, __LINE__),
+        cudnnBatchNormalizationForwardTraining(cudnn_handle(0, __LINE__),
                 CUDNN_BATCHNORM_SPATIAL,
                 &one,
                 &zero,
