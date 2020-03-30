@@ -450,26 +450,26 @@ int main()
 
 #ifdef THREAD
     //변수 동적할당
-    cond_t = (pthread_cond_t*)malloc(sizeof(pthread_cond_t) * n_net);
-    mutex_t = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * n_net);
-    cond_i = (int*)malloc(sizeof(int) * n_net);
+    cond_t = (pthread_cond_t*)malloc(sizeof(pthread_cond_t) * n_net*4);
+    mutex_t = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * n_net*4);
+    cond_i = (int*)malloc(sizeof(int) * n_net*4);
 
 
-    for(int i=0; i<n_net; i++){
+    for(int i=0; i<n_net*4; i++){
         pthread_cond_init(&cond_t[i], NULL);
         pthread_mutex_init(&mutex_t[i], NULL);
         cond_i[i] = 0;
     }
 #endif
-    for(unsigned int k=0; k<n_net; k++){
+    for(unsigned int k=0; k<n_net*4; k++){
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
         //resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
-        //resNetwork[k]->index_n = k+n_net;
+        //resNetwork[k]->index_n = k+(n_net*2);
         //vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
-        //vggNetwork[k]->index_n = k+(n_net*2);
-       // alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
-       // alexNetwork[k]->index_n = k+(n_net*3);
+        //vggNetwork[k]->index_n = k+(n_net*3);
+        //alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
+        //alexNetwork[k]->index_n = k+(n_net*4);
 	}
     
     list *options = read_data_cfg("cfg/imagenet1k.data");
@@ -506,7 +506,7 @@ int main()
     //pthread_t networkArray_alex[n_net];
 
 
-    
+
     for(int i=0; i<n_net; i++){
         net_input_des[i] = (test*)malloc(sizeof(test));
         net_input_des[i]->net = denseNetwork[i];
@@ -534,7 +534,8 @@ int main()
            exit(0);
           }
     }
- 
+
+
     for(int i=0; i<n_net; i++){
         net_input_vgg[i] = (test*)malloc(sizeof(test));
         net_input_vgg[i]->net = vggNetwork[i];
@@ -562,12 +563,13 @@ int main()
             exit(0);
         }
     }
-#endif
+    
+#endif    
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
-  //      pthread_join(networkArray_res[i], NULL);
-  //      pthread_join(networkArray_vgg[i], NULL);
-  //      pthread_join(networkArray_alex[i], NULL);
+        //pthread_join(networkArray_res[i], NULL);
+        //pthread_join(networkArray_vgg[i], NULL);
+        //pthread_join(networkArray_alex[i], NULL);
     } 
 #if 0
     //kmsjames 2020 0215
