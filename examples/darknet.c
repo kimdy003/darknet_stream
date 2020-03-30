@@ -465,11 +465,11 @@ int main()
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
         resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
-        resNetwork[k]->index_n = k+(n_net*2);
+        resNetwork[k]->index_n = k+n_net;
         vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
-        vggNetwork[k]->index_n = k+(n_net*3);
+        vggNetwork[k]->index_n = k+(n_net*2);
         alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
-        alexNetwork[k]->index_n = k+(n_net*4);
+        alexNetwork[k]->index_n = k+(n_net*3);
 	}
     
     list *options = read_data_cfg("cfg/imagenet1k.data");
@@ -506,7 +506,7 @@ int main()
     pthread_t networkArray_alex[n_net];
 
 
-
+    
     for(int i=0; i<n_net; i++){
         net_input_des[i] = (test*)malloc(sizeof(test));
         net_input_des[i]->net = denseNetwork[i];
@@ -534,8 +534,7 @@ int main()
            exit(0);
           }
     }
-
-
+ 
     for(int i=0; i<n_net; i++){
         net_input_vgg[i] = (test*)malloc(sizeof(test));
         net_input_vgg[i]->net = vggNetwork[i];
@@ -563,8 +562,7 @@ int main()
             exit(0);
         }
     }
-    
-    
+
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
         pthread_join(networkArray_res[i], NULL);

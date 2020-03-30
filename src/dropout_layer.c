@@ -12,11 +12,7 @@ dropout_layer make_dropout_layer(int batch, int inputs, float probability)
     l.inputs = inputs;
     l.outputs = inputs;
     l.batch = batch;
-    #if 0
-        cuda_malloc_float_host(&l.rand, inputs*batch*sizeof(float), __LINE__);
-    #else
-        l.rand = calloc(inputs*batch, sizeof(float));
-    #endif
+    l.rand = calloc(inputs*batch, sizeof(float));
     l.scale = 1./(1.-probability);
     l.forward = forward_dropout_layer;
     l.backward = backward_dropout_layer;

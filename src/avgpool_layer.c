@@ -17,13 +17,8 @@ avgpool_layer make_avgpool_layer(int batch, int w, int h, int c)
     l.outputs = l.out_c;
     l.inputs = h*w*c;
     int output_size = l.outputs * batch;
-    #if 0
-        cuda_malloc_float_host(&l.output, output_size*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.delta, output_size*sizeof(float), __LINE__);
-    #else
-        l.output =  calloc(output_size, sizeof(float));
-        l.delta =   calloc(output_size, sizeof(float));
-    #endif
+    l.output =  calloc(output_size, sizeof(float));
+    l.delta =   calloc(output_size, sizeof(float));
     l.forward = forward_avgpool_layer;
     l.backward = backward_avgpool_layer;
     #ifdef THREAD
