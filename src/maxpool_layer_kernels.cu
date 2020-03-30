@@ -96,7 +96,7 @@ extern "C" void forward_maxpool_layer_gpu(maxpool_layer layer, network net)
     check_error(cudaPeekAtLastError());
 }
 #ifdef THREAD
-extern "C" void forward_maxpool_layer_gpu_thread(netlayer* input, int id)
+extern "C" void forward_maxpool_layer_gpu_thread(netlayer* input)
 {
      
 
