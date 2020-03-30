@@ -439,14 +439,14 @@ int main()
 
 
     char * denseName = "Dense";
-    //char * resName = "Res";
-    //char * vggName = "VGG";
-    //char * alexName = "Alex";
+    char * resName = "Res";
+    char * vggName = "VGG";
+    char * alexName = "Alex";
 
     network *denseNetwork[n_net];
-    //network *resNetwork[n_net];
-    //network *vggNetwork[n_net];
-    //network *alexNetwork[n_net];
+    network *resNetwork[n_net];
+    network *vggNetwork[n_net];
+    network *alexNetwork[n_net];
 
 #ifdef THREAD
     //변수 동적할당
@@ -461,15 +461,15 @@ int main()
         cond_i[i] = 0;
     }
 #endif
-    for(unsigned int k=0; k<n_net*4; k++){
+    for(unsigned int k=0; k<n_net; k++){
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
-        //resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
-        //resNetwork[k]->index_n = k+(n_net*2);
-        //vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
-        //vggNetwork[k]->index_n = k+(n_net*3);
-        //alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
-        //alexNetwork[k]->index_n = k+(n_net*4);
+        resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
+        resNetwork[k]->index_n = k+(n_net*2);
+        vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg", "vgg-16.weights", 0);
+        vggNetwork[k]->index_n = k+(n_net*3);
+        alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg", "alexnet.weights", 0);
+        alexNetwork[k]->index_n = k+(n_net*4);
 	}
     
     list *options = read_data_cfg("cfg/imagenet1k.data");
@@ -484,9 +484,9 @@ int main()
     char buff[256];
     char *input = buff;
     test *net_input_des[n_net];
-    //test *net_input_res[n_net];
-    //test *net_input_vgg[n_net];
-    //test *net_input_alex[n_net];
+    test *net_input_res[n_net];
+    test *net_input_vgg[n_net];
+    test *net_input_alex[n_net];
 
     while(1){
         printf("Enter Image Path: ");
@@ -501,9 +501,9 @@ int main()
 
     double time = what_time_is_it_now();
     pthread_t networkArray_des[n_net];
-    //pthread_t networkArray_res[n_net];
-    //pthread_t networkArray_vgg[n_net];
-    //pthread_t networkArray_alex[n_net];
+    pthread_t networkArray_res[n_net];
+    pthread_t networkArray_vgg[n_net];
+    pthread_t networkArray_alex[n_net];
 
 
 
@@ -520,7 +520,7 @@ int main()
             exit(0);
         }
     }
-#if 0
+
     for(int i=0; i<n_net; i++){
         net_input_res[i] = (test*)malloc(sizeof(test));
         net_input_res[i]->net = resNetwork[i];
@@ -564,12 +564,12 @@ int main()
         }
     }
     
-#endif    
+    
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
-        //pthread_join(networkArray_res[i], NULL);
-        //pthread_join(networkArray_vgg[i], NULL);
-        //pthread_join(networkArray_alex[i], NULL);
+        pthread_join(networkArray_res[i], NULL);
+        pthread_join(networkArray_vgg[i], NULL);
+        pthread_join(networkArray_alex[i], NULL);
     } 
 #if 0
     //kmsjames 2020 0215
