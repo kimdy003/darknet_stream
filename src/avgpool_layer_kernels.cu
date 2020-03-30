@@ -51,7 +51,7 @@ extern "C" void forward_avgpool_layer_gpu(avgpool_layer layer, network net)
     check_error(cudaPeekAtLastError());
 }
 #ifdef THREAD
-extern "C" void forward_avgpool_layer_gpu_thread(netlayer* input, int id)
+extern "C" void forward_avgpool_layer_gpu_thread(netlayer* input)
 {
     network net = input->net;
     layer layer = input->layer;
