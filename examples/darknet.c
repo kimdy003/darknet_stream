@@ -439,12 +439,12 @@ int main()
 
 
     char * denseName = "Dense";
-    char * resName = "Res";
+    //char * resName = "Res";
     //char * vggName = "VGG";
     //char * alexName = "Alex";
 
     network *denseNetwork[n_net];
-    network *resNetwork[n_net];
+    //network *resNetwork[n_net];
     //network *vggNetwork[n_net];
     //network *alexNetwork[n_net];
 
@@ -565,7 +565,7 @@ int main()
 #endif
     for(int i=0; i<n_net; i++){
         pthread_join(networkArray_des[i], NULL);
-        pthread_join(networkArray_res[i], NULL);
+  //      pthread_join(networkArray_res[i], NULL);
   //      pthread_join(networkArray_vgg[i], NULL);
   //      pthread_join(networkArray_alex[i], NULL);
     } 
@@ -577,6 +577,7 @@ int main()
 
     fprintf(stderr, "\n execution Time : %lf\n", what_time_is_it_now() - time);
 
+    while(1);
     free(cond_t);
     free(mutex_t);
     free(cond_i);
