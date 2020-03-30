@@ -108,7 +108,7 @@ extern "C" void forward_maxpool_layer_gpu_thread(netlayer* input, int id)
     int c = layer.c;
 
     size_t n = h*w*c*layer.batch;
-#ifdef STREAM
+#if 0
     forward_maxpool_layer_kernel<<<cuda_gridsize(n), BLOCK, 0, stream_id(id)>>>(n, layer.h, layer.w, layer.c, layer.stride, layer.size, layer.pad, net.input_gpu, layer.output_gpu, layer.indexes_gpu);
     check_error(cudaPeekAtLastError());
 #else

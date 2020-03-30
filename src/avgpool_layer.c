@@ -17,7 +17,7 @@ avgpool_layer make_avgpool_layer(int batch, int w, int h, int c)
     l.outputs = l.out_c;
     l.inputs = h*w*c;
     int output_size = l.outputs * batch;
-    #ifdef STREAM
+    #if 0
         cuda_malloc_float_host(&l.output, output_size*sizeof(float), __LINE__);
         cuda_malloc_float_host(&l.delta, output_size*sizeof(float), __LINE__);
     #else
