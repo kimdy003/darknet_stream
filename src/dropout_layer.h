@@ -18,7 +18,7 @@ void forward_dropout_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_dropout_layer_gpu(dropout_layer l, network net);
 #ifdef THREAD
-void forward_dropout_layer_gpu_thread(netlayer* input);
+void forward_dropout_layer_gpu_thread(netlayer* input, int id);
 #endif
 void backward_dropout_layer_gpu(dropout_layer l, network net);
 
