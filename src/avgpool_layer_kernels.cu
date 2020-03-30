@@ -51,21 +51,15 @@ extern "C" void forward_avgpool_layer_gpu(avgpool_layer layer, network net)
     check_error(cudaPeekAtLastError());
 }
 #ifdef THREAD
-extern "C" void forward_avgpool_layer_gpu_thread(netlayer* input)
+extern "C" void forward_avgpool_layer_gpu_thread(netlayer* input, int id)
 {
-      
-
     network net = input->net;
     layer layer = input->layer;
 
     size_t n = layer.c*layer.batch;
 
-    forward_avgpool_layer_kernel<<<cuda_gridsize(n), BLOCK>>>(n, layer.w, layer.h, layer.c, net.input_gpu, layer.output_gpu);
+    forward_avgpool_layer_kernel<<<cuda_gridsize(n), BLOCK, 0, stream_id(id)>>>(n, layer.w, layer.h, layer.c, net.input_gpu, layer.output_gpu);
     check_error(cudaPeekAtLastError());
-
-     
-     
-     
 }
 #endif
 

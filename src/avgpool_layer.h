@@ -21,7 +21,7 @@ void forward_avgpool_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_avgpool_layer_gpu(avgpool_layer l, network net);
 #ifdef THREAD
-void forward_avgpool_layer_gpu_thread(netlayer* input);
+void forward_avgpool_layer_gpu_thread(netlayer* input, int id);
 #endif
 void backward_avgpool_layer_gpu(avgpool_layer l, network net);
 #endif
