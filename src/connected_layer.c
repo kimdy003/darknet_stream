@@ -69,12 +69,12 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
 #ifdef STREAM
 
     if(adam){
-        cuda_malloc_float_host(&l.m, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.v, l.nweights*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.bias_m, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.scale_m, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.bias_v, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.scale_v, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.m, l.inputs*l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.v, l.inputs*l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.bias_m, l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.scale_m, l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.bias_v, l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.scale_v, l.outputs*sizeof(float), __LINE__);
     }
     if(batch_normalize){
         l.scales = calloc(outputs, sizeof(float));
@@ -83,16 +83,16 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
             l.scales[i] = 1;
         }
 
-        cuda_malloc_float_host(&l.mean, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.variance, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.mean, outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.variance, outputs*sizeof(float), __LINE__);
 
-        cuda_malloc_float_host(&l.mean_delta, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.variance_delta, n*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.mean_delta, outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.variance_delta, outputs*sizeof(float), __LINE__);
 
-        cuda_malloc_float_host(&l.rolling_mean, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.rolling_variance, n*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.x, l.batch*l.outputs*sizeof(float), __LINE__);
-        cuda_malloc_float_host(&l.x_norm, l.batch*l.outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.rolling_mean, outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.rolling_variance, outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.x, batch*outputs*sizeof(float), __LINE__);
+        cuda_malloc_float_host(&l.x_norm, batch*outputs*sizeof(float), __LINE__);
     }
 #else
     if(adam){
