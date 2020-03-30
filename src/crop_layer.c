@@ -32,7 +32,7 @@ crop_layer make_crop_layer(int batch, int h, int w, int c, int crop_height, int 
     l.out_c = c;
     l.inputs = l.w * l.h * l.c;
     l.outputs = l.out_w * l.out_h * l.out_c;
-    #ifdef STREAM
+    #if 0
         cuda_malloc_float_host(&l.output, l.outputs*batch*sizeof(float), __LINE__);
     #else
         l.output = calloc(l.outputs*batch, sizeof(float));
