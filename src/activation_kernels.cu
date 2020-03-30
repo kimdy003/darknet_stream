@@ -193,9 +193,9 @@ __global__ void gradient_array_kernel(float *x, int n, ACTIVATION a, float *delt
     if(i < n) delta[i] *= gradient_kernel(x[i], a);
 }
 
-extern "C" void activate_array_gpu(float *x, int n, ACTIVATION a) 
+extern "C" void activate_array_gpu(float *x, int n, ACTIVATION a, int id) 
 {
-    activate_array_kernel<<<cuda_gridsize(n), BLOCK>>>(x, n, a);
+    activate_array_kernel<<<cuda_gridsize(n), BLOCK, 0 , stream_id(id)>>>(x, n, a);
     check_error(cudaPeekAtLastError());
 }
 
