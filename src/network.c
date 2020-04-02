@@ -335,7 +335,7 @@ void forward_network(network *netp)
         input.arg = &nl;
         input.flag = 0;
 #ifdef STREAM
-        thpool_add_work(thpool, forward_function_stream, &input, 0);
+        thpool_add_work(thpool, forward_function_stream, &input);
 #else
         thpool_add_work(thpool, forward_function, &input);
 #endif
