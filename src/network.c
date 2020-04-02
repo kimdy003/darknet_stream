@@ -772,7 +772,7 @@ float *network_predict(network *net, float *input)
     net->train = 0;
     net->delta = 0;
     forward_network(net);
-    network_outputs(net);
+    fprintf(stderr, "netoutput: %d \n", network_outputs(net));
     float *out = net->output;
     *net = orig;
     return out;
