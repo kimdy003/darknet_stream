@@ -637,6 +637,7 @@ void* predict_classifier2(test * input){
 	float *predictions = network_predict(net, X);
         if (net->hierarchy)
 	    	hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
+    print_network(net);
 	
 	top_k(predictions, net->outputs, top, indexes);
         fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, what_time_is_it_now() - time);
