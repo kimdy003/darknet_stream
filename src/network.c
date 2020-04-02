@@ -772,6 +772,7 @@ float *network_predict(network *net, float *input)
     net->train = 0;
     net->delta = 0;
     forward_network(net);
+    network_outputs(net);
     float *out = net->output;
     *net = orig;
     return out;
@@ -1062,6 +1063,7 @@ int network_inputs(network *net)
     return net->layers[0].inputs;
 }
 
+int network_outputs(network *net)
 {
     return network_output_layer(net).outputs;
 }
