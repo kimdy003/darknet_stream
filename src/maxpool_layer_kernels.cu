@@ -96,26 +96,39 @@ extern "C" void forward_maxpool_layer_gpu(maxpool_layer layer, network net)
     check_error(cudaPeekAtLastError());
 }
 #ifdef THREAD
-extern "C" void forward_maxpool_layer_gpu_thread(netlayer* input)
-{
-     
+    #ifdef STREAM
+        extern "C" void forward_maxpool_layer_gpu_thread_stream(netlayer* input, int id)
+        {
+            printf("\n\ncu id : %d \n\n", id);
 
-    network net = input->net;
-    layer layer = input->layer;
+            network net = input->net;
+            layer layer = input->layer;
 
-    int h = layer.out_h;
-    int w = layer.out_w;
-    int c = layer.c;
+            int h = layer.out_h;
+            int w = layer.out_w;
+            int c = layer.c;
 
-    size_t n = h*w*c*layer.batch;
+            size_t n = h*w*c*layer.batch;
 
-    forward_maxpool_layer_kernel<<<cuda_gridsize(n), BLOCK>>>(n, layer.h, layer.w, layer.c, layer.stride, layer.size, layer.pad, net.input_gpu, layer.output_gpu, layer.indexes_gpu);
-    check_error(cudaPeekAtLastError());
+            forward_maxpool_layer_kernel<<<cuda_gridsize(n), BLOCK, 0, stream_id(id)>>>(n, layer.h, layer.w, layer.c, layer.stride, layer.size, layer.pad, net.input_gpu, layer.output_gpu, layer.indexes_gpu);
+            check_error(cudaPeekAtLastError());
+        }
+    #else
+        extern "C" void forward_maxpool_layer_gpu_thread(netlayer* input)
+        {
+            network net = input->net;
+            layer layer = input->layer;
 
-     
-     
-     
-}
+            int h = layer.out_h;
+            int w = layer.out_w;
+            int c = layer.c;
+
+            size_t n = h*w*c*layer.batch;
+
+            forward_maxpool_layer_kernel<<<cuda_gridsize(n), BLOCK>>>(n, layer.h, layer.w, layer.c, layer.stride, layer.size, layer.pad, net.input_gpu, layer.output_gpu, layer.indexes_gpu);
+            check_error(cudaPeekAtLastError());
+        }
+    #endif
 #endif
 
 extern "C" void backward_maxpool_layer_gpu(maxpool_layer layer, network net)

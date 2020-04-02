@@ -90,25 +90,31 @@ dim3 cuda_gridsize(size_t n){
 #ifdef CUDNN
     #ifdef STREAM
     static cudaStream_t stream[8];
+    static int init_stream[8] = {0};
 
     //2020 0311 doyoung
     cudnnHandle_t cudnn_handle(int id, int line)
     {
-        static int init[8] = {0};
         static cudnnHandle_t handle[8];
         int i = id;
-        if(!init[i]) {
+        if(!init_stream[i]) {
             cudnnCreate(&handle[i]);
-	    cudaStreamCreate(&(stream[i]));
+	        cudaStreamCreate(&(stream[i]));
             cudaError_t status = cudnnSetStream(handle[i], stream[i]);
             check_error_line(status, line);
-            init[i] = 1;
+            init_stream[i] = 1;
         }
         
         return handle[i];
     }
 
     cudaStream_t stream_id(int id){
+        printf("\n\n cuda.c - id : %d", id);
+        int i = id;
+        if(!init_stream[i]) {
+	        cudaStreamCreate(&(stream[i]));
+            init_stream[i] = 1;
+        }
         return stream[id];
     }
 
