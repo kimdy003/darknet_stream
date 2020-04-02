@@ -21,8 +21,11 @@ void forward_maxpool_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_maxpool_layer_gpu(maxpool_layer l, network net);
 #ifdef THREAD
-void forward_maxpool_layer_gpu_thread(netlayer* input);
-void forward_maxpool_layer_gpu_thread_stream(netlayer* input, int id);
+	#ifdef STREAM
+	void forward_maxpool_layer_gpu_thread_stream(netlayer* input, int id);
+	#else
+	void forward_maxpool_layer_gpu_thread(netlayer* input);
+	#endif
 #endif
 void backward_maxpool_layer_gpu(maxpool_layer l, network net);
 #endif
