@@ -343,6 +343,7 @@ void forward_network(network *netp)
         {
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
+        print_network(nl.net);
         lastFlag = input.flag;
         net.input = l.output;
         net.input_gpu = l.output_gpu;
@@ -772,7 +773,6 @@ float *network_predict(network *net, float *input)
     net->train = 0;
     net->delta = 0;
     forward_network(net);
-    fprintf(stderr, "netoutput: %d \n", network_outputs(net));
     float *out = net->output;
     *net = orig;
     return out;
