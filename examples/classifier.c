@@ -633,7 +633,6 @@ void* predict_classifier2(test * input){
         float *X = r.data;
 	
 	int asd = 0;
-	fprintf(stderr, "Alex %d \n", asd++);
 
 	float *predictions = network_predict(net, X);
         if (net->hierarchy)
