@@ -344,7 +344,7 @@ void forward_network(network *netp)
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
         lastFlag = input.flag;
-
+        network_outputs(net);
         net.input = l.output;
         net.input_gpu = l.output_gpu;
         net.inputs = l.outputs;
