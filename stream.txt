@@ -1,19 +1,18 @@
+network : Dense: Predicted in 5.969187 seconds.
+network : Dense: Predicted in 6.013270 seconds.
+network : Dense: Predicted in 5.983048 seconds.
+network : Dense: Predicted in 6.060838 seconds.
+network : Dense: Predicted in 6.025112 seconds.
+network : Dense: Predicted in 6.064645 seconds.
+network : Dense: Predicted in 6.078920 seconds.
+network : Dense: Predicted in 6.100284 seconds.
+network : Dense: Predicted in 6.082408 seconds.
+network : Dense: Predicted in 6.093898 seconds.
+network : Dense: Predicted in 6.107802 seconds.
+network : Dense: Predicted in 6.073932 seconds.
+network : Dense: Predicted in 6.108766 seconds.
 ***** Des : 13 , Res : 0 , VGG : 0 , Alex : 0 *****
 
-network : Dense: Predicted in 6.608615 seconds.
-network : Dense: Predicted in 6.685189 seconds.
-network : Dense: Predicted in 6.638198 seconds.
-network : Dense: Predicted in 6.740164 seconds.
-network : Dense: Predicted in 6.691567 seconds.
-network : Dense: Predicted in 6.696498 seconds.
-network : Dense: Predicted in 6.715901 seconds.
-network : Dense: Predicted in 6.699940 seconds.
-network : Dense: Predicted in 6.764663 seconds.
-network : Dense: Predicted in 6.774646 seconds.
-network : Dense: Predicted in 6.768025 seconds.
-network : Dense: Predicted in 6.773244 seconds.
-network : Dense: Predicted in 6.780450 seconds.
-
-execution Time : 6.867004
+execution Time : 6.200856
 
 
