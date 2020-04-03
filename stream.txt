@@ -1,0 +1,19 @@
+***** Des : 13 , Res : 0 , VGG : 0 , Alex : 0 *****
+
+network : Dense: Predicted in 6.608615 seconds.
+network : Dense: Predicted in 6.685189 seconds.
+network : Dense: Predicted in 6.638198 seconds.
+network : Dense: Predicted in 6.740164 seconds.
+network : Dense: Predicted in 6.691567 seconds.
+network : Dense: Predicted in 6.696498 seconds.
+network : Dense: Predicted in 6.715901 seconds.
+network : Dense: Predicted in 6.699940 seconds.
+network : Dense: Predicted in 6.764663 seconds.
+network : Dense: Predicted in 6.774646 seconds.
+network : Dense: Predicted in 6.768025 seconds.
+network : Dense: Predicted in 6.773244 seconds.
+network : Dense: Predicted in 6.780450 seconds.
+
+execution Time : 6.867004
+
+
