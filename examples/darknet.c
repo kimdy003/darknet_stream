@@ -595,19 +595,19 @@ int main()
 */
 
     
-    for(int i=0; i<n_alex; i++){
-        pthread_join(networkArray_alex[i], NULL);
-    }
-    /*
-    for(int i=0; i<n_vgg; i++){
-        pthread_join(networkArray_vgg[i], NULL);
-    } 
     for(int i=0; i<n_des; i++){
         pthread_join(networkArray_des[i], NULL);
     } 
+    /*
     for(int i=0; i<n_res; i++){
         pthread_join(networkArray_res[i], NULL);
     }  
+    for(int i=0; i<n_vgg; i++){
+        pthread_join(networkArray_vgg[i], NULL);
+    } 
+    for(int i=0; i<n_alex; i++){
+        pthread_join(networkArray_alex[i], NULL);
+    }
     */
 #if 0
     //kmsjames 2020 0215
