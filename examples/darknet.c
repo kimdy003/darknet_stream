@@ -418,6 +418,7 @@ int main()
         FILE * fp = fopen("serial.txt", "a");
     #endif
     fprintf(fp,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
+    fprintf(fp,"***** ThREAD NUM POOL : %d *****\n", THREAD_NUM_POOL);
     //test_resize("data/bad.jpg");
     //test_box();
     //test_convolutional_layer();

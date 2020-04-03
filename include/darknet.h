@@ -26,7 +26,7 @@ extern "C" {
 extern int gpu_index;
 extern threadpool thpool;
 
-#define THREAD_NUM_POOL 8
+#define THREAD_NUM_POOL 16
 #define n_net 1 //hojin 8->2
 #define n_des 13
 #define n_res 0

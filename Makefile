@@ -19,7 +19,7 @@ ARCH= -gencode arch=compute_30,code=sm_30 \
 VPATH=./src/:./examples
 SLIB=libdarknet.so
 ALIB=libdarknet.a
-EXEC=thread_8
+EXEC=thread_16
 OBJDIR=./obj/
 
 CC=gcc
