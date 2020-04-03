@@ -39,8 +39,6 @@ extern pthread_mutex_t * mutex_t;
 extern int * cond_i;
 #endif
 
-FILE * do_result;
-
 /*��Ÿ������*/
 typedef struct{
     int classes;
