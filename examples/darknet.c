@@ -412,6 +412,12 @@ int* cond_i;
 
 int main()
 {
+    #ifdef STREAM
+        FILE * fp = fopen("stream.txt", "a");
+    #else
+        FILE * fp = fopen("serial.txt", "a");
+    #endif
+    fprintf(fp,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
     //test_resize("data/bad.jpg");
     //test_box();
     //test_convolutional_layer();
@@ -449,12 +455,6 @@ int main()
     network *alexNetwork[n_alex];
 
     int n_all = n_des+n_res+n_vgg+n_alex;
-    #ifdef STREAM
-        FILE * fp = fopen("stream.txt", "a");
-    #else
-        FILE * fp = fopen("serial.txt", "a");
-    #endif
-    fprintf(fp,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
 
 #ifdef THREAD
     //변수 동적할당
