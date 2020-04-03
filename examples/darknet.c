@@ -487,6 +487,7 @@ int main()
         denseNetwork[k] = (network *)load_network("cfg/densenet201.cfg", "densenet201.weights",0);
         denseNetwork[k]->index_n = k;
     }
+    /*
     for(unsigned int k=0;k<n_res;k++){
         resNetwork[k] = (network *)load_network("cfg/resnet152.cfg", "resnet152.weights",0);
         resNetwork[k]->index_n = k+n_des;
@@ -499,7 +500,7 @@ int main()
         alexNetwork[k] = (network *)load_network("cfg/alexnet.cfg","alexnet.weights",0);
         alexNetwork[k]->index_n = k+n_des+n_res+n_vgg;
     }
-    
+    */
     
     list *options = read_data_cfg("cfg/imagenet1k.data");
     char *name_list = option_find_str(options, "names", 0);
@@ -513,9 +514,9 @@ int main()
     char buff[256];
     char *input = buff;
     test *net_input_des[n_des];
-    test *net_input_res[n_res];
-    test *net_input_vgg[n_vgg];
-    test *net_input_alex[n_alex];
+    //test *net_input_res[n_res];
+    //test *net_input_vgg[n_vgg];
+    //test *net_input_alex[n_alex];
 
     while(1){
         printf("Enter Image Path: ");
@@ -530,9 +531,9 @@ int main()
 
     double time = what_time_is_it_now();
     pthread_t networkArray_des[n_des];
-    pthread_t networkArray_res[n_res];
-    pthread_t networkArray_vgg[n_vgg];
-    pthread_t networkArray_alex[n_alex];
+    //pthread_t networkArray_res[n_res];
+    //pthread_t networkArray_vgg[n_vgg];
+    //pthread_t networkArray_alex[n_alex];
 
 
     
@@ -549,7 +550,7 @@ int main()
             exit(0);
         }
     }
-
+/*
     for(int i=0; i<n_res; i++){
         net_input_res[i] = (test*)malloc(sizeof(test));
         net_input_res[i]->net = resNetwork[i];
@@ -591,12 +592,13 @@ int main()
             exit(0);
         }
     }
-
+*/
 
     
     for(int i=0; i<n_alex; i++){
         pthread_join(networkArray_alex[i], NULL);
     }
+    /*
     for(int i=0; i<n_vgg; i++){
         pthread_join(networkArray_vgg[i], NULL);
     } 
@@ -606,6 +608,7 @@ int main()
     for(int i=0; i<n_res; i++){
         pthread_join(networkArray_res[i], NULL);
     }  
+    */
 #if 0
     //kmsjames 2020 0215
     for(i=0; i<THREAD_NUM_POOL;i++)
