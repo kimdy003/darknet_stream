@@ -450,9 +450,9 @@ int main()
 
     int n_all = n_des+n_res+n_vgg+n_alex;
     #ifdef STREAM
-        fp = fopen("stream.txt", "a");
+        FILE * fp = fopen("stream.txt", "a");
     #else
-        fp = fopen("serial.txt", "a");
+        FILE * fp = fopen("serial.txt", "a");
     #endif
     fprintf(fp,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
 

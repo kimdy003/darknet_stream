@@ -711,7 +711,12 @@ void *predict_classifier2(test *input)
     
     time2 = what_time_is_it_now();
     fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
-    
+    #ifdef STREAM
+        FILE * fp = fopen("stream.txt", "a");
+    #else
+        FILE * fp = fopen("serial.txt", "a");
+    #endif
+
     if(fp){
         fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
     }else{
@@ -734,6 +739,7 @@ void *predict_classifier2(test *input)
     free_network(net);
     fprintf(stderr, "free_networkd : %s, time : %lf \n", input->netName, what_time_is_it_now() - time);
 #endif
+    fclose(fp);
     free(input);
     //hojin
     //while(1);

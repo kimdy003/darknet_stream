@@ -78,20 +78,14 @@ void forward_activation_layer_gpu(layer l, network net)
 }
 
 #ifdef THREAD
-void forward_activation_layer_gpu_thread(netlayer* input, int id){
+void forward_activation_layer_gpu_thread(netlayer* input){
 
     network net= input->net;
     layer l = input->layer;
-    int thid = id;
 
     copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
-    #ifdef STREAM
-        activate_array_gpu_stream(l.output_gpu, l.outputs*l.batch, l.activation, thid);
-    #else
-        activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
-    #endif
-     
-     
+    activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
+
 }
 #endif
 

@@ -28,7 +28,7 @@ extern threadpool thpool;
 
 #define THREAD_NUM_POOL 8
 #define n_net 1 //hojin 8->2
-#define n_des 0
+#define n_des 13
 #define n_res 0
 #define n_vgg 0
 #define n_alex 0
@@ -38,8 +38,6 @@ extern pthread_cond_t * cond_t;
 extern pthread_mutex_t * mutex_t;
 extern int * cond_i;
 #endif
-
-FILE *fp;
 
 /*��Ÿ������*/
 typedef struct{
