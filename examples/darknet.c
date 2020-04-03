@@ -450,11 +450,11 @@ int main()
 
     int n_all = n_des+n_res+n_vgg+n_alex;
     #ifdef STREAM
-        fp = fopen("stream.txt", "a");
+        do_result = fopen("stream.txt", "a");
     #else
-        fp = fopen("serial.txt", "a");
+        do_result = fopen("serial.txt", "a");
     #endif
-    fprintf(fp,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
+    fprintf(do_result,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
 
 #ifdef THREAD
     //변수 동적할당
@@ -614,7 +614,7 @@ int main()
 
     
     if(fp){
-        fprintf(fp, "\nexecution Time : %lf\n\n\n", what_time_is_it_now() - time);
+        fprintf(do_result, "\nexecution Time : %lf\n\n\n", what_time_is_it_now() - time);
     }else{
         fprintf(stderr,"file open error");
         exit(1);

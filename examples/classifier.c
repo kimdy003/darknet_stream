@@ -712,8 +712,8 @@ void *predict_classifier2(test *input)
     time2 = what_time_is_it_now();
     fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
     
-    if(fp){
-        fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
+    if(do_result){
+        fprintf(do_result, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
     }else{
         fprintf(stderr,"file open error\n");
         exit(1);
