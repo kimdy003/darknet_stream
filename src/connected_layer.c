@@ -29,7 +29,7 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
     l.out_w = 1;
     l.out_c = outputs;
 
-    #ifdef STREAM
+    #if 0
         cuda_malloc_float_host(&l.output, batch*outputs*sizeof(float), __LINE__);
         cuda_malloc_float_host(&l.delta, batch*outputs*sizeof(float), __LINE__);
         
@@ -66,7 +66,7 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
         l.biases[i] = 0;
     }
 
-#ifdef STREAM
+#if 0
 
     if(adam){
         cuda_malloc_float_host(&l.m, l.inputs*l.outputs*sizeof(float), __LINE__);
