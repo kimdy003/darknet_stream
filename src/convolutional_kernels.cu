@@ -173,6 +173,9 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 
 #ifdef CUDNN
     float one = 1;
+    if(id > 32)
+	id = 32;
+    fprintf(stderr, "convolution id : %d\n", id);
     //2020 0311 doyoung
     #ifdef STREAM
     //static 변수를 사용하기 위해 같은 함수 사용
@@ -190,6 +193,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     &one,
     l.dstTensorDesc,
     l.output_gpu);
+    
     cuda_syncronize(id, __LINE__);
     #else
     cudnnConvolutionForward(cudnn_handle(),
