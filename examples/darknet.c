@@ -449,7 +449,11 @@ int main()
     network *alexNetwork[n_alex];
 
     int n_all = n_des+n_res+n_vgg+n_alex;
-    fp = fopen("result.txt", "a");
+    #ifdef STREAM
+        fp = fopen("stream.txt", "a");
+    #else
+        fp = fopen("serial.txt", "a");
+    #endif
     fprintf(fp,"***** Des : %d , Res : %d , VGG : %d , Alex : %d *****\n",n_des,n_res,n_vgg,n_alex);
 
 #ifdef THREAD
