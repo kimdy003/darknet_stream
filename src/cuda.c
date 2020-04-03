@@ -109,7 +109,6 @@ dim3 cuda_gridsize(size_t n){
     }
 
     cudaStream_t stream_id(int id){
-        printf("\n\n cuda stream_id : %d \n\n", id);
         int i = id;
         if(!init_stream[i]) {
 	        cudaStreamCreate(&(stream[i]));
