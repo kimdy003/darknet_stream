@@ -493,7 +493,7 @@ int main()
         resNetwork[k]->index_n = k+n_des;
     }
     for(unsigned int k=0;k<n_vgg;k++){
-        vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg","vgg16.weights",0);
+        vggNetwork[k] = (network *)load_network("cfg/vgg-16.cfg","vgg-16.weights",0);
         vggNetwork[k]->index_n = k+n_des+n_res;
     }
     for(unsigned int k=0;k<n_alex;k++){
