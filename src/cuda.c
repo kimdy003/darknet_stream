@@ -89,13 +89,13 @@ dim3 cuda_gridsize(size_t n){
 
 #ifdef CUDNN
     #ifdef STREAM
-    static cudaStream_t stream[8];
-    static int init_stream[8] = {0};
+    static cudaStream_t stream[THREAD_NUM_POOL];
 
     //2020 0311 doyoung
     cudnnHandle_t cudnn_handle(int id, int line)
     {
-        static cudnnHandle_t handle[8];
+        static int init_stream[THREAD_NUM_POOL] = {0};
+        static cudnnHandle_t handle[THREAD_NUM_POOL];
         int i = id;
         if(!init_stream[i]) {
             cudnnCreate(&handle[i]);
@@ -106,15 +106,6 @@ dim3 cuda_gridsize(size_t n){
         }
         
         return handle[i];
-    }
-
-    cudaStream_t stream_id(int id){
-        int i = id;
-        if(!init_stream[i]) {
-	        cudaStreamCreate(&(stream[i]));
-            init_stream[i] = 1;
-        }
-        return stream[id];
     }
 
     void cuda_syncronize(int id, int line){

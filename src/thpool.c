@@ -158,7 +158,7 @@ struct thpool_* thpool_init(int num_threads){
 		thread_init(thpool_p, &thpool_p->threads[n], n);
 
 		//if(n == (num_threads-1)){
-			thpool_p->threads[n]->flag = 1;
+		thpool_p->threads[n]->flag = 1;
 		//}
 		//else{
 		//	thpool_p->threads[n]->flag = 0;
@@ -167,7 +167,7 @@ struct thpool_* thpool_init(int num_threads){
  
 		/* kmsjames 2020 0215 bug fix for pinning each thread on a specified CPU */
 		CPU_ZERO(&cpuset);
-		CPU_SET(n, &cpuset); //only this thread has the affinity for the 'n'-th CPU	
+		CPU_SET(n%8, &cpuset); //only this thread has the affinity for the 'n'-th CPU	
 		pthread_setaffinity_np(thpool_p->threads[n]->pthread, sizeof(cpu_set_t), &cpuset);
 
 #if THPOOL_DEBUG
