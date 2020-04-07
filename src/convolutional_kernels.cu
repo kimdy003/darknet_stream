@@ -178,6 +178,9 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     if(id > 32){
         id = 32;
     }
+    if(id > 7){
+        id = 7;
+    }
     //fprintf(stderr, "convolution id : %d\n", id);
     //2020 0311 doyoung
     #ifdef STREAM
