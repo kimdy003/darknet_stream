@@ -702,6 +702,9 @@ void *predict_classifier2(test *input)
     image r = letterbox_image(im, net->w, net->h);
     float *X = r.data;
 
+    FILE * net = fopen("result.txt", "a");
+    fprintf(net, "******* %s ******** \n", input->netName);
+    fclose(net);
     float *predictions = network_predict(net, X);
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);

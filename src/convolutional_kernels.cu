@@ -154,7 +154,9 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 #ifdef THREAD
 extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 {
-
+    FILE * fp = fopen("result.txt", "a");
+    
+    double time = what_time_is_it_now();
     network net = input->net;
     layer l = input->layer;
     
@@ -249,8 +251,8 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     //if(l.dot > 0) dot_error_gpu(l);
     if(l.binary || l.xnor) swap_binary(&l);
 
-     
-     
+     fprintf(fp, "convolution_kernel : %lf \n", what_time_is_it_now() - time);
+    fclose(fp); 
 }
 #endif
 
