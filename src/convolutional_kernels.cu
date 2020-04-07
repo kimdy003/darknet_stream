@@ -186,7 +186,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     if(id == 0){
 	    id = 1;
     }
-    cudnnConvolutionForward(cudnn_handle(id+1, __LINE__),
+    cudnnConvolutionForward(cudnn_handle(id, __LINE__),
     &one,
     l.srcTensorDesc,
     net.input_gpu,
