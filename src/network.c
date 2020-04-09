@@ -319,7 +319,6 @@ void forward_network(network *netp)
     {
         pthread_mutex_lock(&mutex_t[net.index_n]);
         cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
-	
 
         //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
         cond_i[net.index_n] = 1;
@@ -335,7 +334,7 @@ void forward_network(network *netp)
         input.arg = &nl;
         input.flag = 0;
         input.type = net.layers[i].type;
-	/*
+        /*
         if(net.layers[i].type == CONVOLUTIONAL){
             fprintf(stderr, "  type : convolution ");
         }
@@ -349,7 +348,7 @@ void forward_network(network *netp)
         {
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
-	//fprintf(stderr, "This is network.c \n");
+        //fprintf(stderr, "This is network.c \n");
         lastFlag = input.flag;
         net.input = l.output;
         net.input_gpu = l.output_gpu;
@@ -948,7 +947,7 @@ void print_network(network *net)
         int n = l.outputs;
         float mean = mean_array(output, n);
         float vari = variance_array(output, n);
-        fprintf(stderr, "Layer %d [%s]- Mean: %f, Variance: %f\n", i, get_layer_string(l.type),mean, vari);
+        fprintf(stderr, "Layer %d [%s]- Mean: %f, Variance: %f\n", i, get_layer_string(l.type), mean, vari);
         if (n > 10)
             n = 10;
         for (j = 0; j < n; ++j)

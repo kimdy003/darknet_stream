@@ -702,29 +702,32 @@ void *predict_classifier2(test *input)
     image r = letterbox_image(im, net->w, net->h);
     float *X = r.data;
 
-    FILE * conv_type = fopen("result.txt", "a");
+    FILE *conv_type = fopen("result.txt", "a");
     fprintf(conv_type, "******* %s ******** \n", input->netName);
     fclose(conv_type);
     float *predictions = network_predict(net, X);
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
     top_k(predictions, net->outputs, top, indexes);
-    
+
     time2 = what_time_is_it_now();
     fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
-    #ifdef STREAM
-        FILE * fp = fopen("stream.txt", "a");
-    #else
-        FILE * fp = fopen("serial.txt", "a");
-    #endif
+#ifdef STREAM
+    FILE *fp = fopen("stream.txt", "a");
+#else
+    FILE *fp = fopen("serial.txt", "a");
+#endif
 
-    if(fp){
+    if (fp)
+    {
         fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
-    }else{
-        fprintf(stderr,"file open error\n");
+    }
+    else
+    {
+        fprintf(stderr, "file open error\n");
         exit(1);
     }
-    
+
     for (i = 0; i < top; ++i)
     {
         int index = indexes[i];
