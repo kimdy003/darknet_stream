@@ -531,6 +531,7 @@ static int jobqueue_check(jobqueue* jobqueue_p){
 	job * job_p = jobqueue_p->front;
 
 	if(((th_arg *)job_p->arg)->type == CONVOLUTIONAL){
+		bsem_post(jobqueue_p->has_jobs);
 		return 1;
 	}
 	
