@@ -369,7 +369,7 @@ static void* thread_do(struct thread* thread_p){
 			if(jobqueue_check(&thpool_p->jobqueue)){
 				fprintf(stderr, "continue\n ");
 				bsem_post_all(thpool_p->jobqueue.has_jobs);
-				sleep(1);
+				sleep(0.001);
 				continue;
 			}
 			fprintf(stderr, "check = false \n");
