@@ -366,13 +366,12 @@ static void* thread_do(struct thread* thread_p){
 		if(thread_p->id == 0){
 			fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 			if(jobqueue_check(&thpool_p->jobqueue)){
-				fprintf(stderr, "continue");
-				continue;
+				fprintf(stderr, "continue\n ");
+				
 			}
 		}
 			
 		if (threads_keepalive){
-
 			pthread_mutex_lock(&thpool_p->thcount_lock);
 			thpool_p->num_threads_working++;
 			pthread_mutex_unlock(&thpool_p->thcount_lock);

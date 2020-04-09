@@ -10301,3 +10301,16 @@ convolution_kernel : 0.001154
 convolution_kernel : 0.001247 
 convolution_kernel : 0.003559 
 convolution_kernel : 0.000739 
+******* Dense ******** 
+******* Dense ******** 
+******* Dense ******** 
+******* Dense ******** 
+convolution_kernel : 0.005528 
+convolution_kernel : 0.003453 
+convolution_kernel : 0.003055 
+convolution_kernel : 0.004669 
+******* Dense ******** 
+convolution_kernel : 0.006289 
+convolution_kernel : 0.005147 
+convolution_kernel : 0.004443 
+******* Dense ******** 
