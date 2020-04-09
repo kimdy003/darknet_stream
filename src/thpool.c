@@ -360,9 +360,10 @@ static void* thread_do(struct thread* thread_p){
 	pthread_mutex_unlock(&thpool_p->thcount_lock);
 
 	while(threads_keepalive){
-		fprintf(stderr, "start  ");
+
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
+		// doyoung
 		if(thread_p->id == 0){
 			fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 			if(jobqueue_check(&thpool_p->jobqueue)){
@@ -531,7 +532,7 @@ static int jobqueue_check(jobqueue* jobqueue_p){
 	job * job_p = jobqueue_p->front;
 
 	if(((th_arg *)job_p->arg)->type == CONVOLUTIONAL){
-		jobqueue_p->has_jobs->v = 1;
+		bsem_post_all(jobqueue_p->has_jobs);
 		return 1;
 	}
 	
