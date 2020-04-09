@@ -368,7 +368,6 @@ static void* thread_do(struct thread* thread_p){
 			fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 			if(jobqueue_check(&thpool_p->jobqueue)){
 				fprintf(stderr, "continue\n ");
-				pthread_cond_broadcast();
 				continue;
 			}
 			fprintf(stderr, "id = 0 \n");
