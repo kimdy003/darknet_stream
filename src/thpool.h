@@ -205,7 +205,7 @@ typedef enum {
     LOGXENT,
     L2NORM,
     BLANK
-} _TYPE;
+} LAYER_TYPE;
 
 /* Binary semaphore */
 typedef struct bsem {

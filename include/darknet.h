@@ -25,6 +25,7 @@ extern "C" {
 #define SECRET_NUM -1234
 extern int gpu_index;
 extern threadpool thpool;
+extern LAYER_TYPE _TYPE;
 
 #define THREAD_NUM_POOL 8
 
@@ -80,40 +81,6 @@ typedef enum{
     MULT, ADD, SUB, DIV
 } BINARY_ACTIVATION;
 
-//���̾� Ÿ��
-typedef enum {
-    CONVOLUTIONAL,
-    DECONVOLUTIONAL,
-    CONNECTED,
-    MAXPOOL,
-    SOFTMAX,
-    DETECTION,
-    DROPOUT,
-    CROP,
-    ROUTE,
-    COST,
-    NORMALIZATION,
-    AVGPOOL,
-    LOCAL,
-    SHORTCUT,
-    ACTIVE,
-    RNN,
-    GRU,
-    LSTM,
-    CRNN,
-    BATCHNORM,
-    NETWORK,
-    XNOR,
-    REGION,
-    YOLO,
-    ISEG,
-    REORG,
-    UPSAMPLE,
-    LOGXENT,
-    L2NORM,
-    BLANK
-} LAYER_TYPE;
-
 //cost function
 
 typedef enum{
@@ -143,7 +110,7 @@ struct _netlayer;
 typedef struct _netlayer netlayer;
 
 struct layer{
-    LAYER_TYPE type;
+    _TYPE type;
     ACTIVATION activation;
     COST_TYPE cost_type;
     void (*forward)   (struct layer, struct network);
