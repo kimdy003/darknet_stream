@@ -360,16 +360,17 @@ static void* thread_do(struct thread* thread_p){
 	pthread_mutex_unlock(&thpool_p->thcount_lock);
 
 	while(threads_keepalive){
-
+		fprintf(stderr, "start  ");
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
 		if(thread_p->id == 0){
 			fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 			if(jobqueue_check(&thpool_p->jobqueue)){
 				fprintf(stderr, "continue\n ");
-				pthread_cond_signal(&thpool_p->threads_all_idle);
+				pthread_cond_broadcast(&thpool_p->threads_all_idle);
 				continue;
 			}
+			fprintf(stderr, "id = 0 \n");
 		}
 			
 		if (threads_keepalive){
