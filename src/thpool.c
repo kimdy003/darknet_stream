@@ -376,7 +376,7 @@ static void *thread_do(struct thread *thread_p)
 				//fprintf(stderr, "continue\n ");
 				bsem_post_all(thpool_p->jobqueue.has_jobs);
 				// 0.001 msec = 0.000001 sec
-				sleep(0.001);
+				//sleep(0.001);
 				continue;
 			}
 			//fprintf(stderr, "check = false \n");
