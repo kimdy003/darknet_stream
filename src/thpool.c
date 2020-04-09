@@ -97,7 +97,7 @@ static void  jobqueue_clear(jobqueue* jobqueue_p);
 static void  jobqueue_push(jobqueue* jobqueue_p, struct job* newjob_p);
 static struct job* jobqueue_pull(jobqueue* jobqueue_p);
 // doyoung
-static bool jobqueue_check(jobqueue* jobqueue_p);
+static int jobqueue_check(jobqueue* jobqueue_p);
 static void  jobqueue_destroy(jobqueue* jobqueue_p);
 
 static void  bsem_init(struct bsem *bsem_p, int value);
@@ -525,15 +525,15 @@ static struct job* jobqueue_pull(jobqueue* jobqueue_p){
 	return job_p;
 }
 
-static bool jobqueue_check(jobqueue* jobqueue_p){
+static int jobqueue_check(jobqueue* jobqueue_p){
 	pthread_mutex_lock(&jobqueue_p->rwmutex);
 	job * job_p = jobqueue_p->front;
 
 	if(((th_arg *)job_p->arg)->type == CONVOLUTIONAL){
-		return true;
+		return 1;
 	}
 	
-	return false;
+	return 0;
 }
 
 
