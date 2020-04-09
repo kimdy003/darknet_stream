@@ -10318,3 +10318,13 @@ convolution_kernel : 0.004443
 ******* Dense ******** 
 ******* Dense ******** 
 ******* Dense ******** 
+******* Dense ******** 
+convolution_kernel : 0.005719 
+******* Dense ******** 
+convolution_kernel : 0.005466 
+******* Dense ******** 
+******* Dense ******** 
+convolution_kernel : 0.005450 
+convolution_kernel : 0.004131 
+convolution_kernel : 0.003550 
+convolution_kernel : 0.004636 
