@@ -174,6 +174,38 @@ extern	   int thpool_num_threads_working(threadpool);
 #if 1 // 2020 0206 hojin
 /* ========================== STRUCTURES ============================ */
 
+typedef enum {
+    CONVOLUTIONAL,
+    DECONVOLUTIONAL,
+    CONNECTED,
+    MAXPOOL,
+    SOFTMAX,
+    DETECTION,
+    DROPOUT,
+    CROP,
+    ROUTE,
+    COST,
+    NORMALIZATION,
+    AVGPOOL,
+    LOCAL,
+    SHORTCUT,
+    ACTIVE,
+    RNN,
+    GRU,
+    LSTM,
+    CRNN,
+    BATCHNORM,
+    NETWORK,
+    XNOR,
+    REGION,
+    YOLO,
+    ISEG,
+    REORG,
+    UPSAMPLE,
+    LOGXENT,
+    L2NORM,
+    BLANK
+} _TYPE;
 
 /* Binary semaphore */
 typedef struct bsem {
@@ -229,39 +261,6 @@ typedef struct th_arg{
 	int flag;
 	_TYPE type;
 }th_arg;
-
-typedef enum {
-    CONVOLUTIONAL,
-    DECONVOLUTIONAL,
-    CONNECTED,
-    MAXPOOL,
-    SOFTMAX,
-    DETECTION,
-    DROPOUT,
-    CROP,
-    ROUTE,
-    COST,
-    NORMALIZATION,
-    AVGPOOL,
-    LOCAL,
-    SHORTCUT,
-    ACTIVE,
-    RNN,
-    GRU,
-    LSTM,
-    CRNN,
-    BATCHNORM,
-    NETWORK,
-    XNOR,
-    REGION,
-    YOLO,
-    ISEG,
-    REORG,
-    UPSAMPLE,
-    LOGXENT,
-    L2NORM,
-    BLANK
-} _TYPE;
 
 #endif
 
