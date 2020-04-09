@@ -369,9 +369,10 @@ static void* thread_do(struct thread* thread_p){
 			if(jobqueue_check(&thpool_p->jobqueue)){
 				fprintf(stderr, "continue\n ");
 				bsem_post_all(thpool_p->jobqueue.has_jobs);
+				thpool_p->jobqueue.has_jobs->v = 0;
 				continue;
 			}
-			fprintf(stderr, "id = 0 \n");
+			fprintf(stderr, "check = false \n");
 		}
 			
 		if (threads_keepalive){

@@ -347,7 +347,7 @@ void forward_network(network *netp)
         {
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
-	fprintf(stderr, "while end \n");
+	fprintf(stderr, "This is network.c \n");
         lastFlag = input.flag;
         net.input = l.output;
         net.input_gpu = l.output_gpu;
