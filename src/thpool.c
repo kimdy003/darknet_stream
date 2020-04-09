@@ -532,10 +532,10 @@ static int jobqueue_check(jobqueue* jobqueue_p){
 	job * job_p = jobqueue_p->front;
 
 	if(((th_arg *)job_p->arg)->type == CONVOLUTIONAL){
-		
+		pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 1;
 	}
-	
+	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return 0;
 }
 
