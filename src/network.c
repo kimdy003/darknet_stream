@@ -334,6 +334,10 @@ void forward_network(network *netp)
         th_arg input;
         input.arg = &nl;
         input.flag = 0;
+        input.type = net.layers[i].type;
+        if(net.layers[i].type == CONVOLUTIONAL){
+            fprintf(stderr, "  type : convolution ");
+        }
 #ifdef STREAM
         thpool_add_work(thpool, forward_function_stream, &input);
 #else

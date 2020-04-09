@@ -96,6 +96,8 @@ static int   jobqueue_init(jobqueue* jobqueue_p);
 static void  jobqueue_clear(jobqueue* jobqueue_p);
 static void  jobqueue_push(jobqueue* jobqueue_p, struct job* newjob_p);
 static struct job* jobqueue_pull(jobqueue* jobqueue_p);
+// doyoung
+static bool jobqueue_check(jobqueue* jobqueue_p);
 static void  jobqueue_destroy(jobqueue* jobqueue_p);
 
 static void  bsem_init(struct bsem *bsem_p, int value);
@@ -361,6 +363,14 @@ static void* thread_do(struct thread* thread_p){
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
+		if(thread_p->id == 0){
+			fprintf(stderr, "   thread_p : %d    ", thread_p->id);
+			if(jobqueue_check(&thpool_p->jobqueue)){
+				fprintf(stderr, "continue");
+				continue;
+			}
+		}
+			
 		if (threads_keepalive){
 
 			pthread_mutex_lock(&thpool_p->thcount_lock);
@@ -513,6 +523,17 @@ static struct job* jobqueue_pull(jobqueue* jobqueue_p){
 
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return job_p;
+}
+
+static bool jobqueue_check(jobqueue* jobqueue_p){
+	pthread_mutex_lock(&jobqueue_p->rwmutex);
+	job * job_p = jobqueue_p->front;
+
+	if(((th_arg *)job_p->arg)->type == CONVOLUTIONAL){
+		return true;
+	}
+	
+	return false;
 }
 
 

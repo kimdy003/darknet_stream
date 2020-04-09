@@ -227,7 +227,41 @@ typedef struct thpool_{
 typedef struct th_arg{
 	void* arg;
 	int flag;
+	_TYPE type;
 }th_arg;
+
+typedef enum {
+    CONVOLUTIONAL,
+    DECONVOLUTIONAL,
+    CONNECTED,
+    MAXPOOL,
+    SOFTMAX,
+    DETECTION,
+    DROPOUT,
+    CROP,
+    ROUTE,
+    COST,
+    NORMALIZATION,
+    AVGPOOL,
+    LOCAL,
+    SHORTCUT,
+    ACTIVE,
+    RNN,
+    GRU,
+    LSTM,
+    CRNN,
+    BATCHNORM,
+    NETWORK,
+    XNOR,
+    REGION,
+    YOLO,
+    ISEG,
+    REORG,
+    UPSAMPLE,
+    LOGXENT,
+    L2NORM,
+    BLANK
+} _TYPE;
 
 #endif
 
