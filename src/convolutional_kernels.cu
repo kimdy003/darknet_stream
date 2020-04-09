@@ -156,7 +156,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 {
     //FILE * fp = fopen("result.txt", "a");
     
-    double time = what_time_is_it_now();
+    //double time = what_time_is_it_now();
     network net = input->net;
     layer l = input->layer;
     
@@ -181,11 +181,6 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     //fprintf(stderr, "convolution id : %d\n", id);
     //2020 0311 doyoung
     #ifdef STREAM
-    //static 변수를 사용하기 위해 같은 함수 사용
-    //true - cudnnHandle, false - cudaStreamSynchronize
-    //if(id == 0){
-	//    id = 1;
-   // }
     cudnnConvolutionForward(cudnn_handle(id, __LINE__),
     &one,
     l.srcTensorDesc,
