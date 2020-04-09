@@ -25,7 +25,6 @@ extern "C" {
 #define SECRET_NUM -1234
 extern int gpu_index;
 extern threadpool thpool;
-extern LAYER_TYPE _TYPE;
 
 #define THREAD_NUM_POOL 8
 
@@ -110,7 +109,7 @@ struct _netlayer;
 typedef struct _netlayer netlayer;
 
 struct layer{
-    _TYPE type;
+    LAYER_TYPE type;
     ACTIVATION activation;
     COST_TYPE cost_type;
     void (*forward)   (struct layer, struct network);
