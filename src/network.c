@@ -335,9 +335,11 @@ void forward_network(network *netp)
         input.arg = &nl;
         input.flag = 0;
         input.type = net.layers[i].type;
+	/*
         if(net.layers[i].type == CONVOLUTIONAL){
             fprintf(stderr, "  type : convolution ");
         }
+	*/
 #ifdef STREAM
         thpool_add_work(thpool, forward_function_stream, &input);
 #else
@@ -347,7 +349,7 @@ void forward_network(network *netp)
         {
             pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
         }
-	fprintf(stderr, "This is network.c \n");
+	//fprintf(stderr, "This is network.c \n");
         lastFlag = input.flag;
         net.input = l.output;
         net.input_gpu = l.output_gpu;

@@ -365,14 +365,14 @@ static void* thread_do(struct thread* thread_p){
 
 		// doyoung
 		if(thread_p->id == 0){
-			fprintf(stderr, "   thread_p : %d    ", thread_p->id);
+			//fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 			if(jobqueue_check(&thpool_p->jobqueue)){
-				fprintf(stderr, "continue\n ");
+				//fprintf(stderr, "continue\n ");
 				bsem_post_all(thpool_p->jobqueue.has_jobs);
 				sleep(0.001);
 				continue;
 			}
-			fprintf(stderr, "check = false \n");
+			//fprintf(stderr, "check = false \n");
 		}
 			
 		if (threads_keepalive){
