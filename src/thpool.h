@@ -259,7 +259,7 @@ typedef struct thpool_{
 typedef struct th_arg{
 	void* arg;
 	int flag;
-	_TYPE type;
+	LAYER_TYPE type;
 }th_arg;
 
 #endif
