@@ -533,7 +533,6 @@ static int jobqueue_check(jobqueue* jobqueue_p){
 
 	if(((th_arg *)job_p->arg)->type == CONVOLUTIONAL){
 		bsem_post_all(jobqueue_p->has_jobs);
-		sleep(1);
 		pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 1;
 	}
