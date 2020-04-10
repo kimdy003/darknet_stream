@@ -366,7 +366,7 @@ static void *thread_do(struct thread *thread_p)
 	{
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-		
+	#if 0	
 		// doyoung
 		fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 		if (thread_p->id == 0)
@@ -384,7 +384,8 @@ static void *thread_do(struct thread *thread_p)
 		else{
 			fprintf(stderr, " \n");
 		}
-
+    #endif
+	
 		if (threads_keepalive)
 		{
 			pthread_mutex_lock(&thpool_p->thcount_lock);
