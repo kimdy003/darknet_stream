@@ -361,25 +361,28 @@ static void *thread_do(struct thread *thread_p)
 	pthread_mutex_lock(&thpool_p->thcount_lock);
 	thpool_p->num_threads_alive += 1;
 	pthread_mutex_unlock(&thpool_p->thcount_lock);
-
+	
 	while (threads_keepalive)
 	{
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-
+		
 		// doyoung
+		fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 		if (thread_p->id == 0)
 		{
-			//fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 			if (jobqueue_check(&thpool_p->jobqueue))
 			{
-				//fprintf(stderr, "continue\n ");
+				fprintf(stderr, " continue\n ");
 				bsem_post_all(thpool_p->jobqueue.has_jobs);
 				// 0.001 msec = 0.000001 sec
 				//sleep(0.001);
 				continue;
 			}
-			//fprintf(stderr, "check = false \n");
+			fprintf(stderr, "check = false \n");
+		}
+		else{
+			fprintf(stderr, " \n");
 		}
 
 		if (threads_keepalive)
@@ -415,7 +418,6 @@ static void *thread_do(struct thread *thread_p)
 				free(job_p);
 			}
 #endif
-
 			pthread_mutex_lock(&thpool_p->thcount_lock);
 			thpool_p->num_threads_working--;
 			if (!thpool_p->num_threads_working)
@@ -544,6 +546,7 @@ static int jobqueue_check(jobqueue *jobqueue_p)
 	{
 		//bsem_post_all(jobqueue_p->has_jobs);
 		pthread_mutex_unlock(&jobqueue_p->rwmutex);
+		fprintf(stderr,"%d",((th_arg *)job_p->arg)->type);
 		return 1;
 	}
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);
