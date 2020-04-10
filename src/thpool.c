@@ -365,13 +365,13 @@ static void *thread_do(struct thread *thread_p)
 	while (threads_keepalive)
 	{
 		if(thread_p->id == 0 && thpool_p->jobqueue.len == 0){
-			sleep(0.001);
+			//sleep(0.001);
 			continue;
 		}
 
 		if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == 0){
 			fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
-			sleep(0.001);
+			//sleep(0.001);
 			continue;
 		}
 
