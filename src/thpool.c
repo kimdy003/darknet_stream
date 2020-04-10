@@ -195,7 +195,7 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	/* add function and argument */
 	newjob->function = function_p;
 	newjob->arg = arg_p;
-
+	
 	/* add job to queue */
 	jobqueue_push(&thpool_p->jobqueue, newjob);
 
@@ -366,7 +366,7 @@ static void *thread_do(struct thread *thread_p)
 	{
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-	#if 0	
+	#if 1	
 		// doyoung
 		fprintf(stderr, "   thread_p : %d    ", thread_p->id);
 		if (thread_p->id == 0)
@@ -385,7 +385,7 @@ static void *thread_do(struct thread *thread_p)
 			fprintf(stderr, " \n");
 		}
     #endif
-	
+
 		if (threads_keepalive)
 		{
 			pthread_mutex_lock(&thpool_p->thcount_lock);
@@ -550,8 +550,8 @@ static int jobqueue_check(jobqueue *jobqueue_p)
 	if (((th_arg *)job_p->arg)->type == CONVOLUTIONAL)
 	{
 		//bsem_post_all(jobqueue_p->has_jobs);
+		fprintf(stderr, " [%d]", ((th_arg*)job_p->arg)->id);
 		pthread_mutex_unlock(&jobqueue_p->rwmutex);
-		fprintf(stderr,"%d",((th_arg *)job_p->arg)->type);
 		return 1;
 	}
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);

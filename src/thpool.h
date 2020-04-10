@@ -260,6 +260,7 @@ typedef struct th_arg{
 	void* arg;
 	int flag;
 	LAYER_TYPE type;
+	int id;
 }th_arg;
 
 #endif
