@@ -195,6 +195,7 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	/* add function and argument */
 	newjob->function = function_p;
 	newjob->arg = arg_p;
+	newjob->flag = 1;
 	
 	/* add job to queue */
 	jobqueue_push(&thpool_p->jobqueue, newjob);
@@ -377,7 +378,8 @@ static void *thread_do(struct thread *thread_p)
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 		fprintf(stderr, " [%d - %d]  thread_p : %d   \n ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
-	#if 0	
+	
+	#if 0
 		// doyoung
 		fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
 		if (thread_p->id == 0)
@@ -397,9 +399,10 @@ static void *thread_do(struct thread *thread_p)
 		}
     #endif
 
-		if (threads_keepalive)
+		if (threads_keepalive && thpool_p->jobqueue.front->flag == 1)
 		{
 			pthread_mutex_lock(&thpool_p->thcount_lock);
+			thpool_p->jobqueue.front->flag = 0;
 			thpool_p->num_threads_working++;
 			pthread_mutex_unlock(&thpool_p->thcount_lock);
 
