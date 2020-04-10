@@ -540,6 +540,8 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 static int jobqueue_check(jobqueue *jobqueue_p)
 {
 	//pthread_mutex_lock(&jobqueue_p->rwmutex);
+	if(jobqueue_p->len == 0)
+		return 0;
 	job *job_p = jobqueue_p->front;
 
 	if (((th_arg *)job_p->arg)->type == CONVOLUTIONAL)
