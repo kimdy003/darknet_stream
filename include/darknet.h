@@ -30,9 +30,9 @@ extern "C"
 #define THREAD_NUM_POOL 8
 
 #define n_des 2
-#define n_res 0
-#define n_vgg 0
-#define n_alex 0
+#define n_res 2
+#define n_vgg 1
+#define n_alex 2
 
 #ifdef THREAD
     extern pthread_cond_t *cond_t;
