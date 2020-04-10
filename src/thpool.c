@@ -397,9 +397,9 @@ static void *thread_do(struct thread *thread_p)
 #ifdef STREAM
 			void (*func_buff)(void *, int);
 			void *arg_buff;
-			fprintf(stderr, " [%d = %d]  start   ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
+			fprintf(stderr, "  start   ", );
 			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			fprintf(stderr, " [%d = %d]   end    \n",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
+			fprintf(stderr, "   end    \n", );
 			if (job_p)
 			{
 				func_buff = job_p->function;
