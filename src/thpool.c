@@ -364,9 +364,16 @@ static void *thread_do(struct thread *thread_p)
 	
 	while (threads_keepalive)
 	{
+		if(thpool_p->jobqueue.len == 0){
+			continue;
+		}
+
+		if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == CONVOLUTIONAL){
+			continue;
+		}
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-	#if 1	
+	#if 0	
 		// doyoung
 		fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
 		if (thread_p->id == 0)
