@@ -369,6 +369,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 
 		if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == CONVOLUTIONAL){
+			fprintf(stderr, "id = 0 && conv \n");
 			continue;
 		}
 
