@@ -399,9 +399,9 @@ static void *thread_do(struct thread *thread_p)
 			void *arg_buff;
 			fprintf(stderr, "  start   " );
 			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			fprintf(stderr, "   end    \n" );
 			if (job_p)
 			{
+			fprintf(stderr, "   end    \n" );
 				func_buff = job_p->function;
 				arg_buff = job_p->arg;
 				((th_arg *)arg_buff)->flag = thread_p->flag;
