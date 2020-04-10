@@ -368,7 +368,7 @@ static void *thread_do(struct thread *thread_p)
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 	#if 1	
 		// doyoung
-		fprintf(stderr, "   thread_p : %d    ", thread_p->id);
+		fprintf(stderr, " [%d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id ,thread_p->id);
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
@@ -550,7 +550,7 @@ static int jobqueue_check(jobqueue *jobqueue_p)
 	if (((th_arg *)job_p->arg)->type == CONVOLUTIONAL)
 	{
 		//bsem_post_all(jobqueue_p->has_jobs);
-		fprintf(stderr, " [%d]", ((th_arg*)job_p->arg)->id);
+		//fprintf(stderr, " [%d]", ((th_arg*)job_p->arg)->id);
 		pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 1;
 	}
