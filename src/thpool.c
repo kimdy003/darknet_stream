@@ -365,11 +365,13 @@ static void *thread_do(struct thread *thread_p)
 	while (threads_keepalive)
 	{
 		if(thread_p->id == 0 && thpool_p->jobqueue.len == 0){
+			sleep(0.001);
 			continue;
 		}
 
 		if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == CONVOLUTIONAL){
 			fprintf(stderr, "id = 0 && conv \n");
+			sleep(0.001);
 			continue;
 		}
 
