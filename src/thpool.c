@@ -539,19 +539,21 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 static int jobqueue_check(jobqueue *jobqueue_p)
 {
-	//pthread_mutex_lock(&jobqueue_p->rwmutex);
-	if(jobqueue_p->len == 0)
+	pthread_mutex_lock(&jobqueue_p->rwmutex);
+	if(jobqueue_p->len == 0){
+		pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 0;
+	}	
 	job *job_p = jobqueue_p->front;
 
 	if (((th_arg *)job_p->arg)->type == CONVOLUTIONAL)
 	{
 		//bsem_post_all(jobqueue_p->has_jobs);
-		//pthread_mutex_unlock(&jobqueue_p->rwmutex);
+		pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		fprintf(stderr,"%d",((th_arg *)job_p->arg)->type);
 		return 1;
 	}
-	//pthread_mutex_unlock(&jobqueue_p->rwmutex);
+	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return 0;
 }
 
