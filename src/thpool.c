@@ -364,7 +364,7 @@ static void *thread_do(struct thread *thread_p)
 	
 	while (threads_keepalive)
 	{
-		if(thpool_p->jobqueue.len == 0){
+		if(thread_p->id == 0 && thpool_p->jobqueue.len == 0){
 			continue;
 		}
 
@@ -373,6 +373,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 
 		bsem_wait(thpool_p->jobqueue.has_jobs);
+		fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
 	#if 0	
 		// doyoung
 		fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
@@ -404,11 +405,9 @@ static void *thread_do(struct thread *thread_p)
 #ifdef STREAM
 			void (*func_buff)(void *, int);
 			void *arg_buff;
-			fprintf(stderr, "  start   " );
 			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
 			if (job_p)
 			{
-			fprintf(stderr, "   end    \n" );
 				func_buff = job_p->function;
 				arg_buff = job_p->arg;
 				((th_arg *)arg_buff)->flag = thread_p->flag;
