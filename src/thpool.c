@@ -401,7 +401,7 @@ static void *thread_do(struct thread *thread_p)
 
 		if (threads_keepalive && thpool_p->jobqueue.front->flag == 1)
 		{
-			fprintf(stderr, "{{{{{{%d}}}}}}}\n", thread_p->id);
+			fprintf(stderr, "{{{{{{start : %d}}}}}}}\n", thread_p->id);
 			pthread_mutex_lock(&thpool_p->thcount_lock);
 			thpool_p->jobqueue.front->flag = 0;
 			thpool_p->num_threads_working++;
@@ -413,6 +413,7 @@ static void *thread_do(struct thread *thread_p)
 			void (*func_buff)(void *, int);
 			void *arg_buff;
 			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
+			fprintf(stderr, "{{{{{{end : %d}}}}}}}\n", thread_p->id);
 			if (job_p)
 			{
 				func_buff = job_p->function;
