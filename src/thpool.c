@@ -383,7 +383,7 @@ static void *thread_do(struct thread *thread_p)
 
 #if 1
 		// doyoung
-		#if 1
+		#if 0
 		if (thpool_p->jobqueue.front != NULL)
 			fprintf(stderr, " [%d - %d]  thread_p : %d    ", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
 		#endif
@@ -551,7 +551,7 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 static int jobqueue_check(jobqueue *jobqueue_p)
 {
-	if (jobqueue_p->len == 0)
+	if (jobqueue_p->len == 0 || jobqueue_p->front == NULL)
 	{
 		return 0;
 	}
