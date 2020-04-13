@@ -383,20 +383,22 @@ static void *thread_do(struct thread *thread_p)
 
 #if 1
 		// doyoung
+		#if 0
 		if (thpool_p->jobqueue.front != NULL)
 			fprintf(stderr, " [%d - %d]  thread_p : %d    ", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
+		#endif
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
 			{
-				fprintf(stderr, " continue\n ");
+				//fprintf(stderr, " continue\n ");
 				continue;
 			}
-			fprintf(stderr, "check = false \n");
+			//fprintf(stderr, "check = false \n");
 		}
 		else
 		{
-			fprintf(stderr, " \n");
+			//fprintf(stderr, " \n");
 		}
 #endif
 
