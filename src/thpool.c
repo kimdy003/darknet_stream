@@ -366,27 +366,25 @@ static void *thread_do(struct thread *thread_p)
 	while (threads_keepalive)
 	{
 #if 1
-		if(thpool_p->jobqueue.front != NULL){
-			if(thread_p->id == 0 && thpool_p->jobqueue.len == 0){
-				continue;
-			}
-
-			if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == 0){
-				//fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
-				continue;
+		if (thpool_p->jobqueue.front != NULL)
+		{
+			if (thread_p->id == 0)
+			{
+				if (thpool_p->jobqueue.len == 0 || ((th_arg *)thpool_p->jobqueue.front->arg)->type == 0)
+				{
+					continue;
+				}
 			}
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
-		//fprintf(stderr, " [%d - %d]  thread_p : %d   \n ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
-
 #if 0
 		// doyoung
-		#if 1
+#if 1
 		if (thpool_p->jobqueue.front != NULL)
 			fprintf(stderr, " [%d - %d]  thread_p : %d    ", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
-		#endif
+#endif
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
@@ -414,7 +412,6 @@ static void *thread_do(struct thread *thread_p)
 			void (*func_buff)(void *, int);
 			void *arg_buff;
 			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			//fprintf(stderr, "{{{{{{end : %d}}}}}}}\n", thread_p->id);
 			if (job_p)
 			{
 				func_buff = job_p->function;
