@@ -196,7 +196,7 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	newjob->function = function_p;
 	newjob->arg = arg_p;
 	newjob->flag = 1;
-	
+
 	/* add job to queue */
 	jobqueue_push(&thpool_p->jobqueue, newjob);
 
@@ -362,56 +362,47 @@ static void *thread_do(struct thread *thread_p)
 	pthread_mutex_lock(&thpool_p->thcount_lock);
 	thpool_p->num_threads_alive += 1;
 	pthread_mutex_unlock(&thpool_p->thcount_lock);
-	
+
 	while (threads_keepalive)
 	{
-	#if 0
-		pthread_mutex_lock(&thpool_p->thcount_lock);
+#if 0
 		if(thread_p->id == 0 && thpool_p->jobqueue.len == 0){
-			pthread_mutex_unlock(&thpool_p->thcount_lock);
 			//sleep(0.001);
 			continue;
 		}
 
-		pthread_mutex_lock(&thpool_p->thcount_lock);
 		if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == 0){
-			pthread_mutex_lock(&thpool_p->thcount_lock);
 			fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
 			//sleep(0.001);
 			continue;
 		}
-	#endif
+#endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-		
+
 		//fprintf(stderr, " [%d - %d]  thread_p : %d   \n ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
-	
-	#if 1
+
+#if 1
 		// doyoung
-		//pthread_mutex_lock(&thpool_p->jobqueue.rwmutex);
-		//fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)(thpool_p->jobqueue.front->arg))->id, ((th_arg*)(thpool_p->jobqueue.front->arg))->n ,thread_p->id);
-		//pthread_mutex_unlock(&thpool_p->jobqueue.rwmutex);
+		if (thpool_p->jobqueue.front != NULL)
+			fprintf(stderr, " [%d - %d]  thread_p : %d    ", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
 			{
 				fprintf(stderr, " continue\n ");
-				//bsem_post_all(thpool_p->jobqueue.has_jobs);
-				// 0.001 msec = 0.000001 sec
-				//sleep(0.001);
 				continue;
 			}
 			fprintf(stderr, "check = false \n");
 		}
-		else{
+		else
+		{
 			fprintf(stderr, " \n");
 		}
-    #endif
+#endif
 
 		if (threads_keepalive)
 		{
-			//fprintf(stderr, "{{{{{{start : %d}}}}}}}\n", thread_p->id);
 			pthread_mutex_lock(&thpool_p->thcount_lock);
-			//thpool_p->jobqueue.front->flag = 0;
 			thpool_p->num_threads_working++;
 			pthread_mutex_unlock(&thpool_p->thcount_lock);
 
@@ -501,8 +492,7 @@ static void jobqueue_clear(jobqueue *jobqueue_p)
 	jobqueue_p->len = 0;
 }
 
-/* Add (allocated) job to queue
- */
+/* Add (allocated) job to queue */
 static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 {
 
@@ -527,12 +517,7 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 }
 
-/* Get first job from queue(removes it from queue)
- *
- * Notice: Caller MUST hold a mutex
-=======
->>>>>>> da2c0fe45e43ce0937f272c8cd2704bdc0afb490
- */
+/* Get first job from queue(removes it from queue) */
 static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 {
 
@@ -564,21 +549,16 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 static int jobqueue_check(jobqueue *jobqueue_p)
 {
-	//pthread_mutex_lock(&jobqueue_p->rwmutex);
-	if(jobqueue_p->len == 0){
-		//pthread_mutex_unlock(&jobqueue_p->rwmutex);
+	if (jobqueue_p->len == 0)
+	{
 		return 0;
-	}	
+	}
 	job *job_p = jobqueue_p->front;
 
 	if (((th_arg *)job_p->arg)->type == CONVOLUTIONAL)
 	{
-		//bsem_post_all(jobqueue_p->has_jobs);
-		//fprintf(stderr, " [%d]", ((th_arg*)job_p->arg)->id);
-		//pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 1;
 	}
-	//pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return 0;
 }
 
