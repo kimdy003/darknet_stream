@@ -383,7 +383,7 @@ static void *thread_do(struct thread *thread_p)
 
 #if 1
 		// doyoung
-		#if 1
+		#if 0
 		if (thpool_p->jobqueue.front != NULL)
 			fprintf(stderr, " [%d - %d]  thread_p : %d    ", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
 		#endif
