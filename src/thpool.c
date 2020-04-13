@@ -368,7 +368,7 @@ static void *thread_do(struct thread *thread_p)
 #if 1
 		if (thpool_p->jobqueue.front != NULL)
 		{
-			fprint(stderr, "thread_p : %d   @@   ", thread_p->id);
+			fprintf(stderr, "thread_p : %d   @@   ", thread_p->id);
 			if (thread_p->id == 0)
 			{
 				if (thpool_p->jobqueue.len == 0 || ((th_arg *)thpool_p->jobqueue.front->arg)->type == 0)
