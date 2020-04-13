@@ -383,13 +383,11 @@ static void *thread_do(struct thread *thread_p)
 	#endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 		
-		pthread_mutex_lock(&thpool_p->thcount_lock);
-		fprintf(stderr, " [%d - %d]  thread_p : %d   \n ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
-		pthread_mutex_unlock(&thpool_p->thcount_lock);
-
-	#if 0
+		//fprintf(stderr, " [%d - %d]  thread_p : %d   \n ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
+	
+	#if 1
 		// doyoung
-		fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
+		//fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
