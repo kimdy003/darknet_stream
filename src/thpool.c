@@ -387,9 +387,9 @@ static void *thread_do(struct thread *thread_p)
 	
 	#if 1
 		// doyoung
-		pthread_mutex_lock(&thpool_p->jobqueue.rwmutex);
+		pthread_mutex_lock(&((jobqueue *)thpool_p->jobqueue)->rwmutex);
 		fprintf(stderr, " [%d - %d]  thread_p : %d    ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
-		pthread_mutex_unlock(&thpool_p->jobqueue.rwmutex);
+		pthread_mutex_unlock(&((jobqueue *)thpool_p->jobqueue)->rwmutex);
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
