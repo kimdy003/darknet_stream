@@ -1,44 +1,13 @@
-network : Res: Predicted in 2.075388 seconds.
-network : Res: Predicted in 2.070756 seconds.
-network : VGG: Predicted in 2.221201 seconds.
-network : Alex: Predicted in 2.213888 seconds.
-network : Alex: Predicted in 2.211194 seconds.
-network : Dense: Predicted in 2.277417 seconds.
-network : Dense: Predicted in 2.294287 seconds.
+network : Res: Predicted in 1.789251 seconds.
+network : Res: Predicted in 1.797184 seconds.
+network : Alex: Predicted in 1.939700 seconds.
+network : VGG: Predicted in 1.948351 seconds.
+network : Alex: Predicted in 1.947998 seconds.
+network : Dense: Predicted in 1.947746 seconds.
+network : Dense: Predicted in 1.958646 seconds.
 ***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
 ***** ThREAD NUM POOL : 8 *****
 
-execution Time : 2.328902
+execution Time : 1.991249
 
 
-network : Alex: Predicted in 1.163225 seconds.
-network : VGG: Predicted in 1.166178 seconds.
-network : Alex: Predicted in 1.165133 seconds.
-network : Res: Predicted in 2.043871 seconds.
-network : Res: Predicted in 2.045925 seconds.
-
-
-network : Res: Predicted in 1.410508 seconds.
-network : Res: Predicted in 1.416274 seconds.
-network : VGG: Predicted in 1.497994 seconds.
-network : Alex: Predicted in 1.485114 seconds.
-network : Alex: Predicted in 1.506993 seconds.
-network : Dense: Predicted in 1.557207 seconds.
-network : Dense: Predicted in 1.564803 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 1.594020
-
-
-network : Res: Predicted in 2.102320 seconds.
-network : Res: Predicted in 2.138229 seconds.
-network : Alex: Predicted in 2.209655 seconds.
-network : VGG: Predicted in 2.208609 seconds.
-network : Alex: Predicted in 2.194865 seconds.
-network : Res: Predicted in 2.008957 seconds.
-network : Res: Predicted in 2.052099 seconds.
-network : Alex: Predicted in 2.120678 seconds.
-network : Alex: Predicted in 2.115196 seconds.
-network : VGG: Predicted in 2.119187 seconds.
-network : Dense: Predicted in 2.155019 seconds.
