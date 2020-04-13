@@ -387,9 +387,9 @@ static void *thread_do(struct thread *thread_p)
 	
 	#if 1
 		// doyoung
-		pthread_mutex_lock(&thpool_p->jobqueue.rwmutex);
+		//pthread_mutex_lock(&thpool_p->jobqueue.rwmutex);
 		fprintf(stderr, "  thread_p : %d    ",  thread_p->id);
-		pthread_mutex_unlock(&thpool_p->jobqueue.rwmutex);
+		//pthread_mutex_unlock(&thpool_p->jobqueue.rwmutex);
 		if (thread_p->id == 0)
 		{
 			if (jobqueue_check(&thpool_p->jobqueue))
@@ -564,9 +564,9 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 static int jobqueue_check(jobqueue *jobqueue_p)
 {
-	pthread_mutex_lock(&jobqueue_p->rwmutex);
+	//pthread_mutex_lock(&jobqueue_p->rwmutex);
 	if(jobqueue_p->len == 0){
-		pthread_mutex_unlock(&jobqueue_p->rwmutex);
+		//pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 0;
 	}	
 	job *job_p = jobqueue_p->front;
@@ -575,10 +575,10 @@ static int jobqueue_check(jobqueue *jobqueue_p)
 	{
 		//bsem_post_all(jobqueue_p->has_jobs);
 		//fprintf(stderr, " [%d]", ((th_arg*)job_p->arg)->id);
-		pthread_mutex_unlock(&jobqueue_p->rwmutex);
+		//pthread_mutex_unlock(&jobqueue_p->rwmutex);
 		return 1;
 	}
-	pthread_mutex_unlock(&jobqueue_p->rwmutex);
+	//pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return 0;
 }
 

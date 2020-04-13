@@ -36,138 +36,112 @@ network : Dense: Predicted in 3.582009 seconds.
 execution Time : 3.642364
 
 
-network : Dense: Predicted in 0.854724 seconds.
-***** Des : 1 , Res : 0 , VGG : 0 , Alex : 0 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 0.885295
-
-
-network : Dense: Predicted in 1.270383 seconds.
-network : Dense: Predicted in 1.273726 seconds.
-***** Des : 2 , Res : 0 , VGG : 0 , Alex : 0 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 1.301895
-
-
-network : Dense: Predicted in 1.385777 seconds.
-network : Dense: Predicted in 1.389309 seconds.
-***** Des : 2 , Res : 0 , VGG : 0 , Alex : 0 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 1.417182
-
-
-network : Dense: Predicted in 1.226026 seconds.
-network : Dense: Predicted in 1.229349 seconds.
-***** Des : 2 , Res : 0 , VGG : 0 , Alex : 0 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 1.256303
-
-
-network : Res: Predicted in 3.445361 seconds.
-network : Res: Predicted in 3.459407 seconds.
-network : Alex: Predicted in 3.594914 seconds.
-network : Alex: Predicted in 3.597683 seconds.
-network : VGG: Predicted in 3.597941 seconds.
-network : Dense: Predicted in 3.664723 seconds.
-network : VGG: Predicted in 2.419598 seconds.
-network : Alex: Predicted in 2.420596 seconds.
-network : Alex: Predicted in 2.421441 seconds.
-network : Res: Predicted in 2.919179 seconds.
-network : Res: Predicted in 2.928594 seconds.
-network : Dense: Predicted in 3.093111 seconds.
-network : Dense: Predicted in 3.101437 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 3.129854
-
-
-network : Res: Predicted in 2.881420 seconds.
-network : Res: Predicted in 2.892829 seconds.
-network : Alex: Predicted in 2.958293 seconds.
-network : VGG: Predicted in 2.961126 seconds.
-network : Alex: Predicted in 2.961946 seconds.
-network : Alex: Predicted in 3.111564 seconds.
-network : Alex: Predicted in 3.129367 seconds.
-network : VGG: Predicted in 3.133779 seconds.
-network : Res: Predicted in 3.232326 seconds.
-network : Res: Predicted in 3.251588 seconds.
-network : Alex: Predicted in 2.983641 seconds.
-network : VGG: Predicted in 2.975603 seconds.
-network : Alex: Predicted in 2.983329 seconds.
-network : Res: Predicted in 2.993671 seconds.
-network : Res: Predicted in 2.996673 seconds.
-network : Dense: Predicted in 3.099006 seconds.
-network : Dense: Predicted in 3.101954 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 3.131146
-
-
-network : Alex: Predicted in 2.873721 seconds.
-network : Alex: Predicted in 2.875750 seconds.
-network : VGG: Predicted in 2.876575 seconds.
-network : Res: Predicted in 2.990657 seconds.
-network : Res: Predicted in 3.018038 seconds.
-network : Alex: Predicted in 2.951522 seconds.
-network : Alex: Predicted in 2.943101 seconds.
-network : VGG: Predicted in 2.949417 seconds.
-network : Res: Predicted in 2.948436 seconds.
-network : Res: Predicted in 2.953071 seconds.
-network : Dense: Predicted in 3.041644 seconds.
-network : Dense: Predicted in 3.045574 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 3.074494
-
-
-network : Alex: Predicted in 3.274683 seconds.
-network : Alex: Predicted in 3.299434 seconds.
-network : VGG: Predicted in 3.301883 seconds.
-network : Res: Predicted in 3.478850 seconds.
-network : Res: Predicted in 3.520729 seconds.
-network : Dense: Predicted in 3.634510 seconds.
-network : Dense: Predicted in 3.666254 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 3.696921
-
-
-network : Alex: Predicted in 3.005758 seconds.
-network : Alex: Predicted in 3.003662 seconds.
-network : VGG: Predicted in 3.011385 seconds.
-network : Res: Predicted in 3.026102 seconds.
-network : Res: Predicted in 3.041290 seconds.
-network : Dense: Predicted in 3.145574 seconds.
-network : Dense: Predicted in 3.147458 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 3.179616
-
-
-network : Alex: Predicted in 2.913306 seconds.
-network : Alex: Predicted in 2.914630 seconds.
-network : VGG: Predicted in 2.913923 seconds.
-network : Res: Predicted in 2.974095 seconds.
-network : Res: Predicted in 2.979753 seconds.
-network : Dense: Predicted in 3.099713 seconds.
-network : Dense: Predicted in 3.106504 seconds.
-***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
-***** ThREAD NUM POOL : 8 *****
-
-execution Time : 3.135578
-
-
 network : Alex: Predicted in 3.542421 seconds.
 network : Alex: Predicted in 3.527340 seconds.
 network : VGG: Predicted in 3.519468 seconds.
 network : Res: Predicted in 3.592739 seconds.
 network : Res: Predicted in 3.584111 seconds.
+network : Res: Predicted in 3.480668 seconds.
+network : Res: Predicted in 3.490352 seconds.
+network : Alex: Predicted in 3.645608 seconds.
+network : VGG: Predicted in 3.640721 seconds.
+network : Alex: Predicted in 3.645831 seconds.
+network : Dense: Predicted in 3.682998 seconds.
+network : Dense: Predicted in 3.707093 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.746172
+
+
+network : Res: Predicted in 3.264739 seconds.
+network : Alex: Predicted in 3.353344 seconds.
+network : Alex: Predicted in 3.353228 seconds.
+network : VGG: Predicted in 3.354599 seconds.
+network : Res: Predicted in 3.356611 seconds.
+network : Dense: Predicted in 3.442355 seconds.
+network : Dense: Predicted in 3.447413 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.480891
+
+
+network : Alex: Predicted in 3.097679 seconds.
+network : VGG: Predicted in 3.103094 seconds.
+network : Alex: Predicted in 3.106001 seconds.
+network : Res: Predicted in 3.186090 seconds.
+network : Res: Predicted in 3.189546 seconds.
+network : Dense: Predicted in 3.327900 seconds.
+network : Dense: Predicted in 3.334918 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.369820
+
+
+network : Alex: Predicted in 3.104343 seconds.
+network : Alex: Predicted in 3.107679 seconds.
+network : VGG: Predicted in 3.108493 seconds.
+network : Res: Predicted in 3.211077 seconds.
+network : Res: Predicted in 3.223534 seconds.
+network : Dense: Predicted in 3.344338 seconds.
+network : Dense: Predicted in 3.348702 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.383678
+
+
+network : Alex: Predicted in 3.186858 seconds.
+network : VGG: Predicted in 3.188551 seconds.
+network : Alex: Predicted in 3.190016 seconds.
+network : Res: Predicted in 3.273922 seconds.
+network : Res: Predicted in 3.276514 seconds.
+network : Dense: Predicted in 3.396547 seconds.
+network : Dense: Predicted in 3.399192 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.425558
+
+
+network : Alex: Predicted in 3.166699 seconds.
+network : VGG: Predicted in 3.162409 seconds.
+network : Alex: Predicted in 3.163896 seconds.
+network : Res: Predicted in 3.232629 seconds.
+network : Res: Predicted in 3.237967 seconds.
+network : Dense: Predicted in 3.338311 seconds.
+network : Dense: Predicted in 3.331436 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.372045
+
+
+network : Alex: Predicted in 3.231961 seconds.
+network : Alex: Predicted in 3.235417 seconds.
+network : VGG: Predicted in 3.240408 seconds.
+network : Res: Predicted in 3.300579 seconds.
+network : Res: Predicted in 3.315449 seconds.
+network : Dense: Predicted in 3.438920 seconds.
+network : Dense: Predicted in 3.441261 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.472024
+
+
+network : Alex: Predicted in 3.021612 seconds.
+network : VGG: Predicted in 3.030060 seconds.
+network : Alex: Predicted in 3.025793 seconds.
+network : Res: Predicted in 3.149000 seconds.
+network : Res: Predicted in 3.161685 seconds.
+network : Dense: Predicted in 3.285659 seconds.
+network : Dense: Predicted in 3.293528 seconds.
+***** Des : 2 , Res : 2 , VGG : 1 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 3.320633
+
+
