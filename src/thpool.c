@@ -365,22 +365,24 @@ static void *thread_do(struct thread *thread_p)
 
 	while (threads_keepalive)
 	{
+
 #if 1
 		if (thpool_p->jobqueue.front != NULL)
 		{
-			fprintf(stderr, "thread_p : %d   @@   ", thread_p->id);
-			if (thread_p->id == 0)
+			if (thread_p->id == 0 && thpool_p->jobqueue.len == 0)
 			{
-				if (thpool_p->jobqueue.len == 0 || ((th_arg *)thpool_p->jobqueue.front->arg)->type == 0)
-				{
-					fprintf(stderr, " [%d - %d]  thread_p : %d    \n", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
-					continue;
-				}
+				continue;
+			}
+
+			if (thread_p->id == 0 && ((th_arg *)thpool_p->jobqueue.front->arg)->type == 0)
+			{
+				fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
+				continue;
 			}
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-		fprintf(stderr, "thread_p : %d   @@   \n", thread_p->id);
+		//fprintf(stderr, "thread_p : %d   @@   \n", thread_p->id);
 #if 0
 		// doyoung
 #if 1
