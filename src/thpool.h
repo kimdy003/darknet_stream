@@ -257,8 +257,6 @@ extern "C"
 		void *arg;
 		int flag;
 		LAYER_TYPE type;
-		int id;
-		int n;
 	} th_arg;
 
 #endif

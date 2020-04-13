@@ -334,9 +334,9 @@ void forward_network(network *netp)
         input.arg = &nl;
         input.flag = 0;
         input.type = net.layers[i].type;
-        input.id = net.index_n;
-        input.n = i;
-        fprintf(stderr, "\n [%d - %d]  type : %s ",  net.index_n, i, get_layer_string(net.layers[i].type));
+    
+        //fprintf(stderr, "\n [%d - %d]  type : %s ",  net.index_n, i, get_layer_string(net.layers[i].type));
+    
 #ifdef STREAM
         thpool_add_work(thpool, forward_function_stream, &input);
 #else
