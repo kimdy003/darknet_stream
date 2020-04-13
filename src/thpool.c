@@ -551,7 +551,7 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 static int jobqueue_check(jobqueue *jobqueue_p)
 {
-	if (jobqueue_p->len == 0)
+	if (jobqueue_p->len == 0 || jobqueue_p->front == NULL)
 	{
 		return 0;
 	}
