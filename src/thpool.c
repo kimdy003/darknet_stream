@@ -365,18 +365,24 @@ static void *thread_do(struct thread *thread_p)
 	
 	while (threads_keepalive)
 	{
+	#if 0
+		pthread_mutex_lock(&thpool_p->thcount_lock);
 		if(thread_p->id == 0 && thpool_p->jobqueue.len == 0){
+			pthread_mutex_unlock(&thpool_p->thcount_lock);
 			//sleep(0.001);
 			continue;
 		}
 
+		pthread_mutex_lock(&thpool_p->thcount_lock);
 		if(thread_p->id == 0 && ((th_arg*)thpool_p->jobqueue.front->arg)->type == 0){
+			pthread_mutex_lock(&thpool_p->thcount_lock);
 			fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
 			//sleep(0.001);
 			continue;
 		}
-
+	#endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
+		
 		fprintf(stderr, " [%d - %d]  thread_p : %d   \n ",  ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n ,thread_p->id);
 	
 	#if 0
@@ -399,11 +405,11 @@ static void *thread_do(struct thread *thread_p)
 		}
     #endif
 
-		if (threads_keepalive && thpool_p->jobqueue.front->flag == 1)
+		if (threads_keepalive)
 		{
-			fprintf(stderr, "{{{{{{start : %d}}}}}}}\n", thread_p->id);
+			//fprintf(stderr, "{{{{{{start : %d}}}}}}}\n", thread_p->id);
 			pthread_mutex_lock(&thpool_p->thcount_lock);
-			thpool_p->jobqueue.front->flag = 0;
+			//thpool_p->jobqueue.front->flag = 0;
 			thpool_p->num_threads_working++;
 			pthread_mutex_unlock(&thpool_p->thcount_lock);
 
@@ -413,7 +419,7 @@ static void *thread_do(struct thread *thread_p)
 			void (*func_buff)(void *, int);
 			void *arg_buff;
 			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			fprintf(stderr, "{{{{{{end : %d}}}}}}}\n", thread_p->id);
+			//fprintf(stderr, "{{{{{{end : %d}}}}}}}\n", thread_p->id);
 			if (job_p)
 			{
 				func_buff = job_p->function;
