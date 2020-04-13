@@ -380,7 +380,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-
+		fprintf(stderr, "thread_p : %d   @@   \n", thread_p->id);
 #if 0
 		// doyoung
 #if 1
