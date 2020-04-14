@@ -484,6 +484,9 @@ int main()
     {
         cuda_set_device(gpu_index);
     }
+    for(int i=0; i<THREAD_NUM_POOL; i++){
+        cudnn_handle(i, __LINE__);
+    }
 #endif
 
 #ifdef THREAD

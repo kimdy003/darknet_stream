@@ -173,8 +173,8 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 
 #ifdef CUDNN
     float one = 1;
-    if(id > THREAD_NUM_POOL){
-        id = THREAD_NUM_POOL;
+    if(id >= THREAD_NUM_POOL){
+        id = THREAD_NUM_POOL-1;
     }
     //fprintf(stderr, "convolution id : %d\n", id);
     //2020 0311 doyoung
