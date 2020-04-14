@@ -99,7 +99,7 @@ dim3 cuda_gridsize(size_t n){
         int i = id;
         if(!init_stream[i]) {
             cudnnCreate(&handle[i]);
-	        cudaStreamCreateWithFlags(&(stream[i]), cudaStreamNonBlocking);
+	        cudaStreamCreate(&(stream[i]));
             cudaError_t status = cudnnSetStream(handle[i], stream[i]);
             check_error_line(status, line);
             init_stream[i] = 1;
@@ -115,8 +115,8 @@ dim3 cuda_gridsize(size_t n){
     #else
     cudnnHandle_t cudnn_handle()
     {
-        static int init[16] = {0};
-        static cudnnHandle_t handle[16];
+        static int init[THREAD_NUM_POOL] = {0};
+        static cudnnHandle_t handle[THREAD_NUM_POOL];
         int i = cuda_get_device();
         if(!init[i]) {
             cudnnCreate(&handle[i]);
