@@ -737,7 +737,7 @@ void *predict_classifier2(test *input)
         printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
     }
 
-    fclose(fp);
+    //fclose(fp);
     if (r.data != im.data)
         free_image(r);
 
