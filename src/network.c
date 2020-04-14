@@ -304,9 +304,9 @@ void forward_function(th_arg *input)
 void forward_network(network *netp)
 {
 #ifdef STREAM
-    FILE *fp = fopen("stream.txt", "a");
+    FILE *checkfile = fopen("stream.txt", "a");
 #else
-    FILE *fp = fopen("serial.txt", "a");
+    FILE *checkfile = fopen("serial.txt", "a");
 #endif
 
 #ifdef GPU
@@ -324,7 +324,7 @@ void forward_network(network *netp)
     for (i = 0; i < net.n; ++i)
     {
         double check = what_time_is_it_now();
-        fprintf(fp, "\n [%d - %d]  type : %s  ",  net.index_n, i, get_layer_string(net.layers[i].type));
+        fprintf(checkfile, "\n [%d - %d]  type : %s  ",  net.index_n, i, get_layer_string(net.layers[i].type));
         pthread_mutex_lock(&mutex_t[net.index_n]);
         cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
 
@@ -368,7 +368,7 @@ void forward_network(network *netp)
 
         //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
         pthread_mutex_unlock(&mutex_t[net.index_n]);
-        fprintf(fp, "time : %lf", what_time_is_it_now() - check);
+        fprintf(checkfile, "time : %lf", what_time_is_it_now() - check);
     }
     //if(lastFlag == 1)
     //	pull_network_output(netp);
@@ -434,7 +434,7 @@ void forward_network(network *netp)
 #endif
 #endif
     //calc_network_cost(netp);
-    fclose(fp);
+    fclose(checkfile);
 }
 
 void update_network(network *netp)
