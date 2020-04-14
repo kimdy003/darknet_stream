@@ -581,8 +581,6 @@ int main()
     image im = load_image_color(buff, 0, 0);
 
     double time = what_time_is_it_now();
-
-#ifdef THREAD
     pthread_t networkArray_des[n_des];
     pthread_t networkArray_res[n_res];
     pthread_t networkArray_vgg[n_vgg];
@@ -669,56 +667,6 @@ int main()
         pthread_join(networkArray_alex[i], NULL);
     }
 
-#else
-
-    for (int i = 0; i < n_des; i++)
-    {
-        net_input_des[i] = (test *)malloc(sizeof(test));
-        net_input_des[i]->net = denseNetwork[i];
-        net_input_des[i]->input_path = input;
-        net_input_des[i]->names = names;
-        net_input_des[i]->netName = denseName;
-
-        printf(" It's turn for res i = %d\n", i);
-        predict_classifier2(net_input_des[i]);
-    }
-
-    for (int i = 0; i < n_res; i++)
-    {
-        net_input_res[i] = (test *)malloc(sizeof(test));
-        net_input_res[i]->net = resNetwork[i];
-        net_input_res[i]->input_path = input;
-        net_input_res[i]->names = names;
-        net_input_res[i]->netName = resName;
-
-        printf(" It's turn for res i = %d\n", i);
-        predict_classifier2(net_input_res[i]);
-    }
-
-    for (int i = 0; i < n_vgg; i++)
-    {
-        net_input_vgg[i] = (test *)malloc(sizeof(test));
-        net_input_vgg[i]->net = vggNetwork[i];
-        net_input_vgg[i]->input_path = input;
-        net_input_vgg[i]->names = names;
-        net_input_vgg[i]->netName = vggName;
-
-        printf(" It's turn for vgg i = %d\n", i);
-        predict_classifier2(net_input_vgg[i]);
-    }
-
-    for (int i = 0; i < n_alex; i++)
-    {
-        net_input_alex[i] = (test *)malloc(sizeof(test));
-        net_input_alex[i]->net = alexNetwork[i];
-        net_input_alex[i]->input_path = input;
-        net_input_alex[i]->names = names;
-        net_input_alex[i]->netName = alexName;
-
-        printf(" It's turn for alex i = %d\n", i);
-        predict_classifier2(net_input_alex[i]);
-    }
-#endif
 
 #if 0
     //kmsjames 2020 0215
