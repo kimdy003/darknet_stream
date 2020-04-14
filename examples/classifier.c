@@ -713,7 +713,6 @@ void *predict_classifier2(test *input)
     time2 = what_time_is_it_now();
 
     fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
-#if 0
 #ifdef STREAM
     FILE *fp = fopen("stream.txt", "a");
 #else
@@ -729,7 +728,6 @@ void *predict_classifier2(test *input)
         fprintf(stderr, "file open error\n");
         exit(1);
     }
-#endif
     for (i = 0; i < top; ++i)
     {
         int index = indexes[i];
@@ -737,7 +735,7 @@ void *predict_classifier2(test *input)
         printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
     }
 
-    //fclose(fp);
+    fclose(fp);
     if (r.data != im.data)
         free_image(r);
 
