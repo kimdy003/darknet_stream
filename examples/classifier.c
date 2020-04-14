@@ -686,40 +686,26 @@ void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *fi
 
 void *predict_classifier2(test *input)
 {
-#ifdef STREAM
-    FILE *fp = fopen("stream.txt", "a");
-#else
-    FILE *fp = fopen("serial.txt", "a");
-#endif
 
     image im = load_image_color((char *)input->input_path, 0, 0);
     network *net = input->net;
 
     set_batch_network(net, 1);
     srand(2222222);
-
     int top = 5;
-
     int i = 0;
     char **names = input->names;
-
 
     double time = what_time_is_it_now(), time2;
     int *indexes = calloc(top, sizeof(int));
     
-    double check = what_time_is_it_now();
     image r = letterbox_image(im, net->w, net->h);
-    fprintf(fp, "letterbox_image : %lf sec  ", what_time_is_it_now() - check);
     float *X = r.data;
 
-    check = what_time_is_it_now();
     float *predictions = network_predict(net, X);
-    fprintf(fp, "network_predict : %lf sec    ", what_time_is_it_now() - check);
 
-    check = what_time_is_it_now();
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
-    fprintf(fp, "network_predict : %lf sec   \n", what_time_is_it_now() - check);
     
     //»óÀ§ 5°³ »Ì±â
     top_k(predictions, net->outputs, top, indexes);
