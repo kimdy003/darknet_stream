@@ -99,7 +99,7 @@ dim3 cuda_gridsize(size_t n){
         int i = id;
         if(!init_stream[i]) {
             cudnnCreate(&handle[i]);
-	        cudaStreamCreate(&(stream[i]));
+	        cudaStreamCreate(&(stream[i]), cudaStreamNonBlocking);
             cudaError_t status = cudnnSetStream(handle[i], stream[i]);
             check_error_line(status, line);
             init_stream[i] = 1;
