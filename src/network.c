@@ -369,7 +369,6 @@ void forward_network(network *netp)
         //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
         pthread_mutex_unlock(&mutex_t[net.index_n]);
         fprintf(fp, "time : %lf", what_time_is_it_now() - check);
-        fclose(fp);
     }
     //if(lastFlag == 1)
     //	pull_network_output(netp);
@@ -435,6 +434,7 @@ void forward_network(network *netp)
 #endif
 #endif
     //calc_network_cost(netp);
+    fclose(fp);
 }
 
 void update_network(network *netp)
