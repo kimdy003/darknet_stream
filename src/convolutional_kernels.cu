@@ -72,7 +72,6 @@ void binarize_weights_gpu(float *weights, int n, int size, float *binary)
 
 void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 {
-	fprintf(stderr , "%d - start\n", net.index_n);
     fill_gpu(l.outputs*l.batch, 0, l.output_gpu, 1);
     if(l.binary){
         binarize_weights_gpu(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu);
@@ -140,7 +139,6 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
     }
 #endif
 
-     fprintf(stderr , "%d - end\n", net.index_n);
     if (l.batch_normalize) {
             forward_batchnorm_layer_gpu(l, net);
     } else {
