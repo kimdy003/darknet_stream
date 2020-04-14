@@ -93,7 +93,7 @@ dim3 cuda_gridsize(size_t n){
     static cudnnHandle_t handle[THREAD_NUM_POOL];
     static int init_stream[THREAD_NUM_POOL] = {0};
 
-    void cudnn_handle_set(){
+    void cudnn_handle_set_stream(){
         for(int i=0; i<THREAD_NUM_POOL; i++){
             cudnnCreate(&handle[i]);
 	        cudaStreamCreate(&(stream[i]));
@@ -123,14 +123,23 @@ dim3 cuda_gridsize(size_t n){
         check_error_line(status, line);
     }
     #else
+    static int init_serial[8] = {0};
+    static cudnnHandle_t handle[8];
+
+    void cudnn_handle_set(){
+        for(int i=0; i<THREAD_NUM_POOL; i++){
+            cudnnCreate(&handle[i]);
+            check_error(status);
+            init_serial[i] = 1;
+        }
+    }
+
     cudnnHandle_t cudnn_handle()
     {
-        static int init[8] = {0};
-        static cudnnHandle_t handle[8];
         int i = cuda_get_device();
-        if(!init[i]) {
+        if(!init_serial[i]) {
             cudnnCreate(&handle[i]);
-            init[i] = 1;
+            init_serial[i] = 1;
         }
         return handle[i];
     }

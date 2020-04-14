@@ -726,6 +726,13 @@ extern "C"
 #endif
     float cuda_mag_array(float *x_gpu, size_t n);
     void cuda_push_array(float *x_gpu, float *x, size_t n);
+#ifdef CUDNN
+    #ifdef STREAM
+        void cudnn_handle_set_stream();
+    #else  
+        void cudnn_handle_set();
+    #endif
+#endif
 
     void forward_network_gpu(network *net);
     void backward_network_gpu(network *net);

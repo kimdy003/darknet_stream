@@ -485,7 +485,11 @@ int main()
         cuda_set_device(gpu_index);
     }
     #ifdef CUDNN
-        cudnn_handle_set();
+        #ifdef STREAM
+            cudnn_handle_set_stream();
+        #else
+            cudnn_handle_set();
+        #endif
     #endif
 #endif
 
