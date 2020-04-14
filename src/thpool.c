@@ -367,11 +367,13 @@ static void *thread_do(struct thread *thread_p)
 	{
 
 #if 1
+		// doyoung
 		if (thread_p->id == 0 && thpool_p->jobqueue.len == 0)
 		{
 			continue;
 		}
-		if(thpool_p->jobqueue.front != NULL){	
+		if (thpool_p->jobqueue.front != NULL)
+		{
 			if (thread_p->id == 0 && ((th_arg *)thpool_p->jobqueue.front->arg)->type == 0)
 			{
 				//fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
@@ -380,27 +382,6 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-		//fprintf(stderr, " @@@ convolution not thread id : %d \n", thread_p->id);
-#if 0
-		// doyoung
-#if 1
-		if (thpool_p->jobqueue.front != NULL)
-			fprintf(stderr, " [%d - %d]  thread_p : %d    ", ((th_arg *)(thpool_p->jobqueue.front->arg))->id, ((th_arg *)(thpool_p->jobqueue.front->arg))->n, thread_p->id);
-#endif
-		if (thread_p->id == 0)
-		{
-			if (jobqueue_check(&thpool_p->jobqueue))
-			{
-				//fprintf(stderr, " continue\n ");
-				continue;
-			}
-			//fprintf(stderr, "check = false \n");
-		}
-		else
-		{
-			//fprintf(stderr, " \n");
-		}
-#endif
 
 		if (threads_keepalive)
 		{
@@ -546,21 +527,6 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return job_p;
-}
-
-static int jobqueue_check(jobqueue *jobqueue_p)
-{
-	if (jobqueue_p->len == 0)
-	{
-		return 0;
-	}
-	job *job_p = jobqueue_p->front;
-
-	if (((th_arg *)job_p->arg)->type == CONVOLUTIONAL)
-	{
-		return 1;
-	}
-	return 0;
 }
 
 /* Free all queue resources back to the system */
