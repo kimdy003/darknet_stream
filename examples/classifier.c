@@ -686,6 +686,12 @@ void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *fi
 
 void *predict_classifier2(test *input)
 {
+#ifdef STREAM
+    FILE *fp = fopen("stream.txt", "a");
+#else
+    FILE *fp = fopen("serial.txt", "a");
+#endif
+
     image im = load_image_color((char *)input->input_path, 0, 0);
     network *net = input->net;
 
@@ -703,25 +709,25 @@ void *predict_classifier2(test *input)
     
     double check = what_time_is_it_now();
     image r = letterbox_image(im, net->w, net->h);
-    fprintf(stderr, "letterbox_image : %lf sec  ", what_time_is_it_now() - check);
+    fprintf(fp, "letterbox_image : %lf sec  ", what_time_is_it_now() - check);
     float *X = r.data;
 
     check = what_time_is_it_now();
     float *predictions = network_predict(net, X);
-    fprintf(stderr, "network_predict : %lf sec    ", what_time_is_it_now() - check);
+    fprintf(fp, "network_predict : %lf sec    ", what_time_is_it_now() - check);
 
     check = what_time_is_it_now();
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
-    fprintf(stderr, "network_predict : %lf sec   \n", what_time_is_it_now() - check);
+    fprintf(fp, "network_predict : %lf sec   \n", what_time_is_it_now() - check);
     
     //»óÀ§ 5°³ »Ì±â
     top_k(predictions, net->outputs, top, indexes);
 
     time2 = what_time_is_it_now();
 
-
     fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
+#if 0
 #ifdef STREAM
     FILE *fp = fopen("stream.txt", "a");
 #else
@@ -737,7 +743,7 @@ void *predict_classifier2(test *input)
         fprintf(stderr, "file open error\n");
         exit(1);
     }
-
+#endif
     for (i = 0; i < top; ++i)
     {
         int index = indexes[i];
