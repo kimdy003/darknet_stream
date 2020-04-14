@@ -115,8 +115,8 @@ dim3 cuda_gridsize(size_t n){
     #else
     cudnnHandle_t cudnn_handle()
     {
-        static int init[THREAD_NUM_POOL] = {0};
-        static cudnnHandle_t handle[THREAD_NUM_POOL];
+        static int init[8] = {0};
+        static cudnnHandle_t handle[8];
         int i = cuda_get_device();
         if(!init[i]) {
             cudnnCreate(&handle[i]);
@@ -129,8 +129,8 @@ dim3 cuda_gridsize(size_t n){
 
 cublasHandle_t blas_handle()
 {
-    static int init[16] = {0};
-    static cublasHandle_t handle[16];
+    static int init[8] = {0};
+    static cublasHandle_t handle[8];
     int i = cuda_get_device();
     if(!init[i]) {
         cublasCreate(&handle[i]);

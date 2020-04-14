@@ -27,9 +27,11 @@ extern "C"
     extern int gpu_index;
     extern threadpool thpool;
 
-#define THREAD_NUM_POOL 16
+#define THREAD_NUM_POOL 8
+
 #define n_loop 10
-#define n_des 10
+
+#define n_des 13
 #define n_res 0
 #define n_vgg 0
 #define n_alex 0
