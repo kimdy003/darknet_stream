@@ -696,21 +696,31 @@ void *predict_classifier2(test *input)
 
     int i = 0;
     char **names = input->names;
+
+
     double time = what_time_is_it_now(), time2;
     int *indexes = calloc(top, sizeof(int));
-
+    
+    double check = what_time_is_it_now();
     image r = letterbox_image(im, net->w, net->h);
+    fprintf(stderr, "letterbox_image : %lf sec  ", what_time_is_it_now() - check);
     float *X = r.data;
 
-    //FILE *conv_type = fopen("result.txt", "a");
-    //fprintf(conv_type, "******* %s ******** \n", input->netName);
-    //fclose(conv_type);
+    check = what_time_is_it_now();
     float *predictions = network_predict(net, X);
+    fprintf(stderr, "network_predict : %lf sec    ", what_time_is_it_now() - check);
+
+    check = what_time_is_it_now();
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
+    fprintf(stderr, "network_predict : %lf sec   \n", what_time_is_it_now() - check);
+    
+    //»óÀ§ 5°³ »Ì±â
     top_k(predictions, net->outputs, top, indexes);
 
     time2 = what_time_is_it_now();
+
+
     fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
 #ifdef STREAM
     FILE *fp = fopen("stream.txt", "a");
@@ -734,6 +744,8 @@ void *predict_classifier2(test *input)
 
         printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
     }
+
+    fclose(fp);
     if (r.data != im.data)
         free_image(r);
 
@@ -743,7 +755,6 @@ void *predict_classifier2(test *input)
     free_network(net);
     fprintf(stderr, "free_networkd : %s, time : %lf \n", input->netName, what_time_is_it_now() - time);
 #endif
-    fclose(fp);
     free(input);
     //hojin
     //while(1);
