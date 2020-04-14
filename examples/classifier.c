@@ -686,59 +686,58 @@ void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *fi
 
 void *predict_classifier2(test *input)
 {
-
     image im = load_image_color((char *)input->input_path, 0, 0);
     network *net = input->net;
+    for(int i=0; i<n_loop; i++){
+        set_batch_network(net, 1);
+        srand(2222222);
+        int top = 5;
+        int i = 0;
+        char **names = input->names;
 
-    set_batch_network(net, 1);
-    srand(2222222);
-    int top = 5;
-    int i = 0;
-    char **names = input->names;
+        double time = what_time_is_it_now(), time2;
+        int *indexes = calloc(top, sizeof(int));
+        
+        image r = letterbox_image(im, net->w, net->h);
+        float *X = r.data;
 
-    double time = what_time_is_it_now(), time2;
-    int *indexes = calloc(top, sizeof(int));
-    
-    image r = letterbox_image(im, net->w, net->h);
-    float *X = r.data;
+        float *predictions = network_predict(net, X);
 
-    float *predictions = network_predict(net, X);
+        if (net->hierarchy)
+            hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
+        
+        //»óÀ§ 5°³ »Ì±â
+        top_k(predictions, net->outputs, top, indexes);
 
-    if (net->hierarchy)
-        hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
-    
-    //»óÀ§ 5°³ »Ì±â
-    top_k(predictions, net->outputs, top, indexes);
+        time2 = what_time_is_it_now();
 
-    time2 = what_time_is_it_now();
+        fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
+    #ifdef STREAM
+        FILE *fp = fopen("stream.txt", "a");
+    #else
+        FILE *fp = fopen("serial.txt", "a");
+    #endif
 
-    fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
-#ifdef STREAM
-    FILE *fp = fopen("stream.txt", "a");
-#else
-    FILE *fp = fopen("serial.txt", "a");
-#endif
+        if (fp)
+        {
+            fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
+        }
+        else
+        {
+            fprintf(stderr, "file open error\n");
+            exit(1);
+        }
+        for (i = 0; i < top; ++i)
+        {
+            int index = indexes[i];
 
-    if (fp)
-    {
-        fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
+            printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
+        }
+
+        fclose(fp);
+        if (r.data != im.data)
+            free_image(r);
     }
-    else
-    {
-        fprintf(stderr, "file open error\n");
-        exit(1);
-    }
-    for (i = 0; i < top; ++i)
-    {
-        int index = indexes[i];
-
-        printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
-    }
-
-    fclose(fp);
-    if (r.data != im.data)
-        free_image(r);
-
     free_image(im);
 #if 0
     double time = what_time_is_it_now();
