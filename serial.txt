@@ -1,0 +1,22 @@
+
+
+
+network : Dense: Predicted in 0.889150 seconds.
+network : Dense: Predicted in 0.984344 seconds.
+network : Dense: Predicted in 1.008065 seconds.
+network : Dense: Predicted in 1.003692 seconds.
+network : Dense: Predicted in 1.009793 seconds.
+network : Dense: Predicted in 1.017894 seconds.
+network : Dense: Predicted in 1.016187 seconds.
+network : Dense: Predicted in 1.022295 seconds.
+network : Dense: Predicted in 1.005898 seconds.
+network : Dense: Predicted in 1.013787 seconds.
+network : Dense: Predicted in 1.023361 seconds.
+network : Dense: Predicted in 1.001269 seconds.
+network : Dense: Predicted in 1.005857 seconds.
+***** Des : 13 , Res : 0 , VGG : 0 , Alex : 0 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.078485
+
+
