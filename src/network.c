@@ -1079,6 +1079,7 @@ float *network_output(network *net)
 
 #ifdef GPU
 
+void forward_network_gpu(network *netp)
 {
     network net = *netp;
     cuda_set_device(net.gpu_index);
