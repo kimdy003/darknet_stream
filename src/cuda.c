@@ -30,23 +30,23 @@ void check_error(cudaError_t status)
     //cudaDeviceSynchronize();
     cudaError_t status2 = cudaGetLastError();
     if (status != cudaSuccess)
-    {   
+    {
         const char *s = cudaGetErrorString(status);
         char buffer[256];
         printf("CUDA Error: %s\n", s);
         assert(0);
         snprintf(buffer, 256, "CUDA Error: %s", s);
         error(buffer);
-    } 
+    }
     if (status2 != cudaSuccess)
-    {   
+    {
         const char *s = cudaGetErrorString(status);
         char buffer[256];
         printf("CUDA Error Prev: %s\n", s);
         assert(0);
         snprintf(buffer, 256, "CUDA Error Prev: %s", s);
         error(buffer);
-    } 
+    }
 }
 
 //2020 0311 doyoung
@@ -55,32 +55,34 @@ void check_error_line(cudaError_t status, int line)
     //cudaDeviceSynchronize();
     cudaError_t status2 = cudaGetLastError();
     if (status != cudaSuccess)
-    {   
+    {
         const char *s = cudaGetErrorString(status);
         char buffer[256];
         printf("CUDA Error: %s, LINE : %d\n", s, line);
         assert(0);
         snprintf(buffer, 256, "CUDA Error: %s", s);
         error(buffer);
-    } 
+    }
     if (status2 != cudaSuccess)
-    {   
+    {
         const char *s = cudaGetErrorString(status);
         char buffer[256];
         printf("CUDA Error Prev: %s, LINE : %d\n", s, line);
         assert(0);
         snprintf(buffer, 256, "CUDA Error Prev: %s, LINE : %d\n", s, line);
         error(buffer);
-    } 
+    }
 }
 
-dim3 cuda_gridsize(size_t n){
-    size_t k = (n-1) / BLOCK + 1;
+dim3 cuda_gridsize(size_t n)
+{
+    size_t k = (n - 1) / BLOCK + 1;
     size_t x = k;
     size_t y = 1;
-    if(x > 65535){
+    if (x > 65535)
+    {
         x = ceil(sqrt(k));
-        y = (n-1)/(x*BLOCK) + 1;
+        y = (n - 1) / (x * BLOCK) + 1;
     }
     dim3 d = {x, y, 1};
     //printf("%ld %ld %ld %ld\n", n, x, y, x*y*BLOCK);
@@ -88,62 +90,82 @@ dim3 cuda_gridsize(size_t n){
 }
 
 #ifdef CUDNN
-    #ifdef STREAM
-    static cudaStream_t stream[THREAD_NUM_POOL];
-    static cudnnHandle_t handle[THREAD_NUM_POOL];
-    static int init_stream[THREAD_NUM_POOL] = {0};
+    #ifdef THREAD
+        #ifdef STREAM
+        static cudaStream_t stream[THREAD_NUM_POOL];
+        static cudnnHandle_t handle[THREAD_NUM_POOL];
+        static int init_stream[THREAD_NUM_POOL] = {0};
 
-    void cudnn_handle_set_stream(){
-        for(int i=0; i<THREAD_NUM_POOL; i++){
-            cudnnCreate(&handle[i]);
-	        cudaStreamCreate(&(stream[i]));
-            cudaError_t status = cudnnSetStream(handle[i], stream[i]);
-            check_error(status);
-            init_stream[i] = 1;
+        void cudnn_handle_set_stream()
+        {
+            for (int i = 0; i < THREAD_NUM_POOL; i++)
+            {
+                cudnnCreate(&handle[i]);
+                cudaStreamCreate(&(stream[i]));
+                cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+                check_error(status);
+                init_stream[i] = 1;
+            }
         }
-    }
 
-    //2020 0311 doyoung
-    cudnnHandle_t cudnn_handle(int id, int line)
-    {
-        int i = id;
-        if(!init_stream[i]) {
-            cudnnCreate(&handle[i]);
-	        cudaStreamCreate(&(stream[i]));
-            cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+        //2020 0311 doyoung
+        cudnnHandle_t cudnn_handle(int id, int line)
+        {
+            int i = id;
+            if (!init_stream[i])
+            {
+                cudnnCreate(&handle[i]);
+                cudaStreamCreate(&(stream[i]));
+                cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+                check_error_line(status, line);
+                init_stream[i] = 1;
+            }
+
+            return handle[i];
+        }
+
+        void cuda_syncronize(int id, int line)
+        {
+            cudaError_t status = cudaStreamSynchronize(stream[id]);
             check_error_line(status, line);
-            init_stream[i] = 1;
         }
-        
-        return handle[i];
-    }
+        #else
 
-    void cuda_syncronize(int id, int line){
-        cudaError_t status = cudaStreamSynchronize(stream[id]);
-        check_error_line(status, line);
-    }
+        static int init_serial[THREAD_NUM_POOL] = {0};
+        static cudnnHandle_t handle[THREAD_NUM_POOL];
+
+        void cudnn_handle_set()
+        {
+            int i = cuda_get_device();
+            for (int i = 0; i < THREAD_NUM_POOL; i++)
+            {
+                cudnnCreate(&handle[i]);
+                init_serial[i] = 1;
+            }
+        }
+        cudnnHandle_t cudnn_handle(int id)
+        {
+            int i = id;
+            if (!init_serial[i])
+            {
+                cudnnCreate(&handle[i]);
+                init_serial[i] = 1;
+            }
+            return handle[i];
+        }
+        #endif
     #else
-    static int init_serial[8] = {0};
-    static cudnnHandle_t handle[8];
-
-    void cudnn_handle_set(){
-        for(int i=0; i<THREAD_NUM_POOL; i++){
-            cudnnCreate(&handle[i]);
-            check_error(status);
-            init_serial[i] = 1;
-        }
-    }
-
     cudnnHandle_t cudnn_handle()
     {
         int i = cuda_get_device();
-        if(!init_serial[i]) {
+        if (!init_serial[i])
+        {
             cudnnCreate(&handle[i]);
             init_serial[i] = 1;
         }
         return handle[i];
     }
-    #endif   
+    #endif
 #endif
 
 cublasHandle_t blas_handle()
@@ -151,7 +173,8 @@ cublasHandle_t blas_handle()
     static int init[8] = {0};
     static cublasHandle_t handle[8];
     int i = cuda_get_device();
-    if(!init[i]) {
+    if (!init[i])
+    {
         cublasCreate(&handle[i]);
         init[i] = 1;
     }
@@ -161,21 +184,25 @@ cublasHandle_t blas_handle()
 float *cuda_make_array(float *x, size_t n)
 {
     float *x_gpu;
-    size_t size = sizeof(float)*n;
+    size_t size = sizeof(float) * n;
     cudaError_t status = cudaMalloc((void **)&x_gpu, size);
-    #ifdef STREAM
+#ifdef STREAM
     //2020 0311 doyoung
     cudaMemset(x_gpu, .0, size);
-    #endif
+#endif
 
     check_error(status);
-    if(x){
+    if (x)
+    {
         status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice);
         check_error(status);
-    } else {
+    }
+    else
+    {
         fill_gpu(n, 0, x_gpu, 1);
     }
-    if(!x_gpu) error("Cuda malloc failed\n");
+    if (!x_gpu)
+        error("Cuda malloc failed\n");
     return x_gpu;
 }
 
@@ -184,7 +211,8 @@ void cuda_random(float *x_gpu, size_t n)
     static curandGenerator_t gen[16];
     static int init[16] = {0};
     int i = cuda_get_device();
-    if(!init[i]){
+    if (!init[i])
+    {
         curandCreateGenerator(&gen[i], CURAND_RNG_PSEUDO_DEFAULT);
         curandSetPseudoRandomGeneratorSeed(gen[i], time(0));
         init[i] = 1;
@@ -201,7 +229,7 @@ float cuda_compare(float *x_gpu, float *x, size_t n, char *s)
     //for(i = 0; i < n; ++i) printf("%f %f\n", tmp[i], x[i]);
     axpy_cpu(n, -1, x, 1, tmp, 1);
     float err = dot_cpu(n, tmp, 1, tmp, 1);
-    printf("Error %s: %f\n", s, sqrt(err/n));
+    printf("Error %s: %f\n", s, sqrt(err / n));
     free(tmp);
     return err;
 }
@@ -209,14 +237,16 @@ float cuda_compare(float *x_gpu, float *x, size_t n, char *s)
 int *cuda_make_int_array(int *x, size_t n)
 {
     int *x_gpu;
-    size_t size = sizeof(int)*n;
+    size_t size = sizeof(int) * n;
     cudaError_t status = cudaMalloc((void **)&x_gpu, size);
     check_error(status);
-    if(x){
+    if (x)
+    {
         status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice);
         check_error(status);
     }
-    if(!x_gpu) error("Cuda malloc failed\n");
+    if (!x_gpu)
+        error("Cuda malloc failed\n");
     return x_gpu;
 }
 
@@ -226,14 +256,15 @@ void cuda_free(float *x_gpu)
     check_error(status);
 }
 
-void cuda_freehost(float *x_gpu){
+void cuda_freehost(float *x_gpu)
+{
     cudaError_t status = cudaFreeHost(x_gpu);
     check_error(status);
 }
 
 void cuda_push_array(float *x_gpu, float *x, size_t n)
 {
-    size_t size = sizeof(float)*n;
+    size_t size = sizeof(float) * n;
     cudaError_t status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice);
     check_error(status);
 }
@@ -241,14 +272,14 @@ void cuda_push_array(float *x_gpu, float *x, size_t n)
 //2020 0311 doyoung
 void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line)
 {
-    size_t size = sizeof(float)*n;
+    size_t size = sizeof(float) * n;
     cudaError_t status = cudaMemcpyAsync(x, x_gpu, size, cudaMemcpyDeviceToHost, stream[id]);
     check_error_line(status, line);
 }
 #endif
 void cuda_pull_array(float *x_gpu, float *x, size_t n)
 {
-    size_t size = sizeof(float)*n;
+    size_t size = sizeof(float) * n;
     cudaError_t status = cudaMemcpy(x, x_gpu, size, cudaMemcpyDeviceToHost);
     check_error(status);
 }
@@ -262,20 +293,22 @@ float cuda_mag_array(float *x_gpu, size_t n)
     return m;
 }
 
-//2020 0311 doyoung 
-void cuda_malloc_int_host(int * x_host, size_t size, int line){
+//2020 0311 doyoung
+void cuda_malloc_int_host(int *x_host, size_t size, int line)
+{
     cudaError_t status = cudaMallocHost((void **)&x_host, size);
     check_error_line(status, line);
 }
 
-void cuda_malloc_float_host(float ** x_host, size_t size, int line){
+void cuda_malloc_float_host(float **x_host, size_t size, int line)
+{
     cudaError_t status = cudaMallocHost((void **)x_host, size);
     check_error_line(status, line);
 }
 
-
-
 #else
-void cuda_set_device(int n){}
+void cuda_set_device(int n)
+{
+}
 
 #endif

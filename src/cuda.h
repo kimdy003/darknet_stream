@@ -15,12 +15,16 @@ float cuda_compare(float *x_gpu, float *x, size_t n, char *s);
 dim3 cuda_gridsize(size_t n);
 
 #ifdef CUDNN
-#ifdef STREAM
-cudnnHandle_t cudnn_handle(int id, int line);
+#ifdef THREAD
+    #ifdef STREAM
+        cudnnHandle_t cudnn_handle(int id, int line);
+        void cuda_syncronize(int id, int line);
+    #else
+        cudnnHandle_t cudnn_handle(int id);
+    #endif
 #else
 cudnnHandle_t cudnn_handle();
 #endif
-void cuda_syncronize(int id, int line);
 #endif
 
 #endif
