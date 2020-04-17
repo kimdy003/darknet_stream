@@ -1164,3 +1164,10 @@ network : Dense: Predicted in 0.137004 seconds.
 execution Time : 0.161826
 
 
+network : Dense: Predicted in 0.123020 seconds.
+***** Des : 1 , Res : 0 , VGG : 0 , Alex : 0 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 0.145849
+
+
