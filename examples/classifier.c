@@ -686,8 +686,15 @@ void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *fi
 
 void *predict_classifier2(test *input)
 {
+    #ifdef STREAM
+        FILE *fp = fopen("stream.txt", "a");
+    #else
+        FILE *fp = fopen("serial.txt", "a");
+    #endif
+
     image im = load_image_color((char *)input->input_path, 0, 0);
     network *net = input->net;
+
     for(int i=0; i<n_loop; i++){
         set_batch_network(net, 1);
         srand(2222222);
@@ -706,38 +713,29 @@ void *predict_classifier2(test *input)
         if (net->hierarchy)
             hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
         
-        //»óÀ§ 5°³ »Ì±â
         top_k(predictions, net->outputs, top, indexes);
 
         time2 = what_time_is_it_now();
 
         fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
-    #ifdef STREAM
-        FILE *fp = fopen("stream.txt", "a");
-    #else
-        FILE *fp = fopen("serial.txt", "a");
-    #endif
-
-        if (fp)
-        {
+        if (fp){
             fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
         }
-        else
-        {
+        else{
             fprintf(stderr, "file open error\n");
             exit(1);
         }
         for (i = 0; i < top; ++i)
         {
             int index = indexes[i];
-
             printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
         }
 
-        fclose(fp);
         if (r.data != im.data)
             free_image(r);
     }
+    
+    fclose(fp);
     free_image(im);
 #if 0
     double time = what_time_is_it_now();
@@ -745,8 +743,6 @@ void *predict_classifier2(test *input)
     fprintf(stderr, "free_networkd : %s, time : %lf \n", input->netName, what_time_is_it_now() - time);
 #endif
     free(input);
-    //hojin
-    //while(1);
 }
 
 void label_classifier(char *datacfg, char *filename, char *weightfile)

@@ -91,8 +91,6 @@ static int jobqueue_init(jobqueue *jobqueue_p);
 static void jobqueue_clear(jobqueue *jobqueue_p);
 static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob_p);
 static struct job *jobqueue_pull(jobqueue *jobqueue_p);
-// doyoung
-static int jobqueue_check(jobqueue *jobqueue_p);
 static void jobqueue_destroy(jobqueue *jobqueue_p);
 
 static void bsem_init(struct bsem *bsem_p, int value);
@@ -366,7 +364,7 @@ static void *thread_do(struct thread *thread_p)
 	while (threads_keepalive)
 	{
 
-#if 1
+#if 0
 		// doyoung
 		if (thread_p->id == 0 && thpool_p->jobqueue.len == 0)
 		{
