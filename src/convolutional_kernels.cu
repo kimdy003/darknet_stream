@@ -178,37 +178,52 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
         id = THREAD_NUM_POOL-1;
     }
     //2020 0311 doyoung
-    #ifdef STREAM
-    cudnnConvolutionForward(cudnn_handle(id, __LINE__),
-    &one,
-    l.srcTensorDesc,
-    net.input_gpu,
-    l.weightDesc,
-    l.weights_gpu,
-    l.convDesc,
-    l.fw_algo,
-    net.workspace_gpu,
-    l.workspace_size,
-    &one,
-    l.dstTensorDesc,
-    l.output_gpu);
-    
-    cuda_syncronize(id, __LINE__);
+    #ifdef THREAD 
+        #ifdef STREAM
+        cudnnConvolutionForward(cudnn_handle(id, __LINE__),
+        &one,
+        l.srcTensorDesc,
+        net.input_gpu,
+        l.weightDesc,
+        l.weights_gpu,
+        l.convDesc,
+        l.fw_algo,
+        net.workspace_gpu,
+        l.workspace_size,
+        &one,
+        l.dstTensorDesc,
+        l.output_gpu);
+        
+        cuda_syncronize(id, __LINE__);
+        #else
+        cudnnConvolutionForward(cudnn_handle(id,__LINE__),
+                    &one,
+                    l.srcTensorDesc,
+                    net.input_gpu,
+                    l.weightDesc,
+                    l.weights_gpu,
+                    l.convDesc,
+                    l.fw_algo,
+                    net.workspace_gpu,
+                    l.workspace_size,
+                    &one,
+                    l.dstTensorDesc,
+                    l.output_gpu);
+        #endif
     #else
-    cudnnConvolutionForward(cudnn_handle(id,__LINE__),
-                &one,
-                l.srcTensorDesc,
-                net.input_gpu,
-                l.weightDesc,
-                l.weights_gpu,
-                l.convDesc,
-                l.fw_algo,
-                net.workspace_gpu,
-                l.workspace_size,
-                &one,
-                l.dstTensorDesc,
-                l.output_gpu);
- 
+    cudnnConvolutionForward(cudnn_handle(),
+                    &one,
+                    l.srcTensorDesc,
+                    net.input_gpu,
+                    l.weightDesc,
+                    l.weights_gpu,
+                    l.convDesc,
+                    l.fw_algo,
+                    net.workspace_gpu,
+                    l.workspace_size,
+                    &one,
+                    l.dstTensorDesc,
+                    l.output_gpu); 
     #endif
 
 #else
