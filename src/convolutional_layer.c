@@ -88,6 +88,7 @@ static size_t get_workspace_size(layer l){
     if(gpu_index >= 0){
         size_t most = 0;
         size_t s = 0;
+	fprintf(stderr, "get workspace size \n");
         cudnnGetConvolutionForwardWorkspaceSize(cudnn_handle(0, __LINE__),
                 l.srcTensorDesc,
                 l.weightDesc,
@@ -144,7 +145,7 @@ void cudnn_convolutional_setup(layer *l)
         error("CUDNN < 7 doesn't support groups, please upgrade!");
     }
     #endif
-
+	fprintf(stderr, "cudnn_set \n");
     cudnnGetConvolutionForwardAlgorithm(cudnn_handle(0, __LINE__),
             l->srcTensorDesc,
             l->weightDesc,

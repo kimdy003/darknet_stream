@@ -111,10 +111,10 @@ dim3 cuda_gridsize(size_t n)
         //2020 0311 doyoung
         cudnnHandle_t cudnn_handle(int id, int line)
         {
+                fprintf(stderr, "@@@@@stream\n");
             int i = id;
             if (!init_stream[i])
             {
-                fprintf(stderr, "@@@@@stream\n");
                 cudnnCreate(&handle[i]);
                 cudaStreamCreate(&(stream[i]));
                 cudaError_t status = cudnnSetStream(handle[i], stream[i]);
