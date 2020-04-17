@@ -20,7 +20,7 @@ dim3 cuda_gridsize(size_t n);
         cudnnHandle_t cudnn_handle(int id, int line);
         void cuda_syncronize(int id, int line);
     #else
-        cudnnHandle_t cudnn_handle(int id);
+        cudnnHandle_t cudnn_handle(int id, int line);
     #endif
 #else
 cudnnHandle_t cudnn_handle();

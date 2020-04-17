@@ -114,6 +114,7 @@ dim3 cuda_gridsize(size_t n)
             int i = id;
             if (!init_stream[i])
             {
+                fprintf(stderr, "@@@@@stream\n");
                 cudnnCreate(&handle[i]);
                 cudaStreamCreate(&(stream[i]));
                 cudaError_t status = cudnnSetStream(handle[i], stream[i]);
@@ -143,8 +144,9 @@ dim3 cuda_gridsize(size_t n)
                 init_serial[i] = 1;
             }
         }
-        cudnnHandle_t cudnn_handle(int id)
+        cudnnHandle_t cudnn_handle(int id, int line)
         {
+            fprintf(stderr, "@@@serial\n");
             int i = id;
             if (!init_serial[i])
             {
@@ -157,6 +159,7 @@ dim3 cuda_gridsize(size_t n)
     #else
     cudnnHandle_t cudnn_handle()
     {
+        fprintf(stderr, "@@@ darknet-serial\n");
         static int init[16] = {0};
         static cudnnHandle_t handle[16];
         int i = cuda_get_device();

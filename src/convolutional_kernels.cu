@@ -196,7 +196,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
         
         cuda_syncronize(id, __LINE__);
         #else
-        cudnnConvolutionForward(cudnn_handle(id),
+        cudnnConvolutionForward(cudnn_handle(id,__LINE__),
                     &one,
                     l.srcTensorDesc,
                     net.input_gpu,
@@ -250,6 +250,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 
     if (l.batch_normalize) {
         //2020 0311 doyoung
+        fprintf(stderr, "baatch normalize___\n");
         #ifndef STREAM
             forward_batchnorm_layer_gpu(l, net);
         #else
