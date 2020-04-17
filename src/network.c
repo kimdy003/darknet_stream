@@ -1104,7 +1104,7 @@ void forward_network_gpu(network *netp)
         }
     }
     pull_network_output(netp);
-    //calc_network_cost(netp);
+    calc_network_cost(netp);
 }
 
 void backward_network_gpu(network *netp)
