@@ -157,11 +157,12 @@ dim3 cuda_gridsize(size_t n)
     #else
     cudnnHandle_t cudnn_handle()
     {
+        static int init[16] = {0};
+        static cudnnHandle_t handle[16];
         int i = cuda_get_device();
-        if (!init_serial[i])
-        {
+        if(!init[i]) {
             cudnnCreate(&handle[i]);
-            init_serial[i] = 1;
+            init[i] = 1;
         }
         return handle[i];
     }
