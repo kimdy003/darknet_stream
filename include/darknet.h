@@ -29,9 +29,9 @@ extern "C"
 
 #define THREAD_NUM_POOL 8
 
-#define n_loop 20
+#define n_loop 1
 
-#define n_des 13
+#define n_des 1
 #define n_res 0
 #define n_vgg 0
 #define n_alex 0
