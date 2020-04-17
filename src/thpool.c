@@ -364,7 +364,7 @@ static void *thread_do(struct thread *thread_p)
 	while (threads_keepalive)
 	{
 
-#if 0
+#if 1
 		// doyoung
 		if (thread_p->id == 0 && thpool_p->jobqueue.len == 0)
 		{
