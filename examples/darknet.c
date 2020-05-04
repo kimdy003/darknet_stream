@@ -577,6 +577,7 @@ int main()
     test *net_input_vgg[n_vgg];
     test *net_input_alex[n_alex];
 
+#if 0
     while (1)
     {
         printf("Enter Image Path: ");
@@ -587,6 +588,9 @@ int main()
         strtok(input, "\n");
         break;
     }
+#endif
+    char * filename = "data/eagle.jpg";
+    strncpy(input, filename, 256);
 
     image im = load_image_color(buff, 0, 0);
 
