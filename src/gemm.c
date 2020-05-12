@@ -173,9 +173,9 @@ void gemm_gpu_dd(int TA, int TB, int M, int N, int K, float ALPHA,
         float *A_gpu, int lda, 
         float *B_gpu, int ldb,
         float BETA,
-        float *C_gpu, int ldc)
+        float *C_gpu, int ldc, int idx)
 {
-    cublasHandle_t handle = blas_handle();
+    cublasHandle_t handle = blas_handle(idx);
     cudaError_t status = cublasSgemm(handle, (TB ? CUBLAS_OP_T : CUBLAS_OP_N), 
             (TA ? CUBLAS_OP_T : CUBLAS_OP_N), N, M, K, &ALPHA, B_gpu, ldb, A_gpu, lda, &BETA, C_gpu, ldc);
     check_error(status);

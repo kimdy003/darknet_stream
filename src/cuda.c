@@ -156,34 +156,54 @@ int n_all = n_des+n_res+n_vgg+n_alex;
         }
         #endif
     #else
-//cudnn = 0, tread = 0, stream= 0
+    //cudnn = 0, tread = 0, stream= 0
+    static int init_hand[n_all] = {0};
+    static cudnnHandle_t handle[n_all];
+    cudnnHandle_t cudnn_handle(int idx)
+    {
+        int i = idx;
+        if(!init_hand[i]) {
+            cudnnCreate(&handle[i]);
+            init_hand[i] = 1;
+        }
+        return handle[i];
+    }
     cudnnHandle_t cudnn_handle()
     {
-        static int init[n_all] = {0};
-        static cudnnHandle_t handle[n_all];
-        for(int i = 0; i<n_all; i++){
-        	if(!init[i]) {
-            		cudnnCreate(&handle[i]);
-           	 	init[i] = 1;
-        	}
-	}
+        int i = cuda_set_device();
+        if(!init_hand[i]) {
+            cudnnCreate(&handle[i]);
+            init_hand[i] = 1;
+        }
         return handle[i];
     }
     #endif
 #endif
+    static int init_blas[n_all] = {0};
+    static cublasHandle_t handle_blas[n_all];
+
+cublasHandle_t blas_handle(int idx)
+{
+    int i= idx;
+    if (!init_blas[i])
+    {
+        cublasCreate(&handle_blas[i]);
+        init_blas[i] = 1;
+    }
+    
+    return handle_blas[i];
+}
 
 cublasHandle_t blas_handle()
 {
-    static int init[n_all] = {0};
-    static cublasHandle_t handle[n_all];
-    for(int i=0; i<n_all; i++){
-    	if (!init[i])
-    	{
-        	cublasCreate(&handle[i]);
-        	init[i] = 1;
-    	}
+    int i= cuda_set_device();
+    if (!init_blas[i])
+    {
+        cublasCreate(&handle_blas[i]);
+        init_blas[i] = 1;
     }
-    return handle[i];
+    
+    return handle_blas[i];
 }
 
 float *cuda_make_array(float *x, size_t n)
