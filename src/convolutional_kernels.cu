@@ -87,7 +87,7 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 
 #ifdef CUDNN
     float one = 1;
-    cudnnConvolutionForward(cudnn_handle(net.index_n),
+    cudnnConvolutionForward(cudnn_handle_a(net.index_n),
                 &one,
                 l.srcTensorDesc,
                 net.input_gpu,

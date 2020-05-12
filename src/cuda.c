@@ -159,7 +159,7 @@ int n_all = n_des+n_res+n_vgg+n_alex;
     //cudnn = 0, tread = 0, stream= 0
     static int init_hand[n_all] = {0};
     static cudnnHandle_t handle[n_all];
-    cudnnHandle_t cudnn_handle(int idx)
+    cudnnHandle_t cudnn_handle_a(int idx)
     {
         int i = idx;
         if(!init_hand[i]) {
@@ -182,7 +182,7 @@ int n_all = n_des+n_res+n_vgg+n_alex;
     static int init_blas[n_all] = {0};
     static cublasHandle_t handle_blas[n_all];
 
-cublasHandle_t blas_handle(int idx)
+cublasHandle_t blas_handle_a(int idx)
 {
     int i= idx;
     if (!init_blas[i])
