@@ -134,7 +134,7 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
             } else {
                 im2col_gpu(im, l.c/l.groups, l.h, l.w, l.size, l.stride, l.pad, b);
             }
-            gemm_gpu(0,0,m,n,k,1,a,k,b,n,1,c,n);
+            gemm_gpu_dd(0,0,m,n,k,1,a,k,b,n,1,c,n,net.index_n);
         }
     }
 #endif
@@ -492,5 +492,6 @@ void update_convolutional_layer_gpu(layer l, update_args a)
         constrain_gpu(l.nweights, l.clip, l.weights_gpu, 1);
     }
 }
+
 
 

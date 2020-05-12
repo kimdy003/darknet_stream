@@ -453,6 +453,7 @@ threadpool thpool;
 //각 네트워크의 조건변수, mutex변수, wait를 위한 변수 선언 헤더에 extern변수로 지정
 pthread_cond_t *cond_t;
 pthread_mutex_t *mutex_t;
+pthread_mutex_t *mutex_a;
 int *cond_i;
 
 int main()
@@ -525,6 +526,10 @@ int main()
         cond_i[i] = 0;
     }
 #endif
+
+    mutex_a = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(&mutex_a, NULL);
+
 
 #if 0
     for(unsigned int k=0; k<n_net; k++){

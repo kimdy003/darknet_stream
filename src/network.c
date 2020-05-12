@@ -1089,7 +1089,7 @@ void forward_network_gpu(network *netp)
     {
         net.index = i;
         layer l = net.layers[i];
-        //fprintf(stderr, "net - %d /layerstart-%d - %s\n", net.index_n, i, get_layer_string(l.type));
+        //fprintf(stderr, "net - %d /layerstart-%d - %s start\n", net.index_n, i, get_layer_string(l.type));
         if (l.delta_gpu)
         {
             fill_gpu(l.outputs * l.batch, 0, l.delta_gpu, 1);
@@ -1102,6 +1102,7 @@ void forward_network_gpu(network *netp)
             net.truth_gpu = l.output_gpu;
             net.truth = l.output;
         }
+        //fprintf(stderr, "net - %d /layerstart-%d - %s end\n ", net.index_n, i, get_layer_string(l.type));
     }
     pull_network_output(netp);
     calc_network_cost(netp);

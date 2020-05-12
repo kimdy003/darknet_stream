@@ -31,11 +31,12 @@ extern "C"
 
 #define n_loop 1
 
-#define n_des 1
-#define n_res 0
-#define n_vgg 0
-#define n_alex 0
+#define n_des 2
+#define n_res 2
+#define n_vgg 2
+#define n_alex 2
 
+    extern pthread_mutex_t *mutex_a;
 #ifdef THREAD
     extern pthread_cond_t *cond_t;
     extern pthread_mutex_t *mutex_t;

@@ -88,6 +88,7 @@ dim3 cuda_gridsize(size_t n)
     //printf("%ld %ld %ld %ld\n", n, x, y, x*y*BLOCK);
     return d;
 }
+int n_all = n_des+n_res+n_vgg+n_alex;
 
 #ifdef CUDNN
     #ifdef THREAD
@@ -155,15 +156,17 @@ dim3 cuda_gridsize(size_t n)
         }
         #endif
     #else
+//cudnn = 0, tread = 0, stream= 0
     cudnnHandle_t cudnn_handle()
     {
-        static int init[16] = {0};
-        static cudnnHandle_t handle[16];
-        int i = cuda_get_device();
-        if(!init[i]) {
-            cudnnCreate(&handle[i]);
-            init[i] = 1;
-        }
+        static int init[n_all] = {0};
+        static cudnnHandle_t handle[n_all];
+        for(int i = 0; i<n_all; i++){
+        	if(!init[i]) {
+            		cudnnCreate(&handle[i]);
+           	 	init[i] = 1;
+        	}
+	}
         return handle[i];
     }
     #endif
@@ -171,13 +174,14 @@ dim3 cuda_gridsize(size_t n)
 
 cublasHandle_t blas_handle()
 {
-    static int init[8] = {0};
-    static cublasHandle_t handle[8];
-    int i = cuda_get_device();
-    if (!init[i])
-    {
-        cublasCreate(&handle[i]);
-        init[i] = 1;
+    static int init[n_all] = {0};
+    static cublasHandle_t handle[n_all];
+    for(int i=0; i<n_all; i++){
+    	if (!init[i])
+    	{
+        	cublasCreate(&handle[i]);
+        	init[i] = 1;
+    	}
     }
     return handle[i];
 }
