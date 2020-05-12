@@ -87,6 +87,21 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 
 #ifdef CUDNN
     float one = 1;
+  #ifdef THREAD
+  cudnnConvolutionForward(cudnn_handle(0,__LINE__),
+                &one,
+                l.srcTensorDesc,
+                net.input_gpu,
+                l.weightDesc,
+                l.weights_gpu,
+                l.convDesc,
+                l.fw_algo,
+                net.workspace,
+                l.workspace_size,
+                &one,
+                l.dstTensorDesc,
+                l.output_gpu);
+#else
     cudnnConvolutionForward(cudnn_handle_a(net.index_n),
                 &one,
                 l.srcTensorDesc,
@@ -100,6 +115,7 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
                 &one,
                 l.dstTensorDesc,
                 l.output_gpu);
+#endif
 
 #else
     int i, j;
@@ -194,7 +210,21 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                     l.dstTensorDesc,
                     l.output_gpu);
         #endif
-    #endif
+    #else
+	cudnnConvolutionForward(cudnn_handle(),
+                    &one,
+                    l.srcTensorDesc,
+                    net.input_gpu,
+                    l.weightDesc,
+                    l.weights_gpu,
+                    l.convDesc,
+                    l.fw_algo,
+                    net.workspace_gpu,
+                    l.workspace_size,
+                    &one,
+                    l.dstTensorDesc,
+                    l.output_gpu);
+	#endif
 
 #else
     int i, j;
@@ -314,7 +344,7 @@ void backward_convolutional_layer_gpu(convolutional_layer l, network net)
             l.dweightDesc,
             l.weight_updates_gpu);
     #else
-    cudnnConvolutionBackwardFilter(cudnn_handle(net.index_n),
+    cudnnConvolutionBackwardFilter(cudnn_handle(),
             &one,
             l.srcTensorDesc,
             net.input_gpu,
