@@ -262,7 +262,7 @@ void forward_function(th_arg *input)
 #ifdef GPU
     if (input->flag == 1)
     {
-        //fprintf(stderr, "GPU start\n");
+        fprintf(stderr, "GPU start\n");
         //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
 
         if (nl->layer.delta_gpu)
@@ -272,18 +272,20 @@ void forward_function(th_arg *input)
         nl->layer.forward_gpu_thread(nl);
         //2020 0311 doyoung
         cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
-        //fprintf(stderr, "GPU end\n");
+        fprintf(stderr,"%f\n",nl->layer.output_gpu);
+	fprintf(stderr, "GPU end\n");
     }
     else if (input->flag == 0)
     {
 #endif
         //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
-        //fprintf(stderr, "cpu\n");
+        fprintf(stderr, "cpu\n");
         if (nl->layer.delta)
         {
             fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
         }
         nl->layer.forward_thread(nl);
+	fprintf(stderr,"%f\n",nl->layer.output);
 #ifdef GPU
     }
 #endif

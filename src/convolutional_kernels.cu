@@ -101,7 +101,7 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
                 &one,
                 l.dstTensorDesc,
                 l.output_gpu);
-#else
+    #else
     cudnnConvolutionForward(cudnn_handle_a(net.index_n),
                 &one,
                 l.srcTensorDesc,
@@ -114,8 +114,8 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
                 l.workspace_size,
                 &one,
                 l.dstTensorDesc,
-                l.output_gpu);
-#endif
+                l.output_gpu); 
+    #endif
 
 #else
     int i, j;
@@ -243,7 +243,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
             } else {
                 im2col_gpu(im, l.c/l.groups, l.h, l.w, l.size, l.stride, l.pad, b);
             }
-            gemm_gpu(0,0,m,n,k,1,a,k,b,n,1,c,n);
+            gemm_gpu_dd(0,0,m,n,k,1,a,k,b,n,1,c,n,net.index_n);
         }
     }
 #endif
