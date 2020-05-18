@@ -1,3 +1,4 @@
+CPU=0
 GPU=1
 CUDNN=1
 OPENCV=1
@@ -48,6 +49,11 @@ COMMON+= -DOPENCV
 CFLAGS+= -DOPENCV
 LDFLAGS+= `pkg-config --libs opencv` -lstdc++
 COMMON+= `pkg-config --cflags opencv` 
+endif
+
+ifeq ($(CPU), 1)
+COMMON+= -DCPU
+CFLAGS+= -DCPU
 endif
 
 ifeq ($(GPU), 1) 

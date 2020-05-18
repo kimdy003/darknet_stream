@@ -273,7 +273,7 @@ void forward_function(th_arg *input)
         //2020 0311 doyoung
         cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
         //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
-	//fprintf(stderr, "GPU end\n");
+        //fprintf(stderr, "GPU end\n");
     }
     else if (input->flag == 0)
     {
@@ -284,7 +284,7 @@ void forward_function(th_arg *input)
             fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
         }
         nl->layer.forward_thread(nl);
-	//fprintf(stderr,"CPU : %f\n",nl->layer.output);
+        //fprintf(stderr,"CPU : %f\n",nl->layer.output);
 #ifdef GPU
     }
 #endif
@@ -303,8 +303,8 @@ void forward_network(network *netp)
         network net = *netp;
         int i;
         cuda_set_device(net.gpu_index);
-	cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
-	//fprintf(stderr,"PUSH = CPU : %f GPU : %f\n",net.input,net.input_gpu);
+        cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+        //fprintf(stderr,"PUSH = CPU : %f GPU : %f\n",net.input,net.input_gpu);
 
         if (net.truth)
         {
@@ -313,52 +313,52 @@ void forward_network(network *netp)
 
         for (i = 0; i < net.n; ++i)
         {
-        pthread_mutex_lock(&mutex_t[net.index_n]);
+            pthread_mutex_lock(&mutex_t[net.index_n]);
 
-        //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
-        cond_i[net.index_n] = 1;
-        net.index = i;
-        layer l = net.layers[i];
+            //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
+            cond_i[net.index_n] = 1;
+            net.index = i;
+            layer l = net.layers[i];
 
-        netlayer nl;
+            netlayer nl;
 
-        nl.layer = l;
-        nl.net = net;
+            nl.layer = l;
+            nl.net = net;
 
-        th_arg input;
-        input.arg = &nl;
-        input.flag = 0;
-        input.type = net.layers[i].type;
-        input.id = net.index_n;
-        input.n = i;
-        
+            th_arg input;
+            input.arg = &nl;
+            input.flag = 0;
+            input.type = net.layers[i].type;
+            input.id = net.index_n;
+            input.n = i;
+
         #ifdef STREAM
             thpool_add_work(thpool, forward_function_stream, &input);
         #else
             thpool_add_work(thpool, forward_function, &input);
         #endif
 
-        while (cond_i[net.index_n] == 1)
-        {
-            pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
+            while (cond_i[net.index_n] == 1)
+            {
+                pthread_cond_wait(&cond_t[net.index_n], &mutex_t[net.index_n]);
+            }
+
+            net.input_gpu = l.output_gpu;
+            net.input = l.output;
+            net.inputs = l.outputs;
+
+            if (l.truth)
+            {
+                net.truth = l.output;
+                net.truth_gpu = l.output_gpu;
+            }
+
+            //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
+            pthread_mutex_unlock(&mutex_t[net.index_n]);
         }
-
-        net.input_gpu = l.output_gpu;
-        net.input = l.output;
-        net.inputs = l.outputs;
-
-        if (l.truth)
-        {
-            net.truth = l.output;
-            net.truth_gpu = l.output_gpu;
-        }
-
-        //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
+        pthread_mutex_lock(&mutex_t[net.index_n]);
+        pull_network_output(netp);
         pthread_mutex_unlock(&mutex_t[net.index_n]);
-    }
-    pthread_mutex_lock(&mutex_t[net.index_n]);
-    pull_network_output(netp);
-    pthread_mutex_unlock(&mutex_t[net.index_n]);
 
     #else
         if (netp->gpu_index >= 0)
