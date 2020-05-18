@@ -271,7 +271,9 @@ void forward_function(th_arg *input)
         }
         nl->layer.forward_gpu_thread(nl);
         //2020 0311 doyoung
+#ifdef CPU
         cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+#endif
         //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
         //fprintf(stderr, "GPU end\n");
     }

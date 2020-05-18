@@ -137,7 +137,6 @@ dim3 cuda_gridsize(size_t n)
 
         void cudnn_handle_set()
         {
-            int i = cuda_get_device();
             for (int i = 0; i < THREAD_NUM_POOL; i++)
             {
                 cudnnCreate(&handle[i]);

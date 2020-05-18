@@ -5,7 +5,7 @@ OPENCV=1
 OPENMP=1
 DEBUG=0
 THREAD=1
-STREAM=0
+STREAM=1
 
 
 ARCH= -gencode arch=compute_30,code=sm_30 \

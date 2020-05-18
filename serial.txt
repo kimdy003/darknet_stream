@@ -30,9 +30,6 @@ cudnn = 0
 thread = 0
 stream = 0
 
-
-<<<<<<< HEAD
-
 network : Res: Predicted in 0.836440 seconds.
 network : Res: Predicted in 0.839135 seconds.
 network : Dense: Predicted in 0.922620 seconds.
@@ -239,6 +236,32 @@ network : Dense: Predicted in 0.790156 seconds.
 ***** ThREAD NUM POOL : 8 *****
 
 execution Time : 0.806648
->>>>>>> 1c5b59fee2363b5b725303fa25c19be22d6e352b
+
+network : Res: Predicted in 0.795406 seconds.
+network : Res: Predicted in 0.813231 seconds.
+network : Dense: Predicted in 0.891089 seconds.
+network : Dense: Predicted in 0.942231 seconds.
+network : Alex: Predicted in 0.977844 seconds.
+network : Alex: Predicted in 0.950583 seconds.
+network : VGG: Predicted in 0.982134 seconds.
+network : VGG: Predicted in 0.985077 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.007766
+
+
+network : Res: Predicted in 0.818832 seconds.
+network : Res: Predicted in 0.813551 seconds.
+network : Dense: Predicted in 0.894484 seconds.
+network : Dense: Predicted in 0.923105 seconds.
+network : Alex: Predicted in 0.978274 seconds.
+network : VGG: Predicted in 0.994483 seconds.
+network : VGG: Predicted in 1.000573 seconds.
+network : Alex: Predicted in 0.981190 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.022205
 
 
