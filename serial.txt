@@ -31,3 +31,38 @@ thread = 0
 stream = 0
 
 
+
+network : Res: Predicted in 0.836440 seconds.
+network : Res: Predicted in 0.839135 seconds.
+network : Dense: Predicted in 0.922620 seconds.
+network : Dense: Predicted in 0.908997 seconds.
+network : VGG: Predicted in 0.988470 seconds.
+network : Alex: Predicted in 0.983066 seconds.
+network : Alex: Predicted in 0.989867 seconds.
+network : VGG: Predicted in 1.005572 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.028675
+
+
+network : Res: Predicted in 0.880781 seconds.
+network : Res: Predicted in 0.881406 seconds.
+network : Dense: Predicted in 0.926765 seconds.
+network : Dense: Predicted in 0.933264 seconds.
+network : Alex: Predicted in 0.987033 seconds.
+network : Alex: Predicted in 0.996062 seconds.
+network : VGG: Predicted in 0.996589 seconds.
+network : VGG: Predicted in 1.001813 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.031182
+
+Serial
+cudnn = 1
+thread = 0
+stream = 0
+
+
+
