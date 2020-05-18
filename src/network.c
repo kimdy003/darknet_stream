@@ -272,18 +272,19 @@ void forward_function(th_arg *input)
         nl->layer.forward_gpu_thread(nl);
         //2020 0311 doyoung
         cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
-        //fprintf(stderr, "GPU end\n");
+        //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
+	//fprintf(stderr, "GPU end\n");
     }
     else if (input->flag == 0)
     {
 #endif
         //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
-        //fprintf(stderr, "cpu\n");
         if (nl->layer.delta)
         {
             fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
         }
         nl->layer.forward_thread(nl);
+	//fprintf(stderr,"CPU : %f\n",nl->layer.output);
 #ifdef GPU
     }
 #endif
@@ -302,7 +303,8 @@ void forward_network(network *netp)
         network net = *netp;
         int i;
         cuda_set_device(net.gpu_index);
-        cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+	cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+	//fprintf(stderr,"PUSH = CPU : %f GPU : %f\n",net.input,net.input_gpu);
 
         if (net.truth)
         {
