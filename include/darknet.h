@@ -33,7 +33,7 @@ extern "C"
 
 #define n_des 2
 #define n_res 2
-#define n_vgg 2
+#define n_vgg 1
 #define n_alex 2
 
 #define n_a n_des+n_res+n_vgg+n_alex

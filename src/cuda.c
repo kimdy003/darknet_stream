@@ -130,14 +130,17 @@ dim3 cuda_gridsize(size_t n)
             cudaError_t status = cudaStreamSynchronize(stream[id]);
             check_error_line(status, line);
         }
+	void usedstream(int id){
+		return stream[id];
+	}
         #else
 
-        static int init_serial[THREAD_NUM_POOL] = {0};
-        static cudnnHandle_t handle[THREAD_NUM_POOL];
+        static int init_serial[n_a] = {0};
+        static cudnnHandle_t handle[n_a];
 
         void cudnn_handle_set()
         {
-            for (int i = 0; i < THREAD_NUM_POOL; i++)
+            for (int i = 0; i < n_a; i++)
             {
                 cudnnCreate(&handle[i]);
                 init_serial[i] = 1;
