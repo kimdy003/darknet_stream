@@ -193,8 +193,8 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
         &one,
         l.dstTensorDesc,
         l.output_gpu);
-        cuda_syncronize(id, __LINE__);
 #if 0
+        cuda_syncronize(id, __LINE__);
 	if(!cudaStreamQuery(usedstream(id))){
 		fprintf(stderr, "[%d] end", net.index_n);
 	}

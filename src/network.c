@@ -235,6 +235,7 @@ void forward_function_stream(th_arg *input, int id)
             fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
         }
         nl->layer.forward_gpu_thread(nl, thidx);
+        cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
     }
     else if (input->flag == 0)
     {
@@ -271,9 +272,7 @@ void forward_function(th_arg *input)
         }
         nl->layer.forward_gpu_thread(nl);
         //2020 0311 doyoung
-#ifdef CPU
         cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
-#endif
         //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
         //fprintf(stderr, "GPU end\n");
     }
@@ -305,7 +304,9 @@ void forward_network(network *netp)
         network net = *netp;
         int i;
         cuda_set_device(net.gpu_index);
+#ifndef CPU
         cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+#endif
         //fprintf(stderr,"PUSH = CPU : %f GPU : %f\n",net.input,net.input_gpu);
 
         if (net.truth)
@@ -316,7 +317,9 @@ void forward_network(network *netp)
         for (i = 0; i < net.n; ++i)
         {
             pthread_mutex_lock(&mutex_t[net.index_n]);
-
+#ifdef CPU    
+        cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+#endif
             //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
             cond_i[net.index_n] = 1;
             net.index = i;
@@ -351,16 +354,16 @@ void forward_network(network *netp)
 
             if (l.truth)
             {
-                net.truth = l.output;
-                net.truth_gpu = l.output_gpu;
+                //net.truth = l.output;
+                //net.truth_gpu = l.output_gpu;
             }
 
             //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
             pthread_mutex_unlock(&mutex_t[net.index_n]);
         }
-        pthread_mutex_lock(&mutex_t[net.index_n]);
-        pull_network_output(netp);
-        pthread_mutex_unlock(&mutex_t[net.index_n]);
+        //pthread_mutex_lock(&mutex_t[net.index_n]);
+        //pull_network_output(netp);
+        //pthread_mutex_unlock(&mutex_t[net.index_n]);
 
     #else
         if (netp->gpu_index >= 0)
