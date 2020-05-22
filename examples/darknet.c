@@ -616,7 +616,7 @@ int main()
             exit(0);
         }
     }
-
+    
     for (int i = 0; i < n_res; i++)
     {
         net_input_res[i] = (test *)malloc(sizeof(test));
@@ -625,7 +625,15 @@ int main()
         net_input_res[i]->names = names;
         net_input_res[i]->netName = resName;
 
-        printf(" It's turn for res i = %d\n", i);
+#ifdef SERIAL
+	for (int i = 0; i < n_des; i++)
+	{
+        	pthread_join(networkArray_des[i], NULL);
+    	}
+#endif
+
+        printf("\n It's turn for res i = %d\n", i);
+
         if (pthread_create(&networkArray_res[i], NULL, (void *)predict_classifier2, net_input_res[i]) < 0)
         {
             perror("thread error");
@@ -665,10 +673,12 @@ int main()
         }
     }
 
+#ifndef SERIAL
     for (int i = 0; i < n_des; i++)
     {
         pthread_join(networkArray_des[i], NULL);
     }
+#endif
     for (int i = 0; i < n_res; i++)
     {
         pthread_join(networkArray_res[i], NULL);

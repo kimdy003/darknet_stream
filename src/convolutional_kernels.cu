@@ -180,19 +180,35 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     //2020 0311 doyoung
     #ifdef THREAD 
         #ifdef STREAM
-        cudnnConvolutionForward(cudnn_handle(id, __LINE__),
-        &one,
-        l.srcTensorDesc,
-        net.input_gpu,
-        l.weightDesc,
-        l.weights_gpu,
-        l.convDesc,
-        l.fw_algo,
-        net.workspace_gpu,
-        l.workspace_size,
-        &one,
-        l.dstTensorDesc,
-        l.output_gpu);
+		#ifdef SERIAL
+		cudnnConvolutionForward(cudnn_handle((net.index_n%7)+1, __LINE__),
+		&one,
+		l.srcTensorDesc,
+		net.input_gpu,
+		l.weightDesc,
+		l.weights_gpu,
+		l.convDesc,
+		l.fw_algo,
+		net.workspace_gpu,
+		l.workspace_size,
+		&one,
+		l.dstTensorDesc,
+		l.output_gpu);
+		#else
+		cudnnConvolutionForward(cudnn_handle(id, __LINE__),
+		&one,
+		l.srcTensorDesc,
+		net.input_gpu,
+		l.weightDesc,
+		l.weights_gpu,
+		l.convDesc,
+		l.fw_algo,
+		net.workspace_gpu,
+		l.workspace_size,
+		&one,
+		l.dstTensorDesc,
+		l.output_gpu);
+		#endif
 #if 0
         cuda_syncronize(id, __LINE__);
 	if(!cudaStreamQuery(usedstream(id))){
@@ -200,7 +216,6 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 	}
 #endif
         #else
-	//fprintf(stderr, "[%d] start", net.index_n);
         cudnnConvolutionForward(cudnn_handle(net.index_n, __LINE__),
                     &one,
                     l.srcTensorDesc,
@@ -214,11 +229,6 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                     &one,
                     l.dstTensorDesc,
                     l.output_gpu);
-#if 0
-	if(!cudaStreamQuery(0)){
-		fprintf(stderr, "[%d] end", net.index_n);
-	}
-#endif
         #endif
     #else
 	cudnnConvolutionForward(cudnn_handle(),
