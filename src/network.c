@@ -222,77 +222,77 @@ network *make_network(int n)
 
 #ifdef THREAD
 #ifdef STREAM
-void forward_function_stream(th_arg *input, int id)
-{
-    int thidx = id;
-    netlayer *nl = input->arg;
-    pthread_mutex_lock(&mutex_t[nl->net.index_n]);
-#ifdef GPU
-    if (input->flag == 1)
+    void forward_function_stream(th_arg *input, int id)
     {
-        if (nl->layer.delta_gpu)
+        int thidx = id;
+        netlayer *nl = input->arg;
+        pthread_mutex_lock(&mutex_t[nl->net.index_n]);
+    #ifdef GPU
+        if (input->flag == 1)
         {
-            fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
+            if (nl->layer.delta_gpu)
+            {
+                fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
+            }
+            nl->layer.forward_gpu_thread(nl, thidx);
+            cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
         }
-        nl->layer.forward_gpu_thread(nl, thidx);
-        cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
-    }
-    else if (input->flag == 0)
-    {
-#endif
-        //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
-        //fprintf(stderr, "cpu\n");
-        if (nl->layer.delta)
+        else if (input->flag == 0)
         {
-            fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
+    #endif
+            //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
+            //fprintf(stderr, "cpu\n");
+            if (nl->layer.delta)
+            {
+                fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
+            }
+            nl->layer.forward_thread(nl);
+    #ifdef GPU
         }
-        nl->layer.forward_thread(nl);
-#ifdef GPU
+    #endif
+        cond_i[nl->net.index_n] = 0;
+        pthread_cond_signal(&cond_t[nl->net.index_n]);
+        pthread_mutex_unlock(&mutex_t[nl->net.index_n]);
     }
-#endif
-    cond_i[nl->net.index_n] = 0;
-    pthread_cond_signal(&cond_t[nl->net.index_n]);
-    pthread_mutex_unlock(&mutex_t[nl->net.index_n]);
-}
 #else
-void forward_function(th_arg *input)
-{
-    netlayer *nl = input->arg;
-    pthread_mutex_lock(&mutex_t[nl->net.index_n]);
-    //input->flag == 1;
-#ifdef GPU
-    if (input->flag == 1)
+    void forward_function(th_arg *input)
     {
-        //fprintf(stderr, "GPU start\n");
-        //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
+        netlayer *nl = input->arg;
+        pthread_mutex_lock(&mutex_t[nl->net.index_n]);
+        //input->flag == 1;
+    #ifdef GPU
+        if (input->flag == 1)
+        {
+            //fprintf(stderr, "GPU start\n");
+            //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
 
-        if (nl->layer.delta_gpu)
-        {
-            fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
+            if (nl->layer.delta_gpu)
+            {
+                fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
+            }
+            nl->layer.forward_gpu_thread(nl);
+            //2020 0311 doyoung
+            cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+            //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
+            //fprintf(stderr, "GPU end\n");
         }
-        nl->layer.forward_gpu_thread(nl);
-        //2020 0311 doyoung
-        cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
-        //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
-        //fprintf(stderr, "GPU end\n");
-    }
-    else if (input->flag == 0)
-    {
-#endif
-        //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
-        if (nl->layer.delta)
+        else if (input->flag == 0)
         {
-            fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
+    #endif
+            //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
+            if (nl->layer.delta)
+            {
+                fill_cpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta, 1);
+            }
+            nl->layer.forward_thread(nl);
+            //fprintf(stderr,"CPU : %f\n",nl->layer.output);
+    #ifdef GPU
         }
-        nl->layer.forward_thread(nl);
-        //fprintf(stderr,"CPU : %f\n",nl->layer.output);
-#ifdef GPU
+    #endif
+        cond_i[nl->net.index_n] = 0;
+        pthread_cond_signal(&cond_t[nl->net.index_n]);
+        pthread_mutex_unlock(&mutex_t[nl->net.index_n]);
     }
-#endif
-    cond_i[nl->net.index_n] = 0;
-    pthread_cond_signal(&cond_t[nl->net.index_n]);
-    pthread_mutex_unlock(&mutex_t[nl->net.index_n]);
-}
 #endif
 #endif
 //2020 0213 cheolsun 네트워크 상태 변수 추가 및 network 쓰레드화
