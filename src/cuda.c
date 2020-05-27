@@ -93,69 +93,71 @@ dim3 cuda_gridsize(size_t n)
 #ifdef CUDNN
     #ifdef THREAD
         #ifdef STREAM
-        static cudaStream_t stream[THREAD_NUM_POOL];
-        static cudnnHandle_t handle[THREAD_NUM_POOL];
-        static int init_stream[THREAD_NUM_POOL] = {0};
+            static cudaStream_t stream[THREAD_NUM_POOL];
+            static cudnnHandle_t handle[THREAD_NUM_POOL];
+            static int init_stream[THREAD_NUM_POOL] = {0};
 
-        void cudnn_handle_set_stream()
-        {
-            for (int i = 0; i < THREAD_NUM_POOL; i++)
+            void cudnn_handle_set_stream()
             {
-                cudnnCreate(&handle[i]);
-                cudaStreamCreate(&(stream[i]));
-                cudaError_t status = cudnnSetStream(handle[i], stream[i]);
-                check_error(status);
-                init_stream[i] = 1;
+                for (int i = 0; i < THREAD_NUM_POOL; i++)
+                {
+                    cudnnCreate(&handle[i]);
+                    cudaStreamCreate(&(stream[i]));
+                    cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+                    check_error(status);
+                    init_stream[i] = 1;
+                }
             }
-        }
 
-        //2020 0311 doyoung
-        cudnnHandle_t cudnn_handle(int id, int line)
-        {
-            int i = id;
-            if (!init_stream[i])
+            //2020 0311 doyoung
+            cudnnHandle_t cudnn_handle(int id, int line)
             {
-                cudnnCreate(&handle[i]);
-                cudaStreamCreate(&(stream[i]));
-                cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+                int i = id;
+                if (!init_stream[i])
+                {
+                    cudnnCreate(&handle[i]);
+                    cudaStreamCreate(&(stream[i]));
+                    cudaError_t status = cudnnSetStream(handle[i], stream[i]);
+                    check_error_line(status, line);
+                    init_stream[i] = 1;
+                }
+
+                return handle[i];
+            }
+
+            void cuda_syncronize(int id, int line)
+            {
+                cudaError_t status = cudaStreamSynchronize(stream[id]);
                 check_error_line(status, line);
-                init_stream[i] = 1;
+            }
+            cudaStream_t usedstream(int id)
+            {
+                return stream[id];
             }
 
-            return handle[i];
-        }
-
-        void cuda_syncronize(int id, int line)
-        {
-            cudaError_t status = cudaStreamSynchronize(stream[id]);
-            check_error_line(status, line);
-        }
-	cudaStream_t usedstream(int id){
-		return stream[id];
-	}
         #else
 
-        static int init_serial[n_a] = {0};
-        static cudnnHandle_t handle[n_a];
+            static int init_serial[n_a] = {0};
+            static cudnnHandle_t handle[n_a];
 
-        void cudnn_handle_set()
-        {
-            for (int i = 0; i < n_a; i++)
+            void cudnn_handle_set()
             {
-                cudnnCreate(&handle[i]);
-                init_serial[i] = 1;
+                for (int i = 0; i < n_a; i++)
+                {
+                    cudnnCreate(&handle[i]);
+                    init_serial[i] = 1;
+                }
             }
-        }
-        cudnnHandle_t cudnn_handle(int id, int line)
-        {
-            int i = id;
-            if (!init_serial[i])
+            cudnnHandle_t cudnn_handle(int id, int line)
             {
-                cudnnCreate(&handle[i]);
-                init_serial[i] = 1;
+                int i = id;
+                if (!init_serial[i])
+                {
+                    cudnnCreate(&handle[i]);
+                    init_serial[i] = 1;
+                }
+                return handle[i];
             }
-            return handle[i];
-        }
         #endif
     #else
     //cudnn = 0, tread = 0, stream= 0
@@ -164,7 +166,8 @@ dim3 cuda_gridsize(size_t n)
     cudnnHandle_t cudnn_handle_a(int idx)
     {
         int i = idx;
-        if(!init_a[i]) {
+        if (!init_a[i])
+        {
             cudnnCreate(&handle[i]);
             init_a[i] = 1;
         }
@@ -173,7 +176,8 @@ dim3 cuda_gridsize(size_t n)
     cudnnHandle_t cudnn_handle()
     {
         int i = cuda_get_device();
-        if(!init_a[i]) {
+        if (!init_a[i])
+        {
             cudnnCreate(&handle[i]);
             init_a[i] = 1;
         }
@@ -181,30 +185,30 @@ dim3 cuda_gridsize(size_t n)
     }
     #endif
 #endif
-    static int init_blas[n_a] = {0};
-    static cublasHandle_t handle_blas[n_a];
+static int init_blas[n_a] = {0};
+static cublasHandle_t handle_blas[n_a];
 
 cublasHandle_t blas_handle_a(int idx)
 {
-    int i= idx;
+    int i = idx;
     if (!init_blas[i])
     {
         cublasCreate(&handle_blas[i]);
         init_blas[i] = 1;
     }
-    
+
     return handle_blas[i];
 }
 
 cublasHandle_t blas_handle()
 {
-    int i= cuda_get_device();
+    int i = cuda_get_device();
     if (!init_blas[i])
     {
         cublasCreate(&handle_blas[i]);
         init_blas[i] = 1;
     }
-    
+
     return handle_blas[i];
 }
 
