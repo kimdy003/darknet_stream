@@ -223,10 +223,8 @@ extern "C" void forward_crop_layer_gpu(crop_layer layer, network net)
        */
 }
 #ifdef THREAD
-extern "C" void forward_crop_layer_gpu_thread(netlayer* input)
+extern "C" void forward_crop_layer_gpu_thread(netlayer* input, int id)
 {
-     
-
     network net = input->net;
     layer layer = input->layer;
 
@@ -242,37 +240,27 @@ extern "C" void forward_crop_layer_gpu_thread(netlayer* input)
     }
 
     int size = layer.batch * layer.w * layer.h;
+    #ifdef STREAM
+        fprintf(stderr, "crop stream %d\n", id);
+        levels_image_kernel<<<cuda_gridsize(size), BLOCK, 0, usedstream(id)>>>(net.input_gpu, layer.rand_gpu, layer.batch, layer.w, layer.h, net.train, layer.saturation, layer.exposure, translate, scale, layer.shift);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
 
-    levels_image_kernel<<<cuda_gridsize(size), BLOCK>>>(net.input_gpu, layer.rand_gpu, layer.batch, layer.w, layer.h, net.train, layer.saturation, layer.exposure, translate, scale, layer.shift);
-    check_error(cudaPeekAtLastError());
+        size = layer.batch*layer.c*layer.out_w*layer.out_h;
 
-    size = layer.batch*layer.c*layer.out_w*layer.out_h;
+        forward_crop_layer_kernel<<<cuda_gridsize(size), BLOCK, 0, usedstream(id)>>>(net.input_gpu, layer.rand_gpu, size, layer.c, layer.h, layer.w, layer.out_h, layer.out_w, net.train, layer.flip, radians, layer.output_gpu);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    #else
+        levels_image_kernel<<<cuda_gridsize(size), BLOCK>>>(net.input_gpu, layer.rand_gpu, layer.batch, layer.w, layer.h, net.train, layer.saturation, layer.exposure, translate, scale, layer.shift);
+        check_error(cudaPeekAtLastError());
 
-    forward_crop_layer_kernel<<<cuda_gridsize(size), BLOCK>>>(net.input_gpu, layer.rand_gpu, size, layer.c, layer.h, layer.w, layer.out_h, layer.out_w, net.train, layer.flip, radians, layer.output_gpu);
-    check_error(cudaPeekAtLastError());
+        size = layer.batch*layer.c*layer.out_w*layer.out_h;
 
-     
-     
-     
+        forward_crop_layer_kernel<<<cuda_gridsize(size), BLOCK>>>(net.input_gpu, layer.rand_gpu, size, layer.c, layer.h, layer.w, layer.out_h, layer.out_w, net.train, layer.flip, radians, layer.output_gpu);
+        check_error(cudaPeekAtLastError());
+    #endif
 
-/*
-       cuda_pull_array(layer.output_gpu, layer.output, size);
-       image im = float_to_image(layer.crop_width, layer.crop_height, layer.c, layer.output + 0*(size/layer.batch));
-       image im2 = float_to_image(layer.crop_width, layer.crop_height, layer.c, layer.output + 1*(size/layer.batch));
-       image im3 = float_to_image(layer.crop_width, layer.crop_height, layer.c, layer.output + 2*(size/layer.batch));
-
-       translate_image(im, -translate);
-       scale_image(im, 1/scale);
-       translate_image(im2, -translate);
-       scale_image(im2, 1/scale);
-       translate_image(im3, -translate);
-       scale_image(im3, 1/scale);
-       
-       show_image(im, "cropped");
-       show_image(im2, "cropped2");
-       show_image(im3, "cropped3");
-       cvWaitKey(0);
-       */
 }
 #endif
 
