@@ -57,3 +57,10 @@ execution Time : 0.966939
 =====================================================================
 
 
+network : Dense: Predicted in 0.281389 seconds.
+***** Des : 1 , Res : 0 , VGG : 0 , Alex : 0 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 0.316781
+
+
