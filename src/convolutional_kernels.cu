@@ -278,8 +278,11 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     } else {
         add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.n, l.out_w*l.out_h);
     }
-
-    activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
+    #ifdef STREAM
+        activate_array_gpu_stream(l.output_gpu, l.outputs*l.batch, l.activation, id);
+    #else
+        activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
+    #endif
     //if(l.dot > 0) dot_error_gpu(l);
     if(l.binary || l.xnor) swap_binary(&l);
 

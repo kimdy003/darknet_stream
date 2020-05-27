@@ -404,11 +404,11 @@ void forward_connected_layer_gpu_thread(netlayer * input, int id){
     } else {
         add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.outputs, 1);
     }
-    activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
-
-     
-     
-     
+    #ifdef STREAM
+        activate_array_gpu_stream(l.output_gpu, l.outputs*l.batch, l.activation, id);
+    #else
+        activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
+    #endif
 }
 #endif
 
