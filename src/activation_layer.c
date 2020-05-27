@@ -78,7 +78,7 @@ void forward_activation_layer_gpu(layer l, network net)
 }
 
 #ifdef THREAD
-void forward_activation_layer_gpu_thread(netlayer* input){
+void forward_activation_layer_gpu_thread(netlayer* input, int id){
 
     network net= input->net;
     layer l = input->layer;
