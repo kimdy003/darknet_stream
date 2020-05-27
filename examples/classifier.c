@@ -714,7 +714,7 @@ void *predict_classifier2(test *input)
             hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
         
         // layer print
-        print_network(net);
+        //print_network(net);
 
         top_k(predictions, net->outputs, top, indexes);
 

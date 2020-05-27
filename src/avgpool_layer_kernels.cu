@@ -61,7 +61,7 @@ extern "C" void forward_avgpool_layer_gpu_thread(netlayer* input, int id)
     #ifdef STREAM
         fprintf(stderr, "avgpool %d \n", id);
         forward_avgpool_layer_kernel<<<cuda_gridsize(n), BLOCK, 0, usedstream(id)>>>(n, layer.w, layer.h, layer.c, net.input_gpu, layer.output_gpu);
-        cuda_synchronize(id);
+        cuda_synchronize(id, __LINE__);
     #else
         forward_avgpool_layer_kernel<<<cuda_gridsize(n), BLOCK>>>(n, layer.w, layer.h, layer.c, net.input_gpu, layer.output_gpu);
     #endif
