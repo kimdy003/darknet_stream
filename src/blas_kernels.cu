@@ -759,7 +759,7 @@ extern "C" void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int 
 }
 
 #ifdef STREAM
-    extern "C" void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out)
+    extern "C" void shortcut_gpu_stream(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out, int id)
     {
         int minw = (w1 < w2) ? w1 : w2;
         int minh = (h1 < h2) ? h1 : h2;
