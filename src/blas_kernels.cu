@@ -1023,6 +1023,50 @@ extern "C" void softmax_tree(float *input, int spatial, int batch, int stride, f
     cuda_free((float *)tree_groups_offset);
 }
 
+#ifdef STREAM
+    extern "C" void softmax_tree_stream(float *input, int spatial, int batch, int stride, float temp, float *output, tree hier, int id)
+    {
+        int *tree_groups_size = cuda_make_int_array(hier.group_size, hier.groups);
+        int *tree_groups_offset = cuda_make_int_array(hier.group_offset, hier.groups);
+        /*
+        static int *tree_groups_size = 0;
+        static int *tree_groups_offset = 0;
+        if(!tree_groups_size){
+        tree_groups_size = cuda_make_int_array(hier.group_size, hier.groups);
+        tree_groups_offset = cuda_make_int_array(hier.group_offset, hier.groups);
+        }
+        */
+        int num = spatial*batch*hier.groups;
+        softmax_tree_kernel<<<cuda_gridsize(num), BLOCK, 0, usedstream(id)>>>(input, spatial, batch, stride, temp, output, hier.groups, tree_groups_size, tree_groups_offset);
+        cuda_synchronize(id);
+        check_error(cudaPeekAtLastError());
+        cuda_free((float *)tree_groups_size);
+        cuda_free((float *)tree_groups_offset);
+    }
+
+    extern "C" void softmax_gpu_stream(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output, int id)
+    {
+        softmax_kernel<<<cuda_gridsize(batch*groups), BLOCK, 0, usedstream(id)>>>(input, n, batch, batch_offset, groups, group_offset, stride, temp, output);
+        cuda_synchronize(id);
+        check_error(cudaPeekAtLastError());
+    }
+
+    extern "C" void softmax_x_ent_gpu_stream(int n, float *pred, float *truth, float *delta, float *error, int id)
+    {
+        softmax_x_ent_kernel<<<cuda_gridsize(n), BLOCK, 0, usedstream(id)>>>(n, pred, truth, delta, error);
+        cuda_synchronize(id);
+        check_error(cudaPeekAtLastError());
+    }
+
+    extern "C" void mask_gpu_stream(int N, float * X, float mask_num, float * mask, float val, int id)
+    {
+        mask_kernel<<<cuda_gridsize(N), BLOCK, 0, usedstream(id)>>>(N, X, mask_num, mask, val);
+        cuda_synchronize(id);
+        check_error(cudaPeekAtLastError());
+    }
+
+#endif
+
 __global__ void softmax_kernel(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output)
 {
     int id = (blockIdx.x + blockIdx.y*gridDim.x) * blockDim.x + threadIdx.x;

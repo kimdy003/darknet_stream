@@ -53,6 +53,7 @@ void axpy_gpu_offset(int N, float ALPHA, float * X, int OFFX, int INCX, float * 
 void copy_gpu(int N, float * X, int INCX, float * Y, int INCY);
 void copy_gpu_offset(int N, float * X, int OFFX, int INCX, float * Y, int OFFY, int INCY);
 #ifdef STREAM
+    //stream apply copy_gpu
     void copy_gpu_stream(int N, float * X, int INCX, float * Y, int INCY, int id);
     void copy_gpu_offset_stream(int N, float * X, int OFFX, int INCX, float * Y, int OFFY, int INCY, int id);
 #endif
@@ -78,6 +79,7 @@ void fast_variance_gpu(float *x, float *mean, int batch, int filters, int spatia
 void fast_mean_gpu(float *x, int batch, int filters, int spatial, float *mean);
 void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out);
 #ifdef STREAM
+    //stream apply shorcut
     void shortcut_gpu_stream(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out, int id);
 #endif
 void scale_bias_gpu(float *output, float *biases, int batch, int n, int size);
@@ -106,6 +108,13 @@ void adam_gpu(int n, float *x, float *m, float *v, float B1, float B2, float rat
 
 void flatten_gpu(float *x, int spatial, int layers, int batch, int forward, float *out);
 void softmax_tree(float *input, int spatial, int batch, int stride, float temp, float *output, tree hier);
+#ifdef STREAM
+    //stream apply softmax
+    void softmax_tree_stream(float *input, int spatial, int batch, int stride, float temp, float *output, tree hier, int id);
+    void softmax_gpu_stream(float *input, int n, int batch, int batch_offset, int groups, int group_offset, int stride, float temp, float *output, int id);
+    void softmax_x_ent_gpu_stream(int n, float *pred, float *truth, float *delta, float *error, int id);
+    void mask_gpu_stream(int N, float * X, float mask_num, float * mask, float val, int id);
+#endif
 void upsample_gpu(float *in, int w, int h, int c, int batch, int stride, int forward, float scale, float *out);
 
 #endif

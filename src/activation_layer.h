@@ -16,6 +16,7 @@ void forward_activation_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_activation_layer_gpu(layer l, network net);
 #ifdef THREAD
+//stream apply activate
 void forward_activation_layer_gpu_thread(netlayer* input, int id);
 #endif
 void backward_activation_layer_gpu(layer l, network net);

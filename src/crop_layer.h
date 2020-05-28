@@ -19,6 +19,7 @@ void forward_crop_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_crop_layer_gpu(crop_layer l, network net);
 #ifdef THREAD
+//stream apply crop
 void forward_crop_layer_gpu_thread(netlayer* input, int id);
 #endif
 #endif

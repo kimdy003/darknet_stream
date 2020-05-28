@@ -405,6 +405,7 @@ void forward_connected_layer_gpu_thread(netlayer * input, int id){
         add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.outputs, 1);
     }
     #ifdef STREAM
+        //stream apply activate
         activate_array_gpu_stream(l.output_gpu, l.outputs*l.batch, l.activation, id);
     #else
         activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);

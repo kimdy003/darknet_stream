@@ -85,6 +85,7 @@ void forward_activation_layer_gpu_thread(netlayer* input, int id){
 
     copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
     #ifdef STREAM
+        //stream apply activate
         activate_array_gpu_stream(l.output_gpu, l.outputs*l.batch, l.activation, id);
     #else
         activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);

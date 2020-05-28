@@ -13,6 +13,7 @@ void gradient_array(const float *x, const int n, const ACTIVATION a, float *delt
 void activate_array(float *x, const int n, const ACTIVATION a);
 #ifdef GPU
 #ifdef STREAM
+    //stream apply activate
     void activate_array_gpu_stream(float *x, int n, ACTIVATION a, int id);
 #endif
 void activate_array_gpu(float *x, int n, ACTIVATION a);
