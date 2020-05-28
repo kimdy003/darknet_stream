@@ -379,14 +379,18 @@ void forward_connected_layer_gpu(layer l, network net)
 }
 
 #ifdef THREAD
+//stream apply connected
 void forward_connected_layer_gpu_thread(netlayer * input, int id){
     
      
     network net = input->net;
     layer l = input->layer;
-
-    fill_gpu(l.outputs*l.batch, 0, l.output_gpu, 1);
-
+    #ifdef STREAM
+        //stream apply connected
+        fill_gpu_stream(l.outputs*l.batch, 0, l.output_gpu, 1, id);
+    #else
+        fill_gpu(l.outputs*l.batch, 0, l.output_gpu, 1);
+    #endif
     int m = l.batch;
     int k = l.inputs;
     int n = l.outputs;

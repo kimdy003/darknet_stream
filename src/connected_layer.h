@@ -17,6 +17,7 @@ void forward_connected_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_connected_layer_gpu(layer l, network net);
 #ifdef THREAD
+//stream apply connected
 void forward_connected_layer_gpu_thread(netlayer* input, int id);
 #endif
 void backward_connected_layer_gpu(layer l, network net);

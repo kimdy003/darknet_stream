@@ -86,6 +86,9 @@ void scale_bias_gpu(float *output, float *biases, int batch, int n, int size);
 void backward_scale_gpu(float *x_norm, float *delta, int batch, int n, int size, float *scale_updates);
 void scale_bias_gpu(float *output, float *biases, int batch, int n, int size);
 void add_bias_gpu(float *output, float *biases, int batch, int n, int size);
+#ifdef STREAM
+    void add_bias_gpu_stream(float *output, float *biases, int batch, int n, int size, int id);
+#endif
 void backward_bias_gpu(float *bias_updates, float *delta, int batch, int n, int size);
 
 void logistic_x_ent_gpu(int n, float *pred, float *truth, float *delta, float *error);

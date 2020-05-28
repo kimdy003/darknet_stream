@@ -74,6 +74,17 @@ void add_bias_gpu(float *output, float *biases, int batch, int n, int size)
     check_error(cudaPeekAtLastError());
 }
 
+#ifdef STREAM
+    void add_bias_gpu_stream(float *output, float *biases, int batch, int n, int size, int id)
+    {
+        int num = n*size*batch;
+
+        add_bias_kernel<<<cuda_gridsize(num), BLOCK, 0, usedstream(id)>>>(output, biases, batch, n, size);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }
+#endif
+
 __global__ void backward_bias_conn_kernel(float *bias_updates, float *delta, int batch, int n)
 {
     int index = (blockIdx.x + blockIdx.y*gridDim.x) * blockDim.x + threadIdx.x;

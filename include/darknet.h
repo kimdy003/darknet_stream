@@ -707,6 +707,9 @@ extern "C"
 #ifdef GPU
     void axpy_gpu(int N, float ALPHA, float *X, int INCX, float *Y, int INCY);
     void fill_gpu(int N, float ALPHA, float *X, int INCX);
+    #ifdef STREAM
+        void fill_gpu_stream(int N, float ALPHA, float *X, int INCX, int id);
+    #endif
     void scal_gpu(int N, float ALPHA, float *X, int INCX);
     void copy_gpu(int N, float *X, int INCX, float *Y, int INCY);
 
