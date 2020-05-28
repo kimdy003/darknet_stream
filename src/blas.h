@@ -52,6 +52,10 @@ void axpy_gpu(int N, float ALPHA, float * X, int INCX, float * Y, int INCY);
 void axpy_gpu_offset(int N, float ALPHA, float * X, int OFFX, int INCX, float * Y, int OFFY, int INCY);
 void copy_gpu(int N, float * X, int INCX, float * Y, int INCY);
 void copy_gpu_offset(int N, float * X, int OFFX, int INCX, float * Y, int OFFY, int INCY);
+#ifdef STREAM
+    void copy_gpu_stream(int N, float * X, int INCX, float * Y, int INCY, int id);
+    void copy_gpu_offset_stream(int N, float * X, int OFFX, int INCX, float * Y, int OFFY, int INCY, int id);
+#endif
 void add_gpu(int N, float ALPHA, float * X, int INCX);
 void supp_gpu(int N, float ALPHA, float * X, int INCX);
 void mask_gpu(int N, float * X, float mask_num, float * mask, float val);

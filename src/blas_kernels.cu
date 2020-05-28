@@ -604,6 +604,20 @@ extern "C" void copy_gpu(int N, float * X, int INCX, float * Y, int INCY)
     copy_gpu_offset(N, X, 0, INCX, Y, 0, INCY);
 }
 
+#ifdef STREAM
+    extern "C" void copy_gpu_stream(int N, float * X, int INCX, float * Y, int INCY, int id)
+    {
+        copy_gpu_offset_stream(N, X, 0, INCX, Y, 0, INCY, id);
+    } 
+
+    extern "C" void copy_gpu_offset_stream(int N, float * X, int OFFX, int INCX, float * Y, int OFFY, int INCY, int id)
+    {
+        copy_kernel<<<cuda_gridsize(N), BLOCK, 0 , usedstream(id)>>>(N, X, OFFX, INCX, Y, OFFY, INCY);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }
+#endif
+
 extern "C" void mul_gpu(int N, float * X, int INCX, float * Y, int INCY)
 {
     mul_kernel<<<cuda_gridsize(N), BLOCK>>>(N, X, INCX, Y, INCY);

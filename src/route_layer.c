@@ -160,7 +160,11 @@ void forward_route_layer_gpu_thread(netlayer * input)
         float *input = net.layers[index].output_gpu;
         int input_size = l.input_sizes[i];
         for(j = 0; j < l.batch; ++j){
-            copy_gpu(input_size, input + j*input_size, 1, l.output_gpu + offset + j*l.outputs, 1);
+            #ifdef STREAM
+                copy_gpu_stream(input_size, input + j*input_size, 1, l.output_gpu + offset + j*l.outputs, 1, id);
+            #else
+                copy_gpu(input_size, input + j*input_size, 1, l.output_gpu + offset + j*l.outputs, 1);
+            #endif
         }
         offset += input_size;
     }
