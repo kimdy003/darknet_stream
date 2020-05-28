@@ -16,7 +16,7 @@ void forward_shortcut_layer_thread(netlayer* input);
 #ifdef GPU
 void forward_shortcut_layer_gpu(const layer l, network net);
 #ifdef THREAD
-void forward_shortcut_layer_gpu_thread(netlayer* input);
+void forward_shortcut_layer_gpu_thread(netlayer* input, int id);
 #endif
 void backward_shortcut_layer_gpu(const layer l, network net);
 #endif

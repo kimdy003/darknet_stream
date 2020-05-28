@@ -758,6 +758,27 @@ extern "C" void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int 
     check_error(cudaPeekAtLastError());
 }
 
+#ifdef STREAM
+    extern "C" void shortcut_gpu(int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out)
+    {
+        int minw = (w1 < w2) ? w1 : w2;
+        int minh = (h1 < h2) ? h1 : h2;
+        int minc = (c1 < c2) ? c1 : c2;
+
+        int stride = w1/w2;
+        int sample = w2/w1;
+        assert(stride == h1/h2);
+        assert(sample == h2/h1);
+        if(stride < 1) stride = 1;
+        if(sample < 1) sample = 1;
+
+        int size = batch * minw * minh * minc;
+        shortcut_kernel<<<cuda_gridsize(size), BLOCK, 0, usedstream(id)>>>(size, minw, minh, minc, stride, sample, batch, w1, h1, c1, add, w2, h2, c2, s1, s2, out);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }
+#endif
+
 __global__ void smooth_l1_kernel(int n, float *pred, float *truth, float *delta, float *error)
 {
     int i = (blockIdx.x + blockIdx.y*gridDim.x) * blockDim.x + threadIdx.x;
