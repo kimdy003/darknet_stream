@@ -733,6 +733,15 @@ extern "C" void fill_gpu(int N, float ALPHA, float * X, int INCX)
     check_error(cudaPeekAtLastError());
 }
 
+#ifdef STREAM
+    extern "C" void fill_gpu_stream(int N, float ALPHA, float * X, int INCX, int id)
+    {
+        fill_kernel<<<cuda_gridsize(N), BLOCK, 0, usedstream(id)>>>(N, ALPHA, X, INCX);
+	cuda_synchronize(id, __LINE__);
+   	check_error(cudaPeekAtLastError());
+    } 
+#endif
+
 __global__ void shortcut_kernel(int size, int minw, int minh, int minc, int stride, int sample, int batch, int w1, int h1, int c1, float *add, int w2, int h2, int c2, float s1, float s2, float *out)
 {
     int id = (blockIdx.x + blockIdx.y*gridDim.x) * blockDim.x + threadIdx.x;

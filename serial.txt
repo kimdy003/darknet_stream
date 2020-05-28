@@ -160,3 +160,59 @@ network : Alex: Predicted in 1.683027 seconds.
 execution Time : 1.704396
 
 
+network : Res: Predicted in 1.515141 seconds.
+network : Res: Predicted in 1.515575 seconds.
+network : Dense: Predicted in 1.604821 seconds.
+network : Dense: Predicted in 1.633331 seconds.
+network : Alex: Predicted in 1.666476 seconds.
+network : VGG: Predicted in 1.676022 seconds.
+network : VGG: Predicted in 1.680614 seconds.
+network : Alex: Predicted in 1.660268 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.706371
+
+
+network : Res: Predicted in 1.464819 seconds.
+network : Res: Predicted in 1.481660 seconds.
+network : Dense: Predicted in 1.567986 seconds.
+network : Dense: Predicted in 1.608912 seconds.
+network : Alex: Predicted in 1.638147 seconds.
+network : VGG: Predicted in 1.653888 seconds.
+network : VGG: Predicted in 1.653613 seconds.
+network : Alex: Predicted in 1.633527 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.672455
+
+
+network : Res: Predicted in 1.565304 seconds.
+network : Res: Predicted in 1.557449 seconds.
+network : Dense: Predicted in 1.646406 seconds.
+network : Dense: Predicted in 1.674904 seconds.
+network : VGG: Predicted in 1.690864 seconds.
+network : VGG: Predicted in 1.702099 seconds.
+network : Alex: Predicted in 1.704761 seconds.
+network : Alex: Predicted in 1.699058 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.728715
+
+
+network : Res: Predicted in 1.538020 seconds.
+network : Res: Predicted in 1.533796 seconds.
+network : Dense: Predicted in 1.652608 seconds.
+network : Dense: Predicted in 1.660105 seconds.
+network : VGG: Predicted in 1.695869 seconds.
+network : Alex: Predicted in 1.701615 seconds.
+network : VGG: Predicted in 1.708434 seconds.
+network : Alex: Predicted in 1.702239 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.730232
+
+
