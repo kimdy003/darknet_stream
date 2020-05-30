@@ -153,6 +153,7 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 #ifdef THREAD
 extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 {
+	fprintf(stderr, "convolutional kernel\n");
     network net = input->net;
     layer l = input->layer;
     
@@ -177,21 +178,6 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     //2020 0311 doyoung
     #ifdef THREAD 
         #ifdef STREAM
-		#ifdef SERIAL
-		cudnnConvolutionForward(cudnn_handle((net.index_n%7)+1, __LINE__),
-		&one,
-		l.srcTensorDesc,
-		net.input_gpu,
-		l.weightDesc,
-		l.weights_gpu,
-		l.convDesc,
-		l.fw_algo,
-		net.workspace_gpu,
-		l.workspace_size,
-		&one,
-		l.dstTensorDesc,
-		l.output_gpu);
-		#else
 		cudnnConvolutionForward(cudnn_handle(id, __LINE__),
 		&one,
 		l.srcTensorDesc,
@@ -205,15 +191,15 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 		&one,
 		l.dstTensorDesc,
 		l.output_gpu);
+		#if 0
+        		cuda_synchronize(id, __LINE__);
+			if(!cudaStreamQuery(usedstream(id))){
+				fprintf(stderr, "[%d] end", net.index_n);
+			}
 		#endif
-#if 0
-        cuda_syncronize(id, __LINE__);
-	if(!cudaStreamQuery(usedstream(id))){
-		fprintf(stderr, "[%d] end", net.index_n);
-	}
-#endif
         #else
-        cudnnConvolutionForward(cudnn_handle(net.index_n, __LINE__),
+			fprintf(stderr, "thidsfas\n");
+        	cudnnConvolutionForward(cudnn_handle(net.index_n, __LINE__),
                     &one,
                     l.srcTensorDesc,
                     net.input_gpu,
@@ -226,6 +212,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                     &one,
                     l.dstTensorDesc,
                     l.output_gpu);
+		cudaDeviceSynchronize();
         #endif
     #else
 	cudnnConvolutionForward(cudnn_handle(),
@@ -282,6 +269,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
         activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
     #endif
     if(l.binary || l.xnor) swap_binary(&l);
+    fprintf(stderr, "gpu end\n");
 }
 #endif
 

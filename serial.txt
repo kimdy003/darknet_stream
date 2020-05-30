@@ -216,3 +216,17 @@ network : Alex: Predicted in 1.702239 seconds.
 execution Time : 1.730232
 
 
+network : Alex: Predicted in 0.792876 seconds.
+network : Alex: Predicted in 0.803945 seconds.
+network : Dense: Predicted in 2.239070 seconds.
+network : Dense: Predicted in 2.334808 seconds.
+network : Res: Predicted in 4.049496 seconds.
+network : Res: Predicted in 4.921453 seconds.
+network : VGG: Predicted in 5.901049 seconds.
+network : VGG: Predicted in 6.704846 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 6.753719
+
+

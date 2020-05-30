@@ -543,7 +543,7 @@ void forward_convolutional_layer(convolutional_layer l, network net)
 }
 #ifdef THREAD
 void forward_convolutional_layer_thread(netlayer * input){
-     
+    fprintf(stderr, "cpu layer_thread\n"); 
     network net = input->net;
     layer l = input->layer;
 
@@ -590,6 +590,7 @@ void forward_convolutional_layer_thread(netlayer * input){
      // 
      // 
      
+    fprintf(stderr, "cpu end\n");
      
      
 }
