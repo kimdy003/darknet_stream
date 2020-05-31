@@ -68,6 +68,9 @@ void mul_gpu(int N, float *X, int INCX, float *Y, int INCY);
 void mean_gpu(float *x, int batch, int filters, int spatial, float *mean);
 void variance_gpu(float *x, float *mean, int batch, int filters, int spatial, float *variance);
 void normalize_gpu(float *x, float *mean, float *variance, int batch, int filters, int spatial);
+#ifdef STREAM
+    void normalize_gpu_stream(float *x, float *mean, float *variance, int batch, int filters, int spatial, int id);
+#endif
 void l2normalize_gpu(float *x, float *dx, int batch, int filters, int spatial);
 
 void normalize_delta_gpu(float *x, float *mean, float *variance, float *mean_delta, float *variance_delta, int batch, int filters, int spatial, float *delta);
@@ -88,6 +91,7 @@ void scale_bias_gpu(float *output, float *biases, int batch, int n, int size);
 void add_bias_gpu(float *output, float *biases, int batch, int n, int size);
 #ifdef STREAM
     void add_bias_gpu_stream(float *output, float *biases, int batch, int n, int size, int id);
+    void scale_bias_gpu_stream(float *output, float *biases, int batch, int n, int size, int id);
 #endif
 void backward_bias_gpu(float *bias_updates, float *delta, int batch, int n, int size);
 
