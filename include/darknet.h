@@ -727,7 +727,8 @@ extern "C"
 
     void cuda_pull_array(float *x_gpu, float *x, size_t n);
 #ifdef STREAM
-    void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id, int line);
+    void cuda_pull_array_stream(float *x_gpu, float *x, size_t n, int id);
+    void cuda_push_array_stream(float *x_gpu, float *x, size_t n, int id);
 #endif
     float cuda_mag_array(float *x_gpu, size_t n);
     void cuda_push_array(float *x_gpu, float *x, size_t n);

@@ -158,7 +158,7 @@ void forward_softmax_layer_gpu_thread(netlayer * input, int id)
                 mask_gpu_stream(l.batch*l.inputs, l.delta_gpu, SECRET_NUM, net.truth_gpu, 0, id);
                 mask_gpu_stream(l.batch*l.inputs, l.loss_gpu, SECRET_NUM, net.truth_gpu, 0, id);
             }
-            cuda_pull_array(l.loss_gpu, l.loss, l.batch*l.inputs);
+            cuda_pull_array_stream(l.loss_gpu, l.loss, l.batch*l.inputs, id);
             l.cost[0] = sum_array(l.loss, l.batch*l.inputs);
         }
 

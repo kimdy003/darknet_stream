@@ -235,7 +235,7 @@ network *make_network(int n)
                 fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
             }
             nl->layer.forward_gpu_thread(nl, thidx);
-            cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+            cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx);
         }
         else if (input->flag == 0)
         {
@@ -305,13 +305,21 @@ void forward_network(network *netp)
         int i;
         cuda_set_device(net.gpu_index);
 #ifndef CPU
+    #ifdef STREAM
+        cuda_push_array_stream(net.input_gpu, net.input, net.inputs * net.batch, (net.index_n%7));
+    #else
         cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+    #endif
 #endif
         //fprintf(stderr,"PUSH = CPU : %f GPU : %f\n",net.input,net.input_gpu);
 
         if (net.truth)
         {
-            cuda_push_array(net.truth_gpu, net.truth, net.truths * net.batch);
+            #ifdef STREAM
+                cuda_push_array_stream(net.truth_gpu, net.truth, net.truths * net.batch, (net.index_n % 7));
+            #else
+                cuda_push_array(net.truth_gpu, net.truth, net.truths * net.batch);
+            #endif
         }
 
         for (i = 0; i < net.n; ++i)
