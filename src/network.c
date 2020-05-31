@@ -232,7 +232,7 @@ network *make_network(int n)
         {
             if (nl->layer.delta_gpu)
             {
-                fill_gpu(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1);
+                fill_gpu_stream(nl->layer.outputs * nl->layer.batch, 0, nl->layer.delta_gpu, 1, thidx);
             }
             nl->layer.forward_gpu_thread(nl, thidx);
             cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx);

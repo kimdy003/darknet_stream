@@ -160,7 +160,7 @@ dim3 cuda_gridsize(size_t n)
             }
         #endif
     #else
-    //cudnn = 0, tread = 0, stream= 0
+    //cudnn = 1, tread = 0, stream= 0
     static int init_a[n_a] = {0};
     static cudnnHandle_t handle[n_a];
     cudnnHandle_t cudnn_handle_a(int idx)
@@ -311,7 +311,7 @@ void cuda_push_array(float *x_gpu, float *x, size_t n)
     void cuda_push_array_stream(float *x_gpu, float *x, size_t n, int id)
     {
         size_t size = sizeof(float) * n;
-        cudaError_t status = cudaMemcpy(x_gpu, x, size, cudaMemcpyHostToDevice, stream[id]);
+        cudaError_t status = cudaMemcpyAsync(x_gpu, x, size, cudaMemcpyHostToDevice, stream[id]);
         check_error(status);
     }
 #endif

@@ -143,3 +143,31 @@ network : Alex: Predicted in 1.710483 seconds.
 execution Time : 1.730937
 
 
+network : Res: Predicted in 1.597145 seconds.
+network : Res: Predicted in 1.601299 seconds.
+network : Alex: Predicted in 1.713939 seconds.
+network : VGG: Predicted in 1.715036 seconds.
+network : VGG: Predicted in 1.706227 seconds.
+network : Alex: Predicted in 1.695886 seconds.
+network : Dense: Predicted in 1.719240 seconds.
+network : Dense: Predicted in 1.723125 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.753718
+
+
+network : Res: Predicted in 1.508134 seconds.
+network : Res: Predicted in 1.530669 seconds.
+network : Dense: Predicted in 1.623143 seconds.
+network : Dense: Predicted in 1.649591 seconds.
+network : Alex: Predicted in 1.673903 seconds.
+network : VGG: Predicted in 1.673400 seconds.
+network : VGG: Predicted in 1.673696 seconds.
+network : Alex: Predicted in 1.657337 seconds.
+***** Des : 2 , Res : 2 , VGG : 2 , Alex : 2 *****
+***** ThREAD NUM POOL : 8 *****
+
+execution Time : 1.692843
+
+
