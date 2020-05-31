@@ -137,7 +137,6 @@ void forward_softmax_layer_gpu(const softmax_layer l, network net)
 #ifdef THREAD
 void forward_softmax_layer_gpu_thread(netlayer * input, int id)
 {
-	fprintf(stderr, "softmax start \n");
     network net = input->net;
     layer l = input->layer;
 
@@ -193,7 +192,6 @@ void forward_softmax_layer_gpu_thread(netlayer * input, int id)
             l.cost[0] = sum_array(l.loss, l.batch*l.inputs);
         }
     #endif
-	fprintf(stderr, "softmax end\n");
 }
 #endif
 

@@ -714,11 +714,10 @@ void *predict_classifier2(test *input)
             hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
         
         // layer print
-        print_network(net);
+        //print_network(net);
 
         top_k(predictions, net->outputs, top, indexes);
 
-	fprintf(stderr, "top_k\n");
         time2 = what_time_is_it_now();
 
         fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
