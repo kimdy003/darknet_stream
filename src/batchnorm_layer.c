@@ -214,7 +214,7 @@ void forward_batchnorm_layer_gpu(layer l, network net)
                     l.variance_gpu);
 
         #else   
-            cudnnBatchNormalizationForwardTraining(cudnn_handle(),
+            cudnnBatchNormalizationForwardTraining(cudnn_handle_a(net.index_n),
                     CUDNN_BATCHNORM_SPATIAL,
                     &one,
                     &zero,
@@ -259,8 +259,18 @@ void forward_batchnorm_layer_gpu(layer l, network net)
 //2020 0311 doyoung
 void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
 {
-    if(l.type == BATCHNORM) copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
-    copy_gpu(l.outputs*l.batch, l.output_gpu, 1, l.x_gpu, 1);
+    if(l.type == BATCHNORM){
+        #ifdef STREAM
+            copy_gpu_stream(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1, id);
+        #else
+            copy_gpu(l.outputs*l.batch, net.input_gpu, 1, l.output_gpu, 1);
+        #endif
+    }
+    #ifdef STREAM    
+        copy_gpu_stream(l.outputs*l.batch, l.output_gpu, 1, l.x_gpu, 1, id);
+    #else
+        copy_gpu(l.outputs*l.batch, l.output_gpu, 1, l.x_gpu, 1);
+    #endif
     if (net.train) {
 #ifdef CUDNN
         float one = 1;
@@ -284,7 +294,7 @@ void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
                 l.mean_gpu,
                 l.variance_gpu);
         #else
-            cudnnBatchNormalizationForwardTraining(cudnn_handle(),
+            cudnnBatchNormalizationForwardTraining(cudnn_handle_a(net.index_n),
                 CUDNN_BATCHNORM_SPATIAL,
                 &one,
                 &zero,
@@ -319,9 +329,15 @@ void forward_batchnorm_layer_gpu_stream(layer l, network net, int id)
         add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.out_c, l.out_w*l.out_h);
 #endif
     } else {
-        normalize_gpu(l.output_gpu, l.rolling_mean_gpu, l.rolling_variance_gpu, l.batch, l.out_c, l.out_h*l.out_w);
-        scale_bias_gpu(l.output_gpu, l.scales_gpu, l.batch, l.out_c, l.out_h*l.out_w);
-        add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.out_c, l.out_w*l.out_h);
+        #ifdef STREAM
+            normalize_gpu_stream(l.output_gpu, l.rolling_mean_gpu, l.rolling_variance_gpu, l.batch, l.out_c, l.out_h*l.out_w, id);
+            scale_bias_gpu_stream(l.output_gpu, l.scales_gpu, l.batch, l.out_c, l.out_h*l.out_w, id);
+            add_bias_gpu_stream(l.output_gpu, l.biases_gpu, l.batch, l.out_c, l.out_w*l.out_h, id);
+        #else
+            normalize_gpu(l.output_gpu, l.rolling_mean_gpu, l.rolling_variance_gpu, l.batch, l.out_c, l.out_h*l.out_w);
+            scale_bias_gpu(l.output_gpu, l.scales_gpu, l.batch, l.out_c, l.out_h*l.out_w);
+            add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.out_c, l.out_w*l.out_h);
+        #endif
     }
 
 }

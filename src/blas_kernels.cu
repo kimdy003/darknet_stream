@@ -27,6 +27,18 @@ void scale_bias_gpu(float *output, float *biases, int batch, int n, int size)
     check_error(cudaPeekAtLastError());
 }
 
+#ifdef STREAM
+    void scale_bias_gpu_stream(float *output, float *biases, int batch, int n, int size, int id)
+    {
+        dim3 dimGrid((size-1)/BLOCK + 1, n, batch);
+        dim3 dimBlock(BLOCK, 1, 1);
+
+        scale_bias_kernel<<<dimGrid, dimBlock, 0, usedstream(id)>>>(output, biases, n, size);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }
+#endif
+
 __global__ void backward_scale_kernel(float *x_norm, float *delta, int batch, int n, int size, float *scale_updates)
 {
     __shared__ float part[BLOCK];
@@ -479,6 +491,16 @@ extern "C" void normalize_gpu(float *x, float *mean, float *variance, int batch,
     normalize_kernel<<<cuda_gridsize(N), BLOCK>>>(N, x, mean, variance, batch, filters, spatial);
     check_error(cudaPeekAtLastError());
 }
+
+#ifdef STREAM
+    extern "C" void normalize_gpu_stream(float *x, float *mean, float *variance, int batch, int filters, int spatial, int id)
+    {
+        size_t N = batch*filters*spatial;
+        normalize_kernel<<<cuda_gridsize(N), BLOCK, 0, usedstream(id)>>>(N, x, mean, variance, batch, filters, spatial);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }
+#endif
 
 __global__ void l2norm_kernel(int N, float *x, float *dx, int batch, int filters, int spatial)
 {
