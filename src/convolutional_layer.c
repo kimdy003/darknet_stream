@@ -543,7 +543,7 @@ void forward_convolutional_layer(convolutional_layer l, network net)
 }
 #ifdef THREAD
 void forward_convolutional_layer_thread(netlayer * input){
-    fprintf(stderr, "cpu layer_thread\n"); 
+    //fprintf(stderr, "cpu layer_thread\n"); 
     network net = input->net;
     layer l = input->layer;
 
@@ -585,13 +585,8 @@ void forward_convolutional_layer_thread(netlayer * input){
 
     activate_array(l.output, l.outputs*l.batch, l.activation);
     if(l.binary || l.xnor) swap_binary(&l);
-
     
-     // 
-     // 
-     
-    fprintf(stderr, "cpu end\n");
-     
+    //fprintf(stderr, "cpu end\n");
      
 }
 #endif

@@ -153,7 +153,7 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 #ifdef THREAD
 extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 {
-	fprintf(stderr, "convolutional kernel\n");
+	//fprintf(stderr, "convolutional kernel\n");
     network net = input->net;
     layer l = input->layer;
     
@@ -198,7 +198,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 			}
 		#endif
         #else
-			fprintf(stderr, "thidsfas\n");
+			//fprintf(stderr, "thidsfas\n");
         	cudnnConvolutionForward(cudnn_handle(net.index_n, __LINE__),
                     &one,
                     l.srcTensorDesc,
@@ -269,7 +269,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
         activate_array_gpu(l.output_gpu, l.outputs*l.batch, l.activation);
     #endif
     if(l.binary || l.xnor) swap_binary(&l);
-    fprintf(stderr, "gpu end\n");
+    //fprintf(stderr, "gpu end\n");
 }
 #endif
 
