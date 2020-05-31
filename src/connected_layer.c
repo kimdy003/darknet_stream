@@ -406,7 +406,11 @@ void forward_connected_layer_gpu_thread(netlayer * input, int id){
             forward_batchnorm_layer_gpu_stream(l, net, id);
         #endif
     } else {
-        add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.outputs, 1);
+        #ifdef STREAM
+            add_bias_gpu_stream(l.output_gpu, l.biases_gpu, l.batch, l.outputs, 1, id);
+        #else
+            add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.outputs, 1);
+        #endif
     }
     #ifdef STREAM
         //stream apply activate

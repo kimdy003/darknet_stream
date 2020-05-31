@@ -26,6 +26,15 @@ void binarize_gpu(float *x, int n, float *binary)
     check_error(cudaPeekAtLastError());
 }
 
+#ifdef STREAM
+    void binarize_gpu_stream(float *x, int n, float *binary, int id)
+    {
+        binarize_kernel<<<cuda_gridsize(n), BLOCK, 0, usedstream(id)>>>(x, n, binary);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }   
+#endif
+
 __global__ void binarize_input_kernel(float *input, int n, int size, float *binary)
 {
     int s = (blockIdx.x + blockIdx.y*gridDim.x) * blockDim.x + threadIdx.x;
@@ -69,6 +78,15 @@ void binarize_weights_gpu(float *weights, int n, int size, float *binary)
     binarize_weights_kernel<<<cuda_gridsize(n), BLOCK>>>(weights, n, size, binary);
     check_error(cudaPeekAtLastError());
 }
+
+#ifdef STREAM
+    void binarize_weights_gpu_stream(float *weights, int n, int size, float *binary, int id)
+    {
+        binarize_weights_kernel<<<cuda_gridsize(n), BLOCK, 0, usedstream(id)>>>(weights, n, size, binary);
+        cuda_synchronize(id, __LINE__);
+        check_error(cudaPeekAtLastError());
+    }
+#endif
 
 void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 {
@@ -156,17 +174,32 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 	//fprintf(stderr, "convolutional kernel\n");
     network net = input->net;
     layer l = input->layer;
-    
-    fill_gpu(l.outputs*l.batch, 0, l.output_gpu, 1);
+    #ifdef STREAM
+        fill_gpu_stream(l.outputs*l.batch, 0, l.output_gpu, 1, id);
+    #else
+        fill_gpu(l.outputs*l.batch, 0, l.output_gpu, 1);
+    #endif
     if(l.binary){
-        binarize_weights_gpu(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu);
+        #ifdef STREAM
+            binarize_weights_gpu_stream(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu, id);
+        #else
+            binarize_weights_gpu(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu);
+        #endif
         swap_binary(&l);
     }
 
     if(l.xnor){
-        binarize_weights_gpu(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu);
+        #ifdef STREAM
+            binarize_weights_gpu_stream(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu, id);
+        #else
+            binarize_weights_gpu(l.weights_gpu, l.n, l.c/l.groups*l.size*l.size, l.binary_weights_gpu);
+        #endif
         swap_binary(&l);
-        binarize_gpu(net.input_gpu, l.c*l.h*l.w*l.batch, l.binary_input_gpu);
+        #ifdef STREAM
+            binarize_gpu_stream(net.input_gpu, l.c*l.h*l.w*l.batch, l.binary_input_gpu, id);
+        #else
+            binarize_gpu(net.input_gpu, l.c*l.h*l.w*l.batch, l.binary_input_gpu);
+        #endif
         net.input_gpu = l.binary_input_gpu;
     }
 
@@ -260,7 +293,11 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
             forward_batchnorm_layer_gpu_stream(l, net, id);
         #endif
     } else {
-        add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.n, l.out_w*l.out_h);
+        #ifdef STREAM
+            add_bias_gpu_stream(l.output_gpu, l.biases_gpu, l.batch, l.n, l.out_w*l.out_h, id);
+        #else
+            add_bias_gpu(l.output_gpu, l.biases_gpu, l.batch, l.n, l.out_w*l.out_h);
+        #endif
     }
     #ifdef STREAM
         //stream apply activate
