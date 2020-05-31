@@ -226,6 +226,11 @@ network *make_network(int n)
     {
         int thidx = id;
         netlayer *nl = input->arg;
+        #ifndef SERIAL
+            int thidx = id;
+        #else
+            int thidx = nl->net.index_n;
+        #endif
         pthread_mutex_lock(&mutex_t[nl->net.index_n]);
     #ifdef GPU
         if (input->flag == 1)
