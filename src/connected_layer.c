@@ -385,6 +385,7 @@ void forward_connected_layer_gpu_thread(netlayer * input, int id){
      
     network net = input->net;
     layer l = input->layer;
+    //fprintf(stderr, "[%d] index, connected id parameter : [%d] \n", net.index_n, id);
     #ifdef STREAM
         //stream apply connected
         fill_gpu_stream(l.outputs*l.batch, 0, l.output_gpu, 1, id);

@@ -142,6 +142,7 @@ void forward_softmax_layer_gpu_thread(netlayer * input, int id)
 
     #ifdef STREAM
         //stream apply softmax
+	//fprintf(stderr, "[%d] index, softmax if parameter : [%d] \n", net.index_n, id);
         if(l.softmax_tree){
             softmax_tree_stream(net.input_gpu, 1, l.batch, l.inputs, l.temperature, l.output_gpu, *l.softmax_tree, id);
             

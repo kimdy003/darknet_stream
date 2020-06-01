@@ -242,7 +242,7 @@ extern "C" void forward_crop_layer_gpu_thread(netlayer* input, int id)
     int size = layer.batch * layer.w * layer.h;
     #ifdef STREAM
         //stream apply crop
-        //fprintf(stderr, "crop stream %d\n", id);
+        //fprintf(stderr, "[%d] index, crop id parameter : [%d]\n", net.index_n, id);
         levels_image_kernel<<<cuda_gridsize(size), BLOCK, 0, usedstream(id)>>>(net.input_gpu, layer.rand_gpu, layer.batch, layer.w, layer.h, net.train, layer.saturation, layer.exposure, translate, scale, layer.shift);
         cuda_synchronize(id, __LINE__);
         check_error(cudaPeekAtLastError());

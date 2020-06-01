@@ -171,9 +171,9 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network net)
 #ifdef THREAD
 extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 {
-	//fprintf(stderr, "convolutional kernel\n");
     network net = input->net;
     layer l = input->layer;
+    //fprintf(stderr, "[%d] index, convolutional id parameter : [%d] \n", net.index_n, id);
     #ifdef STREAM
         fill_gpu_stream(l.outputs*l.batch, 0, l.output_gpu, 1, id);
     #else

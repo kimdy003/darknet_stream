@@ -162,6 +162,7 @@ void forward_route_layer_gpu_thread(netlayer * input, int id)
         for(j = 0; j < l.batch; ++j){
             #ifdef STREAM
                 //stream apply copy
+		//fprintf(stderr, "[%d] index, route id parameter : [%d] \n", net.index_n, id);
                 copy_gpu_stream(input_size, input + j*input_size, 1, l.output_gpu + offset + j*l.outputs, 1, id);
             #else
                 copy_gpu(input_size, input + j*input_size, 1, l.output_gpu + offset + j*l.outputs, 1);

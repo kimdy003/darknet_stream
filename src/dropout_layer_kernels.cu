@@ -42,7 +42,7 @@ void forward_dropout_layer_gpu_thread(netlayer* input, int id)
     cuda_random(layer.rand_gpu, size);
     #ifdef STREAM
         //stream apply dropout
-    	//fprintf(stderr, "drop stream %d \n", id);
+    	fprintf(stderr, "[%d] index, drop id parameter : [%d] \n", net.index_n, id);
         yoloswag420blazeit360noscope<<<cuda_gridsize(size), BLOCK, 0, usedstream(id)>>>(net.input_gpu, size, layer.rand_gpu, layer.probability, layer.scale);
         cuda_synchronize(id, __LINE__);
     #else

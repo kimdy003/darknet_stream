@@ -625,7 +625,7 @@ int main()
         net_input_res[i]->names = names;
         net_input_res[i]->netName = resName;
 
-#ifdef SERIAL
+#if 0
 	for (int i = 0; i < n_des; i++)
 	{
         	pthread_join(networkArray_des[i], NULL);
@@ -648,6 +648,13 @@ int main()
         net_input_vgg[i]->input_path = input;
         net_input_vgg[i]->names = names;
         net_input_vgg[i]->netName = vggName;
+
+#ifdef SERIAL
+	for (int i = 0; i < n_des; i++)
+	{
+            pthread_join(networkArray_des[i], NULL);
+    	}
+#endif
 
         printf(" It's turn for vgg i = %d\n", i);
         if (pthread_create(&networkArray_vgg[i], NULL, (void *)predict_classifier2, net_input_vgg[i]) < 0)
