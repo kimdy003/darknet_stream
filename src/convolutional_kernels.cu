@@ -231,7 +231,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                 }
             #endif
         #else
-		fprintf(stderr, "cudnn_convolution\n");
+		//fprintf(stderr, "cudnn_convolution\n");
         	cudnnConvolutionForward(cudnn_handle(net.index_n, __LINE__),
                     &one,
                     l.srcTensorDesc,
