@@ -480,7 +480,7 @@ extern "C"
     typedef struct network
     {
         //doyoung
-        char *prioity;
+        char *priority;
         int n;
         int batch;
         size_t *seen;

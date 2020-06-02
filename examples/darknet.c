@@ -639,7 +639,7 @@ int main()
                 net_input_des[i]->input_path = input;
                 net_input_des[i]->names = names;
                 net_input_des[i]->netName = denseName;
-                net_input_des[i]->net.priority = d_pri[i];
+                net_input_des[i]->net->priority = d_pri[i];
                 break;
             }
         }
@@ -657,7 +657,7 @@ int main()
                 net_input_res[i]->input_path = input;
                 net_input_res[i]->names = names;
                 net_input_res[i]->netName = resName;
-                net_input_res[i]->net.priority = r_pri[i];
+                net_input_res[i]->net->priority = r_pri[i];
                 break;
             }
         }
@@ -675,7 +675,7 @@ int main()
                 net_input_vgg[i]->input_path = input;
                 net_input_vgg[i]->names = names;
                 net_input_vgg[i]->netName = vggName;
-                net_input_ves[i]->net.priority = v_pri[i];
+                net_input_vgg[i]->net->priority = v_pri[i];
                 break;
             }
         }
@@ -693,7 +693,7 @@ int main()
                 net_input_alex[i]->input_path = input;
                 net_input_alex[i]->names = names;
                 net_input_alex[i]->netName = alexName;
-                net_input_alex[i]->net.priority = a_pri[i];
+                net_input_alex[i]->net->priority = a_pri[i];
                 break;
             }
         }
@@ -710,7 +710,7 @@ int main()
         #endif
 
         printf(" It's turn for des i = %d\n", i);
-        printf(" [%d] Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->net.priority);
+        printf(" [%d] Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->net->priority);
         if (pthread_create(&networkArray_des[i], NULL, (void *)predict_classifier2, net_input_des[i]) < 0)
         {
             perror("thread error");
@@ -736,7 +736,7 @@ int main()
         #endif
 
         printf("\n It's turn for res i = %d\n", i);
-	printf(" [%d] Resnet priority = %s \n", resNetwork[i]->index_n, net_input_res[i]->net.priority);
+	printf(" [%d] Resnet priority = %s \n", resNetwork[i]->index_n, net_input_res[i]->net->priority);
         if (pthread_create(&networkArray_res[i], NULL, (void *)predict_classifier2, net_input_res[i]) < 0)
         {
             perror("thread error");
