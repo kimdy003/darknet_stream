@@ -602,38 +602,33 @@ int main()
     pthread_t networkArray_alex[n_alex];
 
      #ifdef PRIORITY
-    char d_buff[5];
-		char *d_pri = d_buff;
-        char filed = 'h';
-			char r_buff[5];
-			char *r_pri = r_buff;
-            char filer = 'r';
+#if 0
+    	char d_buff[5];
+	char *d_pri = d_buff;
+	char r_buff[5];
+	char *r_pri = r_buff;
+#endif
+	char **d_pri = (char **)malloc(sizeof(char *) * n_des);
+	for(int k = 0; k<n_des; k++){
+		d_pri[i] = (char *)malloc(sizeof(char) * 3);
+	}
 
+	char **r_pri = (char **)malloc(sizeof(char *) * n_res);
+	for(int k=0; k < n_res; k++){
+		r_pri[i] = (char *)malloc(sizeof(char) * 3);
+	}
 
         for (int i = 0; i < n_des; i++)
         {
              while (1)
             {
                 printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
-        	    net_input_des[i] = (test *)malloc(sizeof(test));
-		   #if 0
-	        char d_buff[256];
-                char *d_pri = d_buff;
-                printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
-                fflush(stdout);
-                d_pri = fgets(d_pri, 256, stdin);
-                if (!d_pri)
-                    continue;
-                strtok(d_pri, "\n");
-        	    net_input_des[i] = (test *)malloc(sizeof(test));
-                net_input_des[i]->priority = d_pri;
-#endif
-			//scanf("%s", d_pri);
-            strncpy(d_pri, filed, 5);
+        	net_input_des[i] = (test *)malloc(sizeof(test));
+		scanf("%s", d_pri[i]);
+            	//strncpy(d_pri, filed, 5);
 		if(!d_pri)
 			continue;
-                net_input_des[i]->priority = d_pri;
-                printf(" [%d] Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->priority);
+                net_input_des[i]->priority = d_pri[i];
                 break;
             }
         }
@@ -642,30 +637,13 @@ int main()
         {
              while (1)
             {
-                printf(" [%d] Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->priority);
-                printf("[%d] Resnet priority : ", resNetwork[i]->index_n);
-        	    net_input_res[i] = (test *)malloc(sizeof(test));
-#if 0
-		        char r_buff[256];
-                char *pri = r_buff;
-                printf("[%d] Resnet priority : ", resNetwork[i]->index_n);
-                fflush(stdout);
-                pri = fgets(pri, 256, stdin);
-                if (!pri)
-                    continue;
-                strtok(pri, "\n");
-        	    net_input_res[i] = (test *)malloc(sizeof(test));
-                net_input_res[i]->priority = pri;
-#endif
-		//scanf("%s", r_pri);
-        strncpy(r_pri, filer, 5);
+		printf(" [%d] Resnet priority : ", resNetwork[i]->index_n);
+        	net_input_res[i] = (test *)malloc(sizeof(test));
+		scanf("%s", r_pri[i]);
+        	//strncpy(r_pri, filer, 5);
 		if(!r_pri)
 			continue;
-	    printf(" [%d] Resnet priority = %s \n", resNetwork[i]->index_n, net_input_res[i]->priority);
-                printf(" [%d] up Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->priority);
-                net_input_res[i]->priority = r_pri;
-                printf(" [%d] down Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->priority);
-
+                net_input_res[i]->priority = r_pri[i];
                 break;
             }
         }
@@ -702,7 +680,7 @@ int main()
         #endif
 
         printf("\n It's turn for res i = %d\n", i);
-	    printf(" [%d] Resnet priority = %s \n", resNetwork[i]->index_n, net_input_res[i]->priority);
+	printf(" [%d] Resnet priority = %s \n", resNetwork[i]->index_n, net_input_res[i]->priority);
         if (pthread_create(&networkArray_res[i], NULL, (void *)predict_classifier2, net_input_res[i]) < 0)
         {
             perror("thread error");
