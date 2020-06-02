@@ -311,13 +311,13 @@ void forward_network(network *netp)
         network net = *netp;
         int i;
         cuda_set_device(net.gpu_index);
-#ifndef CPU
-    #ifdef STREAM
-        cuda_push_array_stream(net.input_gpu, net.input, net.inputs * net.batch, (net.index_n % 8));
-    #else
-        cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
-    #endif
-#endif
+        #ifndef CPU
+            #ifdef STREAM
+                cuda_push_array_stream(net.input_gpu, net.input, net.inputs * net.batch, (net.index_n % 8));
+            #else
+                cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+            #endif
+        #endif
         //fprintf(stderr,"PUSH = CPU : %f GPU : %f\n",net.input,net.input_gpu);
 
         if (net.truth)
@@ -332,9 +332,9 @@ void forward_network(network *netp)
         for (i = 0; i < net.n; ++i)
         {
             pthread_mutex_lock(&mutex_t[net.index_n]);
-#ifdef CPU    
-        cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
-#endif
+            #ifdef CPU    
+                    cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
+            #endif
             //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
             cond_i[net.index_n] = 1;
             net.index = i;

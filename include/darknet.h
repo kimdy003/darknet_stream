@@ -479,6 +479,8 @@ extern "C"
 
     typedef struct network
     {
+        //doyoung
+        char *prioity;
         int n;
         int batch;
         size_t *seen;
