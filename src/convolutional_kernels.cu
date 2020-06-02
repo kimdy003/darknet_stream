@@ -231,7 +231,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                 }
             #endif
         #else
-			//fprintf(stderr, "thidsfas\n");
+		fprintf(stderr, "cudnn_convolution\n");
         	cudnnConvolutionForward(cudnn_handle(net.index_n, __LINE__),
                     &one,
                     l.srcTensorDesc,
@@ -261,7 +261,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
                     &one,
                     l.dstTensorDesc,
                     l.output_gpu);
-	#endif
+    #endif
 
 #else
     int i, j;
@@ -287,10 +287,10 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
 
     if (l.batch_normalize) {
         //2020 0311 doyoung
-        #ifndef STREAM
-            forward_batchnorm_layer_gpu(l, net);
+        #ifdef STREAM
+            //forward_batchnorm_layer_gpu_stream(l, net, id);
         #else
-            forward_batchnorm_layer_gpu_stream(l, net, id);
+            forward_batchnorm_layer_gpu(l, net);
         #endif
     } else {
         #ifdef STREAM

@@ -649,7 +649,7 @@ int main()
         net_input_vgg[i]->names = names;
         net_input_vgg[i]->netName = vggName;
 
-#ifdef SERIAL
+#if 0
 	for (int i = 0; i < n_des; i++)
 	{
             pthread_join(networkArray_des[i], NULL);
@@ -680,7 +680,7 @@ int main()
         }
     }
 
-#ifndef SERIAL
+#if 1
     for (int i = 0; i < n_des; i++)
     {
         pthread_join(networkArray_des[i], NULL);
