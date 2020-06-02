@@ -604,8 +604,10 @@ int main()
      #ifdef PRIORITY
     char d_buff[5];
 		char *d_pri = d_buff;
+        char filed = 'h';
 			char r_buff[5];
 			char *r_pri = r_buff;
+            char filer = 'r';
 
 
         for (int i = 0; i < n_des; i++)
@@ -626,7 +628,8 @@ int main()
         	    net_input_des[i] = (test *)malloc(sizeof(test));
                 net_input_des[i]->priority = d_pri;
 #endif
-			scanf("%s", d_pri);
+			//scanf("%s", d_pri);
+            strncpy(d_pri, filed, 5);
 		if(!d_pri)
 			continue;
                 net_input_des[i]->priority = d_pri;
@@ -654,7 +657,8 @@ int main()
         	    net_input_res[i] = (test *)malloc(sizeof(test));
                 net_input_res[i]->priority = pri;
 #endif
-		scanf("%s", r_pri);
+		//scanf("%s", r_pri);
+        strncpy(r_pri, filer, 5);
 		if(!r_pri)
 			continue;
 	    printf(" [%d] Resnet priority = %s \n", resNetwork[i]->index_n, net_input_res[i]->priority);
