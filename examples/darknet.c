@@ -623,6 +623,8 @@ int main()
                 net_input_des[i]->priority = pri;
                 break;
             }
+
+	    fprintf(stderr, "des : %s\n", net_input_des[i]->priority);
         #endif
         if (pthread_create(&networkArray_des[i], NULL, (void *)predict_classifier2, net_input_des[i]) < 0)
         {
@@ -662,6 +664,7 @@ int main()
                 break;
             }
         #endif
+	    fprintf(stderr, "res : %s\n", net_input_res[i]->priority);
 
         if (pthread_create(&networkArray_res[i], NULL, (void *)predict_classifier2, net_input_res[i]) < 0)
         {
