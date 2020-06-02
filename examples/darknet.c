@@ -610,6 +610,20 @@ int main()
         net_input_des[i]->netName = denseName;
 
         printf(" It's turn for des i = %d\n", i);
+        #ifdef PRIORITY
+            while (1)
+            {
+                char *pri = buff;
+                printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
+                fflush(stdout);
+                pri = fgets(pri, 256, stdin);
+                if (!pri)
+                    continue;
+                strtok(pri, "\n");
+                net_input_des[i]->priority = pri;
+                break;
+            }
+        #endif
         if (pthread_create(&networkArray_des[i], NULL, (void *)predict_classifier2, net_input_des[i]) < 0)
         {
             perror("thread error");
@@ -633,6 +647,21 @@ int main()
 #endif
 
         printf("\n It's turn for res i = %d\n", i);
+
+        #ifdef PRIORITY
+            while (1)
+            {
+                char *pri = buff;
+                printf("[%d] Resnet priority : ", resNetwork[i]->index_n);
+                fflush(stdout);
+                pri = fgets(pri, 256, stdin);
+                if (!pri)
+                    continue;
+                strtok(pri, "\n");
+                net_input_res[i]->priority = pri;
+                break;
+            }
+        #endif
 
         if (pthread_create(&networkArray_res[i], NULL, (void *)predict_classifier2, net_input_res[i]) < 0)
         {

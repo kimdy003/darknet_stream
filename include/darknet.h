@@ -33,8 +33,8 @@ extern "C"
 
 #define n_des 1
 #define n_res 1
-#define n_vgg 1
-#define n_alex 1
+#define n_vgg 0
+#define n_alex 0
 
 #define n_a n_des+n_res+n_vgg+n_alex
 
@@ -913,12 +913,14 @@ extern "C"
         char **names;
         char *netName;
         char *input_path;
+        char *priority;
     } test;
     typedef struct _netlayer
     {
         network net;
         layer layer;
         int flag;
+        char * priority;
     } netlayer;
 
 #ifdef __cplusplus
