@@ -631,10 +631,14 @@ int main()
             while (1)
             {
                 printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
-                net_input_des[i] = (test *)malloc(sizeof(test));
                 scanf("%s", d_pri[i]);
                 if (!d_pri)
                     continue;
+                net_input_des[i] = (test *)malloc(sizeof(test));
+                net_input_des[i]->net = denseNetwork[i];
+                net_input_des[i]->input_path = input;
+                net_input_des[i]->names = names;
+                net_input_des[i]->netName = denseName;
                 net_input_des[i]->net.priority = d_pri[i];
                 break;
             }
@@ -645,10 +649,14 @@ int main()
             while (1)
             {
                 printf(" [%d] Resnet priority : ", resNetwork[i]->index_n);
-                net_input_res[i] = (test *)malloc(sizeof(test));
                 scanf("%s", r_pri[i]);
                 if (!r_pri)
                     continue;
+                net_input_res[i] = (test *)malloc(sizeof(test));
+                net_input_res[i]->net = resNetwork[i];
+                net_input_res[i]->input_path = input;
+                net_input_res[i]->names = names;
+                net_input_res[i]->netName = resName;
                 net_input_res[i]->net.priority = r_pri[i];
                 break;
             }
@@ -659,10 +667,14 @@ int main()
             while (1)
             {
                 printf(" [%d] Resnet priority : ", vggNetwork[i]->index_n);
-                net_input_vgg[i] = (test *)malloc(sizeof(test));
                 scanf("%s", v_pri[i]);
                 if (!v_pri)
                     continue;
+                net_input_vgg[i] = (test *)malloc(sizeof(test));
+                net_input_vgg[i]->net = vggNetwork[i];
+                net_input_vgg[i]->input_path = input;
+                net_input_vgg[i]->names = names;
+                net_input_vgg[i]->netName = vggName;
                 net_input_ves[i]->net.priority = v_pri[i];
                 break;
             }
@@ -673,11 +685,14 @@ int main()
             while (1)
             {
                 printf(" [%d] Resnet priority : ", alexNetwork[i]->index_n);
-                net_input_alex[i] = (test *)malloc(sizeof(test));
                 scanf("%s", a_pri[i]);
-                //strncpy(r_pri, filer, 5);
                 if (!a_pri)
                     continue;
+                net_input_alex[i] = (test *)malloc(sizeof(test));
+                net_input_alex[i]->net = alexNetwork[i];
+                net_input_alex[i]->input_path = input;
+                net_input_alex[i]->names = names;
+                net_input_alex[i]->netName = alexName;
                 net_input_alex[i]->net.priority = a_pri[i];
                 break;
             }
@@ -686,10 +701,13 @@ int main()
 
     for (int i = 0; i < n_des; i++)
     {
-        net_input_des[i]->net = denseNetwork[i];
-        net_input_des[i]->input_path = input;
-        net_input_des[i]->names = names;
-        net_input_des[i]->netName = denseName;
+        #ifndef PRIORITY
+            net_input_des[i] = (test *)malloc(sizeof(test));
+            net_input_des[i]->net = denseNetwork[i];
+            net_input_des[i]->input_path = input;
+            net_input_des[i]->names = names;
+            net_input_des[i]->netName = denseName;
+        #endif
 
         printf(" It's turn for des i = %d\n", i);
         printf(" [%d] Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->net.priority);
@@ -702,10 +720,13 @@ int main()
     
     for (int i = 0; i < n_res; i++)
     {
-        net_input_res[i]->net = resNetwork[i];
-        net_input_res[i]->input_path = input;
-        net_input_res[i]->names = names;
-        net_input_res[i]->netName = resName;
+        #ifndef PRIORITY
+            net_input_res[i] = (test *)malloc(sizeof(test));
+            net_input_res[i]->net = resNetwork[i];
+            net_input_res[i]->input_path = input;
+            net_input_res[i]->names = names;
+            net_input_res[i]->netName = resName;
+        #endif
 
         #if 0
             for (int i = 0; i < n_des; i++)
@@ -725,11 +746,13 @@ int main()
 
     for (int i = 0; i < n_vgg; i++)
     {
-        net_input_vgg[i] = (test *)malloc(sizeof(test));
-        net_input_vgg[i]->net = vggNetwork[i];
-        net_input_vgg[i]->input_path = input;
-        net_input_vgg[i]->names = names;
-        net_input_vgg[i]->netName = vggName;
+        #ifndef PRIORITY
+            net_input_vgg[i] = (test *)malloc(sizeof(test));
+            net_input_vgg[i]->net = vggNetwork[i];
+            net_input_vgg[i]->input_path = input;
+            net_input_vgg[i]->names = names;
+            net_input_vgg[i]->netName = vggName;
+        #endif
 
 #if 0
 	for (int i = 0; i < n_des; i++)
@@ -748,11 +771,13 @@ int main()
 
     for (int i = 0; i < n_alex; i++)
     {
-        net_input_alex[i] = (test *)malloc(sizeof(test));
-        net_input_alex[i]->net = alexNetwork[i];
-        net_input_alex[i]->input_path = input;
-        net_input_alex[i]->names = names;
-        net_input_alex[i]->netName = alexName;
+        #ifndef PRIORITY
+            net_input_alex[i] = (test *)malloc(sizeof(test));
+            net_input_alex[i]->net = alexNetwork[i];
+            net_input_alex[i]->input_path = input;
+            net_input_alex[i]->names = names;
+            net_input_alex[i]->netName = alexName;
+        #endif
 
         printf(" It's turn for alex i = %d\n", i);
         if (pthread_create(&networkArray_alex[i], NULL, (void *)predict_classifier2, net_input_alex[i]) < 0)
