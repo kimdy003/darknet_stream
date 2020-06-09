@@ -32,7 +32,7 @@ extern "C"
 #define n_loop 1
 
 #define n_des 2
-#define n_res 0
+#define n_res 1
 #define n_vgg 0
 #define n_alex 0
 
@@ -480,7 +480,7 @@ extern "C"
     typedef struct network
     {
         //doyoung
-        char priority;
+        char *priority;
         int n;
         int batch;
         size_t *seen;
