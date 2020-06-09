@@ -804,7 +804,7 @@ int main()
         #endif
 
         printf(" It's turn for des i = %d\n", i);
-        printf(" [%d] Densenet priority = %s \n", denseNetwork[i]->index_n, net_input_des[i]->net->priority);
+        printf(" [%d] Densenet priority = %c \n", denseNetwork[i]->index_n, net_input_des[i]->net->priority);
         if (pthread_create(&networkArray_des[i], NULL, (void *)predict_classifier2, net_input_des[i]) < 0)
         {
             perror("thread error");
