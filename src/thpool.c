@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <errno.h>
@@ -199,17 +200,9 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	newjob->flag = 1;
 	fprintf(stderr, "pri : %s \n", ((th_arg *)arg_p)->pri);
 
-	if(*(((th_arg *)arg_p)->pri) == "H" || *(((th_arg *)arg_p)->pri) == "h"){
+	if(strcmp(((th_arg *)arg_p)->pri, "H") == 0){
 		fprintf(stderr, "[%d] index [%s]", ((th_arg*)arg_p)->id, ((th_arg *)arg_p)->pri);
 		fprintf(stderr, " high\n");
-	}
-	else if(*(((th_arg *)arg_p)->pri) == "M" || *(((th_arg *)arg_p)->pri) == "m"){
-		fprintf(stderr, "[%d] index [%s]", ((th_arg*)arg_p)->id, ((th_arg *)arg_p)->pri);
-		fprintf(stderr, " middle\n");
-	}
-	else if(*(((th_arg *)arg_p)->pri) == "L" || *(((th_arg *)arg_p)->pri) == "l"){
-		fprintf(stderr, "[%d] index [%s]", ((th_arg*)arg_p)->id, ((th_arg *)arg_p)->pri);
-		fprintf(stderr, " low\n");
 	}
 
 	/* add job to queue */
