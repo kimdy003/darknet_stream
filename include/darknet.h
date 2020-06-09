@@ -480,7 +480,7 @@ extern "C"
     typedef struct network
     {
         //doyoung
-        char *priority;
+        char priority;
         int n;
         int batch;
         size_t *seen;
@@ -915,14 +915,13 @@ extern "C"
         char **names;
         char *netName;
         char *input_path;
-        char *priority;
     } test;
+
     typedef struct _netlayer
     {
         network net;
         layer layer;
         int flag;
-        char * priority;
     } netlayer;
 
 #ifdef __cplusplus
