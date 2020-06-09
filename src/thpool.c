@@ -228,13 +228,13 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 
 	#ifdef PRIORITY
 		if(strcmp(((th_arg *)arg_p)->pri, "H") == 0){
-			H_jobqueue_push(&thpool_p->jobqueue, newjob);
+			H_jobqueue_push(&thpool_p->H_jobqueue, newjob);
 		}
 		else if(strcmp(((th_arg *)arg_p)->pri, "M") == 0){
-			M_jobqueue_push(&thpool_p->jobqueue, newjob);
+			M_jobqueue_push(&thpool_p->M_jobqueue, newjob);
 		}
 		else if(strcmp(((th_arg *)arg_p)->pri, "L") == 0){
-			L_jobqueue_push(&thpool_p->jobqueue, newjob);
+			L_jobqueue_push(&thpool_p->L_jobqueue, newjob);
 		}
 		else {
 			fprintf(stderr, "Please enter priority again OR Please enter in capital letters\n");
@@ -451,7 +451,25 @@ static void *thread_do(struct thread *thread_p)
 #else
 			void (*func_buff)(void *);
 			void *arg_buff;
-			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
+			#ifdef PRIORITY
+				job *job_p;
+				whiel(1){
+					if(&thpool_p->H_jobqueue != NULL){
+						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
+						break;
+					}
+					if(&thpool_p->M_jobqueue != NULL){
+						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
+						break;
+					}
+					if(&thpool_p->L_jobqueue != NULL){
+						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
+						break;
+					}
+				}
+			#else
+				job *job_p = jobqueue_pull(&thpool_p->jobqueue);
+			#endif
 			if (job_p)
 			{
 				func_buff = job_p->function;
@@ -550,6 +568,8 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 
 		pthread_mutex_lock(&jobqueue_p->rwmutex);
 		newjob->prev = NULL;
+
+		
 
 		switch (jobqueue_p->len)
 		{
