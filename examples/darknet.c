@@ -723,10 +723,10 @@ int main()
         {
             while (1)
             {
-                char d_pri;
+                char d_pri = NULL;
                 printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
-                scanf("%c", d_pri);
-                if (!d_pri)
+                scanf("%c", &d_pri);
+                if (d_pri == NULL)
                     continue;
                 net_input_des[i] = (test *)malloc(sizeof(test));
                 net_input_des[i]->net = denseNetwork[i];
