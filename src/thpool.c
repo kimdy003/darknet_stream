@@ -245,6 +245,7 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	#ifndef PRIORITY
 		jobqueue_push(&thpool_p->jobqueue, newjob);
 	#endif
+		fprintf(stderr, "add_work end \n");
 	return 0;
 }
 
@@ -427,6 +428,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
+		fprintf(stderr, " [%d - %d]  id = 0 && conv \n", ((th_arg*)thpool_p->jobqueue.front->arg)->id, ((th_arg*)thpool_p->jobqueue.front->arg)->n);
 
 		if (threads_keepalive)
 		{
@@ -453,7 +455,7 @@ static void *thread_do(struct thread *thread_p)
 			void *arg_buff;
 			#ifdef PRIORITY
 				job *job_p;
-				whiel(1){
+				while(1){
 					if(&thpool_p->H_jobqueue != NULL){
 						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
 						break;
@@ -567,9 +569,8 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 	{
 
 		pthread_mutex_lock(&jobqueue_p->rwmutex);
+		fprintf(stderr, "high jobqueue\n");
 		newjob->prev = NULL;
-
-		
 
 		switch (jobqueue_p->len)
 		{
@@ -586,6 +587,7 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 		jobqueue_p->len++;
 
 		bsem_post(jobqueue_p->has_jobs);
+		fprintf(stderr, "high end \n");
 		pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	}
 
@@ -722,6 +724,7 @@ static void bsem_wait(bsem *bsem_p)
 	{
 		pthread_cond_wait(&bsem_p->cond, &bsem_p->mutex);
 	}
+	fprintf(stderr, "bsem_wait\n");
 	bsem_p->v = 0;
 	pthread_mutex_unlock(&bsem_p->mutex);
 }
