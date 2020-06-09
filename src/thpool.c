@@ -198,7 +198,18 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	newjob->arg = arg_p;
 	newjob->flag = 1;
 
-	printf("priority : [%s]", ((netlayer *)((th_arg *)arg_p)->arg)->net.priority);
+	if(((th_arg *)arg_p)->pri == 'H' || ((th_arg *)arg_p)->pri == 'h'){
+		fprintf(stderr, "[%d] index [%s]", ((th_arg*)arg_p)->id, ((th_arg *)arg_p)->pri);
+		fprintf(stderr, " high\n");
+	}
+	else if(((th_arg *)arg_p)->pri == 'H' || ((th_arg *)arg_p)->pri == 'h'){
+		fprintf(stderr, "[%d] index [%s]", ((th_arg*)arg_p)->id, ((th_arg *)arg_p)->pri);
+		fprintf(stderr, " middle\n");
+	}
+	else if(((th_arg *)arg_p)->pri == 'H' || ((th_arg *)arg_p)->pri == 'h'){
+		fprintf(stderr, "[%d] index [%s]", ((th_arg*)arg_p)->id, ((th_arg *)arg_p)->pri);
+		fprintf(stderr, " low\n");
+	}
 
 	/* add job to queue */
 	jobqueue_push(&thpool_p->jobqueue, newjob);

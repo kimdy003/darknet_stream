@@ -351,6 +351,7 @@ void forward_network(network *netp)
             input.type = net.layers[i].type;
             input.id = net.index_n;
             input.n = i;
+            input.pri = net.priority;
 
         #ifdef STREAM
             thpool_add_work(thpool, forward_function_stream, &input);

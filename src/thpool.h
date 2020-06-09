@@ -259,6 +259,7 @@ extern "C"
 		LAYER_TYPE type;
 		int id;
 		int n;
+		int pri;
 	} th_arg;
 
 #endif
