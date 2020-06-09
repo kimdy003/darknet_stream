@@ -250,11 +250,9 @@ extern "C"
 		pthread_mutex_t thcount_lock;	  /* used for thread count etc */
 		pthread_cond_t threads_all_idle;  /* signal to thpool_wait     */
 		jobqueue jobqueue;				  /* job queue                 */
-		#ifdef PRIORITY
-			jobqueue H_jobqueue;			  /* job queue                 */
-			jobqueue M_jobqueue;			  /* job queue                 */
-			jobqueue L_jobqueue;			  /* job queue                 */
-		#endif
+		jobqueue H_jobqueue;			  /* job queue                 */
+		jobqueue M_jobqueue;			  /* job queue                 */
+		jobqueue L_jobqueue;			  /* job queue                 */
 	} thpool_;
 
 	typedef struct th_arg
