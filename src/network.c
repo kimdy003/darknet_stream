@@ -335,7 +335,7 @@ void forward_network(network *netp)
                     cuda_push_array(net.input_gpu, net.input, net.inputs * net.batch);
             #endif
             //fprintf(stderr, "[%d] index, [%s] start\n",net.index_n, get_layer_string(net.layers[i].type));
-            fprintf(stderr, "[%d] index, priority [%s] \n",net.index_n, net.priority);
+            //fprintf(stderr, "[%d] index, priority [%s] \n",net.index_n, net.priority);
             cond_i[net.index_n] = 1;
             net.index = i;
             layer l = net.layers[i];
