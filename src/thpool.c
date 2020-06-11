@@ -197,6 +197,7 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	newjob->function = function_p;
 	newjob->arg = arg_p;
 	newjob->flag = 1;
+	thpool_p->pri = (th_arg *)arg_p->pri;
 
 	/* add job to queue */
 	jobqueue_push(&thpool_p->jobqueue, newjob);
@@ -382,13 +383,13 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
+		fprintf("priority : %s", thpool_p->pri);
 	
-	//fprintf(stderr, "High point : %d \n ", H_thpool->jobqueue.len);
 		if(H_thpool->jobqueue.len == 1){
-			err("len == 11");
+			err("len == 11\n");
 		}
 		else if(H_thpool->jobqueue.len == 0){
-			err("len == 0");
+			err("len == 0\n");
 		}
 		if (threads_keepalive)
 		{

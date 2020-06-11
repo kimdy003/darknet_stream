@@ -255,6 +255,7 @@ extern "C"
 		pthread_mutex_t thcount_lock;	  /* used for thread count etc */
 		pthread_cond_t threads_all_idle;  /* signal to thpool_wait     */
 		jobqueue jobqueue;				  /* job queue                 */
+		char *pri;
 	} thpool_;
 
 	typedef struct th_arg
