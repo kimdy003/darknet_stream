@@ -178,7 +178,6 @@ struct thpool_ *thpool_init(int num_threads)
 	while (thpool_p->num_threads_alive != num_threads)
 	{
 	}
-
 	return thpool_p;
 }
 
@@ -384,6 +383,13 @@ static void *thread_do(struct thread *thread_p)
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 	
+	//fprintf(stderr, "High point : %d \n ", H_thpool->jobqueue.len);
+		if(H_thpool->jobqueue.len == 1){
+			err("len == 11");
+		}
+		else if(H_thpool->jobqueue.len == 0){
+			err("len == 0");
+		}
 		if (threads_keepalive)
 		{
 			pthread_mutex_lock(&thpool_p->thcount_lock);
@@ -584,7 +590,6 @@ static void bsem_wait(bsem *bsem_p)
 	{
 		pthread_cond_wait(&bsem_p->cond, &bsem_p->mutex);
 	}
-	fprintf(stderr, "bsem_wait\n");
 	bsem_p->v = 0;
 	pthread_mutex_unlock(&bsem_p->mutex);
 }
