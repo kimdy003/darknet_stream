@@ -27,10 +27,6 @@ extern "C"
     extern int gpu_index;
     #ifndef PRIORITY
         extern threadpool thpool;
-    #else
-	//extern threadpool H_thpool;
-	//extern threadpool M_thpool;
-	//extern threadpool L_thpool;
     #endif
 
 #define THREAD_NUM_POOL 8

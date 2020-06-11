@@ -5,7 +5,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <errno.h>
@@ -384,11 +383,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
-		fprintf(stderr, "\nhhhhh[%d]hhhh\n", H_thpool->jobqueue.len);
-		if(H_thpool->jobqueue.front != NULL){
-			fprintf(stderr, "\nhhhhhhhhhhh\n");
-		}
-
+	
 		if (threads_keepalive)
 		{
 			pthread_mutex_lock(&thpool_p->thcount_lock);
