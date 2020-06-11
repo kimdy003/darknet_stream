@@ -3,6 +3,11 @@
 #ifdef __cplusplus
 extern "C"
 {
+	#ifdef PRIORITY
+		extern threadpool H_thpool;
+		extern threadpool M_thpool;
+		extern threadpool L_thpool;
+	#endif
 #endif
 
 	/* =================================== API ======================================= */
@@ -249,13 +254,7 @@ extern "C"
 		volatile int num_threads_working; /* threads currently working */
 		pthread_mutex_t thcount_lock;	  /* used for thread count etc */
 		pthread_cond_t threads_all_idle;  /* signal to thpool_wait     */
-		jobqueue H_jobqueue;			  /* job queue                 */
-		jobqueue M_jobqueue;			  /* job queue                 */
-		jobqueue L_jobqueue;			  /* job queue                 */
 		jobqueue jobqueue;				  /* job queue                 */
-		//jobqueue H_jobqueue;			  /* job queue                 */
-		//jobqueue M_jobqueue;			  /* job queue                 */
-		//jobqueue L_jobqueue;			  /* job queue                 */
 	} thpool_;
 
 	typedef struct th_arg

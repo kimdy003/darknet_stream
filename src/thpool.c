@@ -92,11 +92,6 @@ static void thread_destroy(struct thread *thread_p);
 static int jobqueue_init(jobqueue *jobqueue_p);
 static void jobqueue_clear(jobqueue *jobqueue_p);
 static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob_p);
-#ifdef PRIORITY
-	static void H_jobqueue_push(jobqueue *jobqueue_p, struct job *newjob_p);
-	static void M_jobqueue_push(jobqueue *jobqueue_p, struct job *newjob_p);
-	static void L_jobqueue_push(jobqueue *jobqueue_p, struct job *newjob_p);
-#endif
 static struct job *jobqueue_pull(jobqueue *jobqueue_p);
 static void jobqueue_destroy(jobqueue *jobqueue_p);
 
@@ -138,27 +133,6 @@ struct thpool_ *thpool_init(int num_threads)
 		free(thpool_p);
 		return NULL;
 	}
-
-	#ifdef PRIORITY
-		if (jobqueue_init(&thpool_p->H_jobqueue) == -1)
-		{
-			err("thpool_init(): Could not allocate memory for job queue\n");
-			free(thpool_p);
-			return NULL;
-		}
-		if (jobqueue_init(&thpool_p->M_jobqueue) == -1)
-		{
-			err("thpool_init(): Could not allocate memory for job queue\n");
-			free(thpool_p);
-			return NULL;
-		}
-		if (jobqueue_init(&thpool_p->L_jobqueue) == -1)
-		{
-			err("thpool_init(): Could not allocate memory for job queue\n");
-			free(thpool_p);
-			return NULL;
-		}
-	#endif
 
 	/* Make threads in pool */
 	thpool_p->threads = (struct thread **)malloc(num_threads * sizeof(struct thread *));
@@ -226,25 +200,9 @@ int thpool_add_work(thpool_ *thpool_p, void (*function_p)(void *), void *arg_p)
 	newjob->arg = arg_p;
 	newjob->flag = 1;
 
-	#ifdef PRIORITY
-		if(strcmp(((th_arg *)arg_p)->pri, "H") == 0){
-			H_jobqueue_push(&thpool_p->H_jobqueue, newjob);
-		}
-		else if(strcmp(((th_arg *)arg_p)->pri, "M") == 0){
-			M_jobqueue_push(&thpool_p->M_jobqueue, newjob);
-		}
-		else if(strcmp(((th_arg *)arg_p)->pri, "L") == 0){
-			L_jobqueue_push(&thpool_p->L_jobqueue, newjob);
-		}
-		else {
-			fprintf(stderr, "Please enter priority again OR Please enter in capital letters\n");
-			assert(0);
-		}
-	#endif
 	/* add job to queue */
-	#ifndef PRIORITY
-		jobqueue_push(&thpool_p->jobqueue, newjob);
-	#endif
+	jobqueue_push(&thpool_p->jobqueue, newjob);
+
 	return 0;
 }
 
@@ -427,6 +385,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
+		
 
 		if (threads_keepalive)
 		{
@@ -451,25 +410,7 @@ static void *thread_do(struct thread *thread_p)
 #else
 			void (*func_buff)(void *);
 			void *arg_buff;
-			#ifdef PRIORITY
-				job *job_p;
-				whiel(1){
-					if(&thpool_p->H_jobqueue != NULL){
-						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
-						break;
-					}
-					if(&thpool_p->M_jobqueue != NULL){
-						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
-						break;
-					}
-					if(&thpool_p->L_jobqueue != NULL){
-						job_p = jobqueue_pull(&thpool_p->H_jobqueue);
-						break;
-					}
-				}
-			#else
-				job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			#endif
+			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
 			if (job_p)
 			{
 				func_buff = job_p->function;
@@ -561,82 +502,6 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 	bsem_post(jobqueue_p->has_jobs);
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 }
-
-#ifdef PRIORITY
-	static void H_jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
-	{
-
-		pthread_mutex_lock(&jobqueue_p->rwmutex);
-		newjob->prev = NULL;
-
-		
-
-		switch (jobqueue_p->len)
-		{
-
-		case 0: /* if no jobs in queue */
-			jobqueue_p->front = newjob;
-			jobqueue_p->rear = newjob;
-			break;
-
-		default: /* if jobs in queue */
-			jobqueue_p->rear->prev = newjob;
-			jobqueue_p->rear = newjob;
-		}
-		jobqueue_p->len++;
-
-		bsem_post(jobqueue_p->has_jobs);
-		pthread_mutex_unlock(&jobqueue_p->rwmutex);
-	}
-
-	static void M_jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
-	{
-
-		pthread_mutex_lock(&jobqueue_p->rwmutex);
-		newjob->prev = NULL;
-
-		switch (jobqueue_p->len)
-		{
-
-		case 0: /* if no jobs in queue */
-			jobqueue_p->front = newjob;
-			jobqueue_p->rear = newjob;
-			break;
-
-		default: /* if jobs in queue */
-			jobqueue_p->rear->prev = newjob;
-			jobqueue_p->rear = newjob;
-		}
-		jobqueue_p->len++;
-
-		bsem_post(jobqueue_p->has_jobs);
-		pthread_mutex_unlock(&jobqueue_p->rwmutex);
-	}
-
-	static void L_jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
-	{
-
-		pthread_mutex_lock(&jobqueue_p->rwmutex);
-		newjob->prev = NULL;
-
-		switch (jobqueue_p->len)
-		{
-
-		case 0: /* if no jobs in queue */
-			jobqueue_p->front = newjob;
-			jobqueue_p->rear = newjob;
-			break;
-
-		default: /* if jobs in queue */
-			jobqueue_p->rear->prev = newjob;
-			jobqueue_p->rear = newjob;
-		}
-		jobqueue_p->len++;
-
-		bsem_post(jobqueue_p->has_jobs);
-		pthread_mutex_unlock(&jobqueue_p->rwmutex);
-	}
-#endif
 
 /* Get first job from queue(removes it from queue) */
 static struct job *jobqueue_pull(jobqueue *jobqueue_p)

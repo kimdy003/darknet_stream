@@ -448,8 +448,13 @@ void visualize(char *cfgfile, char *weightfile)
 void choiceNetwork()
 {
 }
-
-threadpool thpool;
+#ifdef PRIORITY
+    threadpool H_thpool;
+    threadpool M_thpool;
+    threadpool L_thpool;
+#else
+    threadpool thpool;
+#endif
 //각 네트워크의 조건변수, mutex변수, wait를 위한 변수 선언 헤더에 extern변수로 지정
 pthread_cond_t *cond_t;
 pthread_mutex_t *mutex_t;
@@ -497,7 +502,13 @@ int main()
 #endif
 
 #ifdef THREAD
-    thpool = thpool_init(THREAD_NUM_POOL);
+    #ifdef PRIORITY
+        H_thpool = thpool_init(3);
+        M_thpool = thpool_init(3);
+        L_thpool = thpool_init(2);
+    #else
+        thpool = thpool_init(THREAD_NUM_POOL);
+    #endif
 #endif
 
     char *denseName = "Dense";

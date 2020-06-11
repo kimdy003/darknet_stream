@@ -356,7 +356,32 @@ void forward_network(network *netp)
         #ifdef STREAM
             thpool_add_work(thpool, forward_function_stream, &input);
         #else
-            thpool_add_work(thpool, forward_function, &input);
+            #ifdef PRIORITY
+                if(strcmp(net.priority, "H") == 0){
+                    fprintf(stderr, "[%d] index High", net.index_n);
+                    pthread_mutex_unlock(&mutex_t[net.index_n]);
+                    return;
+                    thpool_add_work(H_thpool, forward_function, &input);
+                }
+                else if(strcmp(net.priority, "M") == 0){
+                    fprintf(stderr, "[%d] index High", net.index_n);
+                    pthread_mutex_unlock(&mutex_t[net.index_n]);
+                    return;
+                    thpool_add_work(M_thpool, forward_function, &input);
+                }
+                else if(strcmp(net.priority, "L") == 0){
+                    fprintf(stderr, "[%d] index High", net.index_n);
+                    pthread_mutex_unlock(&mutex_t[net.index_n]);
+                    return;
+                    thpool_add_work(L_thpool, forward_function, &input);
+                }
+                else {
+                    fprintf(stderr, "Please enter priority again OR Please enter in capital letters\n");
+                    assert(0);
+                }
+            #else
+                thpool_add_work(thpool, forward_function, &input);
+            #endif
         #endif
 
             while (cond_i[net.index_n] == 1)
