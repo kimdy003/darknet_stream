@@ -720,7 +720,7 @@ void *predict_classifier2(test *input)
 
         time2 = what_time_is_it_now();
 
-        fprintf(stderr, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
+        fprintf(stderr, "[%d]network : %s: Predicted in %lf seconds.\n",net->index_n, input->netName, time2 - time);
         if (fp){
             fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
         }

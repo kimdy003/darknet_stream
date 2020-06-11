@@ -616,25 +616,25 @@ int main()
         char **d_pri = (char **)malloc(sizeof(char *) * n_des);
         for (int k = 0; k < n_des; k++)
         {
-            d_pri[i] = (char *)malloc(sizeof(char) * 3);
+            d_pri[k] = (char *)malloc(sizeof(char) * 3);
         }
 
         char **r_pri = (char **)malloc(sizeof(char *) * n_res);
         for (int k = 0; k < n_res; k++)
         {
-            r_pri[i] = (char *)malloc(sizeof(char) * 3);
+            r_pri[k] = (char *)malloc(sizeof(char) * 3);
         }
 
         char **v_pri = (char **)malloc(sizeof(char *) * n_vgg);
         for (int k = 0; k < n_vgg; k++)
         {
-            v_pri[i] = (char *)malloc(sizeof(char) * 3);
+            v_pri[k] = (char *)malloc(sizeof(char) * 3);
         }
 
         char **a_pri = (char **)malloc(sizeof(char *) * n_alex);
         for (int k = 0; k < n_alex; k++)
         {
-            a_pri[i] = (char *)malloc(sizeof(char) * 3);
+            a_pri[k] = (char *)malloc(sizeof(char) * 3);
         }
 
         for (int i = 0; i < n_des; i++)

@@ -358,15 +358,15 @@ void forward_network(network *netp)
         #else
             #ifdef PRIORITY
                 if(strcmp(net.priority, "H") == 0){
-                    fprintf(stderr, "[%d] index High", net.index_n);
+                    //fprintf(stderr, "[%d] index High\n", net.index_n);
                     thpool_add_work(H_thpool, forward_function, &input);
                 }
                 else if(strcmp(net.priority, "M") == 0){
-                    fprintf(stderr, "[%d] index Middle", net.index_n);
+                    //fprintf(stderr, "[%d] index Middle\n", net.index_n);
                     thpool_add_work(M_thpool, forward_function, &input);
                 }
                 else if(strcmp(net.priority, "L") == 0){
-                    fprintf(stderr, "[%d] index Low", net.index_n);
+                    //fprintf(stderr, "[%d] index Low\n", net.index_n);
                     thpool_add_work(L_thpool, forward_function, &input);
                 }
                 else {
