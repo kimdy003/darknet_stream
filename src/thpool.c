@@ -366,7 +366,18 @@ static void *thread_do(struct thread *thread_p)
 
 	while (threads_keepalive)
 	{
-
+		if(thpool_p->jobqueue.front != NULL){
+		if(strcmp(thpool_p->pri, "M") == 0){
+		    if(H_thpool->jobqueue.front != NULL){
+			continue;
+		    }
+		}	
+		else if(strcmp(thpool_p->pri, "L") == 0){
+		    if(H_thpool->jobqueue.front != NULL && M_thpool->jobqueue.front != NULL){
+		        continue;
+		    }
+		}
+		}
 #if 0
 		// doyoung
 		if (thread_p->id == 0 && thpool_p->jobqueue.len == 0)
@@ -384,7 +395,7 @@ static void *thread_do(struct thread *thread_p)
 #endif
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
-	
+#if 0
 		if(strcmp(thpool_p->pri, "M") == 0){
 		    while(1){
 		        if(H_thpool->jobqueue.front == NULL){
@@ -399,7 +410,7 @@ static void *thread_do(struct thread *thread_p)
 			}
 		    }
 		}
-	
+#endif	
 
 		if (threads_keepalive)
 		{
