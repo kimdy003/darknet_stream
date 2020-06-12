@@ -606,12 +606,6 @@ int main()
 
     image im = load_image_color(buff, 0, 0);
 
-    double time = what_time_is_it_now();
-    pthread_t networkArray_des[n_des];
-    pthread_t networkArray_res[n_res];
-    pthread_t networkArray_vgg[n_vgg];
-    pthread_t networkArray_alex[n_alex];
-
     #ifdef PRIORITY
         char **d_pri = (char **)malloc(sizeof(char *) * n_des);
         for (int k = 0; k < n_des; k++)
@@ -636,8 +630,15 @@ int main()
         {
             a_pri[k] = (char *)malloc(sizeof(char) * 3);
         }
-	
-	time = what_time_is_it_now();
+    #endif
+
+    
+    pthread_t networkArray_des[n_des];
+    pthread_t networkArray_res[n_res];
+    pthread_t networkArray_vgg[n_vgg];
+    pthread_t networkArray_alex[n_alex];
+
+    #ifdef PRIORITY
         for (int i = 0; i < n_des; i++)
         {
             while (1)
@@ -646,12 +647,6 @@ int main()
                 scanf("%s", d_pri[i]);
                 if (!d_pri)
                     continue;
-                net_input_des[i] = (test *)malloc(sizeof(test));
-                net_input_des[i]->net = denseNetwork[i];
-                net_input_des[i]->input_path = input;
-                net_input_des[i]->names = names;
-                net_input_des[i]->netName = denseName;
-                net_input_des[i]->net->priority = d_pri[i];
                 break;
             }
         }
@@ -664,12 +659,6 @@ int main()
                 scanf("%s", r_pri[i]);
                 if (!r_pri)
                     continue;
-                net_input_res[i] = (test *)malloc(sizeof(test));
-                net_input_res[i]->net = resNetwork[i];
-                net_input_res[i]->input_path = input;
-                net_input_res[i]->names = names;
-                net_input_res[i]->netName = resName;
-                net_input_res[i]->net->priority = r_pri[i];
                 break;
             }
         }
@@ -682,12 +671,6 @@ int main()
                 scanf("%s", v_pri[i]);
                 if (!v_pri)
                     continue;
-                net_input_vgg[i] = (test *)malloc(sizeof(test));
-                net_input_vgg[i]->net = vggNetwork[i];
-                net_input_vgg[i]->input_path = input;
-                net_input_vgg[i]->names = names;
-                net_input_vgg[i]->netName = vggName;
-                net_input_vgg[i]->net->priority = v_pri[i];
                 break;
             }
         }
@@ -700,25 +683,22 @@ int main()
                 scanf("%s", a_pri[i]);
                 if (!a_pri)
                     continue;
-                net_input_alex[i] = (test *)malloc(sizeof(test));
-                net_input_alex[i]->net = alexNetwork[i];
-                net_input_alex[i]->input_path = input;
-                net_input_alex[i]->names = names;
-                net_input_alex[i]->netName = alexName;
-                net_input_alex[i]->net->priority = a_pri[i];
                 break;
             }
         }
     #endif
 
+    double time = what_time_is_it_now();
+
     for (int i = 0; i < n_des; i++)
     {
-        #ifndef PRIORITY
             net_input_des[i] = (test *)malloc(sizeof(test));
             net_input_des[i]->net = denseNetwork[i];
             net_input_des[i]->input_path = input;
             net_input_des[i]->names = names;
             net_input_des[i]->netName = denseName;
+        #ifdef PRIORITY
+            net_input_des[i]->net->priority = d_pri[i];
         #endif
 
         printf(" It's turn for des i = %d\n", i);
@@ -731,19 +711,13 @@ int main()
     
     for (int i = 0; i < n_res; i++)
     {
-        #ifndef PRIORITY
             net_input_res[i] = (test *)malloc(sizeof(test));
             net_input_res[i]->net = resNetwork[i];
             net_input_res[i]->input_path = input;
             net_input_res[i]->names = names;
             net_input_res[i]->netName = resName;
-        #endif
-
-        #if 0
-            for (int i = 0; i < n_des; i++)
-            {
-                pthread_join(networkArray_des[i], NULL);
-            }
+        #ifdef PRIORITY
+            net_input_res[i]->net->priority = r_pri[i];
         #endif
 
         printf("\n It's turn for res i = %d\n", i);
@@ -756,20 +730,14 @@ int main()
 
     for (int i = 0; i < n_vgg; i++)
     {
-        #ifndef PRIORITY
             net_input_vgg[i] = (test *)malloc(sizeof(test));
             net_input_vgg[i]->net = vggNetwork[i];
             net_input_vgg[i]->input_path = input;
             net_input_vgg[i]->names = names;
             net_input_vgg[i]->netName = vggName;
+        #ifdef PRIORITY
+            net_input_vgg[i]->net->priority = v_pri[i];
         #endif
-
-#if 0
-	for (int i = 0; i < n_des; i++)
-	{
-            pthread_join(networkArray_des[i], NULL);
-    	}
-#endif
 
         printf(" It's turn for vgg i = %d\n", i);
         if (pthread_create(&networkArray_vgg[i], NULL, (void *)predict_classifier2, net_input_vgg[i]) < 0)
@@ -781,12 +749,13 @@ int main()
 
     for (int i = 0; i < n_alex; i++)
     {
-        #ifndef PRIORITY
             net_input_alex[i] = (test *)malloc(sizeof(test));
             net_input_alex[i]->net = alexNetwork[i];
             net_input_alex[i]->input_path = input;
             net_input_alex[i]->names = names;
             net_input_alex[i]->netName = alexName;
+        #ifdef PRIORITY
+            net_input_alex[i]->net->priority = a_pri[i];
         #endif
 
         printf(" It's turn for alex i = %d\n", i);
@@ -797,23 +766,26 @@ int main()
         }
     }
 
-#if 1
+
     for (int i = 0; i < n_des; i++)
     {
         pthread_join(networkArray_des[i], NULL);
+        fprintf(stderr, "[%d] densenet %lf \n", denseNetwork[i]->index_n, what_time_is_it_now() - time);
     }
-#endif
     for (int i = 0; i < n_res; i++)
     {
         pthread_join(networkArray_res[i], NULL);
+        fprintf(stderr, "[%d] resnet %lf \n", resNetwork[i]->index_n, what_time_is_it_now() - time);
     }
     for (int i = 0; i < n_vgg; i++)
     {
         pthread_join(networkArray_vgg[i], NULL);
+        fprintf(stderr, "[%d] vggnet %lf \n", vggNetwork[i]->index_n, what_time_is_it_now() - time);
     }
     for (int i = 0; i < n_alex; i++)
     {
         pthread_join(networkArray_alex[i], NULL);
+        fprintf(stderr, "[%d] alexnet %lf \n", alexNetwork[i]->index_n, what_time_is_it_now() - time);
     }
 
 
