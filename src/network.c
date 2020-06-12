@@ -279,7 +279,7 @@ network *make_network(int n)
             }
             nl->layer.forward_gpu_thread(nl);
             //2020 0311 doyoung
-            //cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+           // cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
             //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
             //fprintf(stderr, "GPU end\n");
         }
@@ -396,9 +396,9 @@ void forward_network(network *netp)
             //fprintf(stderr, "[%d] index [%s] end\n",net.index_n, get_layer_string(net.layers[i].type));
             pthread_mutex_unlock(&mutex_t[net.index_n]);
         }
-        //pthread_mutex_lock(&mutex_t[net.index_n]);
-        //pull_network_output(netp);
-        //pthread_mutex_unlock(&mutex_t[net.index_n]);
+        pthread_mutex_lock(&mutex_t[net.index_n]);
+        pull_network_output(netp);
+        pthread_mutex_unlock(&mutex_t[net.index_n]);
 
     #else
         if (netp->gpu_index >= 0)
