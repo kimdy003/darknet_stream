@@ -715,12 +715,12 @@ void *predict_classifier2(test *input)
         
         // layer print
         //print_network(net);
-
         top_k(predictions, net->outputs, top, indexes);
 
         time2 = what_time_is_it_now();
 
         fprintf(stderr, "[%d]network : %s: Predicted in %lf seconds.\n",net->index_n, input->netName, time2 - time);
+	
         if (fp){
             fprintf(fp, "network : %s: Predicted in %lf seconds.\n", input->netName, time2 - time);
         }

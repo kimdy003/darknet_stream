@@ -636,7 +636,8 @@ int main()
         {
             a_pri[k] = (char *)malloc(sizeof(char) * 3);
         }
-
+	
+	time = what_time_is_it_now();
         for (int i = 0; i < n_des; i++)
         {
             while (1)
