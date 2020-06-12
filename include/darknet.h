@@ -46,6 +46,7 @@ extern "C"
     extern int *cond_i;
 #endif
 
+    double start_time;
     /*��Ÿ������*/
     typedef struct
     {

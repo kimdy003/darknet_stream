@@ -459,6 +459,7 @@ void choiceNetwork()
 pthread_cond_t *cond_t;
 pthread_mutex_t *mutex_t;
 int *cond_i;
+double start_time;
 
 int main()
 {
@@ -689,6 +690,7 @@ int main()
     #endif
 
     double time = what_time_is_it_now();
+    start_time = time;
 
     for (int i = 0; i < n_des; i++)
     {
@@ -770,22 +772,18 @@ int main()
     for (int i = 0; i < n_des; i++)
     {
         pthread_join(networkArray_des[i], NULL);
-        fprintf(stderr, "[%d] densenet %lf \n", denseNetwork[i]->index_n, what_time_is_it_now() - time);
     }
     for (int i = 0; i < n_res; i++)
     {
         pthread_join(networkArray_res[i], NULL);
-        fprintf(stderr, "[%d] resnet %lf \n", resNetwork[i]->index_n, what_time_is_it_now() - time);
     }
     for (int i = 0; i < n_vgg; i++)
     {
         pthread_join(networkArray_vgg[i], NULL);
-        fprintf(stderr, "[%d] vggnet %lf \n", vggNetwork[i]->index_n, what_time_is_it_now() - time);
     }
     for (int i = 0; i < n_alex; i++)
     {
         pthread_join(networkArray_alex[i], NULL);
-        fprintf(stderr, "[%d] alexnet %lf \n", alexNetwork[i]->index_n, what_time_is_it_now() - time);
     }
 
 

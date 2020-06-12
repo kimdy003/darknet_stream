@@ -733,6 +733,7 @@ void *predict_classifier2(test *input)
             int index = indexes[i];
             printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
         }
+        fprintf(stderr, "-------- end time : %lf ---------\n", what_time_is_it_now()-start_time);
 
         if (r.data != im.data)
             free_image(r);
