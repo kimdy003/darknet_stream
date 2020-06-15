@@ -279,7 +279,7 @@ network *make_network(int n)
             }
             nl->layer.forward_gpu_thread(nl);
             //2020 0311 doyoung
-            cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+            //cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
             //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
             //fprintf(stderr, "GPU end\n");
         }
@@ -993,7 +993,7 @@ matrix network_predict_data(network *net, data test)
 void print_network(network *net)
 {
     int i, j;
-    for (i = 0; i < 10; ++i)
+    for (i = 0; i < net->n; ++i)
     {
         layer l = net->layers[i];
         float *output = l.output;

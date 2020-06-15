@@ -507,7 +507,6 @@ int main()
         H_thpool = thpool_init(H_th);
 	M_thpool = thpool_init(M_th);
 	L_thpool = thpool_init(L_th);
-
     #else
         thpool = thpool_init(THREAD_NUM_POOL);
     #endif

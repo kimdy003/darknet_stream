@@ -288,7 +288,7 @@ extern "C" void forward_convolutional_layer_gpu_thread(netlayer* input, int id)
     if (l.batch_normalize) {
         //2020 0311 doyoung
         #ifdef STREAM
-            //forward_batchnorm_layer_gpu_stream(l, net, id);
+            forward_batchnorm_layer_gpu_stream(l, net, id);
         #else
             forward_batchnorm_layer_gpu(l, net);
         #endif

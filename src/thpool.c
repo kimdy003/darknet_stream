@@ -124,6 +124,9 @@ struct thpool_ *thpool_init(int num_threads)
 	}
 	thpool_p->num_threads_alive = 0;
 	thpool_p->num_threads_working = 0;
+#ifdef PRIORITY
+	thpool_p->pri = NULL;
+#endif
 
 	/* Initialise the job queue */
 	if (jobqueue_init(&thpool_p->jobqueue) == -1)
@@ -153,11 +156,11 @@ struct thpool_ *thpool_init(int num_threads)
 	for (n = 0; n < num_threads; n++)
 	{
 #ifdef PRIORITY
-		if(H_thpool != NULL){
-			thread_init(thpool_p, &thpool_p->threads[n], H_th + n);
-		}
-		else if(M_thpool != NULL){
+		if(M_thpool != NULL){
 			thread_init(thpool_p, &thpool_p->threads[n], H_th + M_th + n);
+		}
+		else if(H_thpool != NULL){
+			thread_init(thpool_p, &thpool_p->threads[n], H_th + n);
 		}
 		else {
 			thread_init(thpool_p, &thpool_p->threads[n], n);
@@ -379,20 +382,54 @@ static void *thread_do(struct thread *thread_p)
 
 	while (threads_keepalive)
 	{
+		char * my_pri;
+		my_pri = thpool_p->pri;
+#if 1			
 		#ifdef PRIORITY
-		if(thpool_p->jobqueue.front != NULL){
-			if(strcmp(thpool_p->pri, "M") == 0){
-				if(H_thpool->jobqueue.front != NULL){
-				continue;
-				}
+		if(thpool_p->jobqueue.front != NULL && my_pri != NULL){
+	        	if(strcmp(my_pri, "M") == 0 && H_thpool->jobqueue.front == NULL){
+		    		goto KKK;
+			}
+			else if(strcmp(my_pri, "L") == 0 && H_thpool->jobqueue.front == NULL && M_thpool->jobqueue.front == NULL){
+		    		goto KKK;
 			}	
-			else if(strcmp(thpool_p->pri, "L") == 0){
-				if(H_thpool->jobqueue.front != NULL && M_thpool->jobqueue.front != NULL){
-					continue;
-				}
+			else if(strcmp(my_pri, "H") == 0){
+				goto KKK;
+			    }
+			 else{ 
+			        continue;
+			 }
+		  }
+		#endif
+
+#endif
+
+#if 0			
+		//if(my_pri != NULL && strcmp(my_pri, "H") )
+		//	fprintf(stderr, "sdsdsdsds %s\n", my_pri); 
+		#ifdef PRIORITY
+		if(thpool_p->jobqueue.front != NULL && my_pri != NULL){
+			while(1){
+			    //if(my_pri != NULL &&  strcmp(my_pri, "H") )
+			    //    fprintf(stderr, "while\n");
+			    if(strcmp(my_pri, "M") == 0 && H_thpool->jobqueue.front == NULL){
+				break;
+		    	    }
+			    else if(strcmp(my_pri, "L") == 0 && H_thpool->jobqueue.front == NULL && M_thpool->jobqueue.front == NULL){
+				break;
+	  		    }
+			    else if(strcmp(my_pri, "H") == 0){
+				break;
+			    }
+			    else{ 
+			        continue;
+			    }
 			}
 		}
 		#endif
+
+#endif
+
 #if 0
 		// doyoung
 		if (thread_p->id == 0 && thpool_p->jobqueue.len == 0)
@@ -408,6 +445,8 @@ static void *thread_do(struct thread *thread_p)
 			}
 		}
 #endif
+
+KKK:		
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
 		if (threads_keepalive)
