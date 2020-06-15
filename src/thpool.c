@@ -152,7 +152,20 @@ struct thpool_ *thpool_init(int num_threads)
 
 	for (n = 0; n < num_threads; n++)
 	{
+#ifdef PRIORITY
+		if(H_thpool != NULL){
+			thread_init(thpool_p, &thpool_p->threads[n], H_th + n);
+		}
+		else if(M_thpool != NULL){
+			thread_init(thpool_p, &thpool_p->threads[n], H_th + M_th + n);
+		}
+		else {
+			thread_init(thpool_p, &thpool_p->threads[n], n);
+		}
+#else
 		thread_init(thpool_p, &thpool_p->threads[n], n);
+#endif
+
 #ifdef CPU
 		if(n == (num_threads-1)){
 #endif

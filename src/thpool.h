@@ -167,6 +167,10 @@ extern "C"
 
 #if 1 // 2020 0206 hojin
 	/* ========================== STRUCTURES ============================ */
+#define H_th 3
+#define M_th 3
+#define L_th 2
+
 #ifdef PRIORITY
 	extern threadpool H_thpool;
 	extern threadpool M_thpool;

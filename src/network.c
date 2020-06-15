@@ -225,7 +225,7 @@ network *make_network(int n)
     void forward_function_stream(th_arg *input, int id)
     {
         netlayer *nl = input->arg;
-        #ifdef SERIAL
+        #ifndef SERIAL
             int thidx = id;
         #else
             int thidx = (nl->net.index_n % 8);
@@ -241,13 +241,13 @@ network *make_network(int n)
             }
 	    //fprintf(stderr, "[%d] index, [%s] start, thpool index: %d,  thidx : %d\n", nl->net.index_n, get_layer_string(nl->layer.type), id, thidx);
             nl->layer.forward_gpu_thread(nl, thidx);
-            cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx);
+            //cuda_pull_array_stream(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch, thidx);
 	    //fprintf(stderr, "[%d} index, [%s] end \n", nl->net.index_n, get_layer_string(nl->layer.type));
         }
         else if (input->flag == 0)
         {
     #endif
-            //cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
+            cuda_push_array(nl->net.input_gpu, nl->net.input, ((nl->net).inputs)*((nl->net).batch));
             //fprintf(stderr, "cpu\n");
             if (nl->layer.delta)
             {
@@ -279,7 +279,7 @@ network *make_network(int n)
             }
             nl->layer.forward_gpu_thread(nl);
             //2020 0311 doyoung
-           // cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
+            cuda_pull_array(nl->layer.output_gpu, nl->layer.output, nl->layer.outputs * nl->layer.batch);
             //fprintf(stderr,"PULL = CPU : %f, GPU :%f\n",nl->layer.output,nl->layer.output_gpu);
             //fprintf(stderr, "GPU end\n");
         }
@@ -354,7 +354,26 @@ void forward_network(network *netp)
             input.pri = net.priority;
 
         #ifdef STREAM
-            thpool_add_work(thpool, forward_function_stream, &input);
+	    #ifdef PRIORITY
+                if(strcmp(net.priority, "H") == 0){
+                    //fprintf(stderr, "[%d] index High\n", net.index_n);
+                    thpool_add_work(H_thpool, forward_function_stream, &input);
+                }
+                else if(strcmp(net.priority, "M") == 0){
+                    //fprintf(stderr, "[%d] index Middle\n", net.index_n);
+                    thpool_add_work(M_thpool, forward_function_stream, &input);
+                }
+                else if(strcmp(net.priority, "L") == 0){
+                    //fprintf(stderr, "[%d] index Low\n", net.index_n);
+                    thpool_add_work(L_thpool, forward_function_stream, &input);
+                }
+                else {
+                    fprintf(stderr, "Please enter priority again OR Please enter in capital letters\n");
+                    assert(0);
+                }
+            #else
+                thpool_add_work(thpool, forward_function_stream, &input);
+	    #endif
         #else
             #ifdef PRIORITY
                 if(strcmp(net.priority, "H") == 0){
@@ -974,7 +993,7 @@ matrix network_predict_data(network *net, data test)
 void print_network(network *net)
 {
     int i, j;
-    for (i = 0; i < net->n; ++i)
+    for (i = 0; i < 10; ++i)
     {
         layer l = net->layers[i];
         float *output = l.output;

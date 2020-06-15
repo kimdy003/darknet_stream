@@ -504,9 +504,10 @@ int main()
 
 #ifdef THREAD
     #ifdef PRIORITY
-        H_thpool = thpool_init(3);
-        M_thpool = thpool_init(3);
-        L_thpool = thpool_init(2);
+        H_thpool = thpool_init(H_th);
+	M_thpool = thpool_init(M_th);
+	L_thpool = thpool_init(L_th);
+
     #else
         thpool = thpool_init(THREAD_NUM_POOL);
     #endif
@@ -702,7 +703,7 @@ int main()
         #ifdef PRIORITY
             net_input_des[i]->net->priority = d_pri[i];
         #endif
-
+	    
         printf(" It's turn for des i = %d\n", i);
         if (pthread_create(&networkArray_des[i], NULL, (void *)predict_classifier2, net_input_des[i]) < 0)
         {
@@ -767,7 +768,6 @@ int main()
             exit(0);
         }
     }
-
 
     for (int i = 0; i < n_des; i++)
     {

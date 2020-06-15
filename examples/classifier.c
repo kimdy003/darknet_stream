@@ -714,7 +714,7 @@ void *predict_classifier2(test *input)
             hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
         
         // layer print
-        //print_network(net);
+        print_network(net);
         top_k(predictions, net->outputs, top, indexes);
 
         time2 = what_time_is_it_now();
@@ -733,7 +733,9 @@ void *predict_classifier2(test *input)
             int index = indexes[i];
             printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
         }
-        fprintf(stderr, "-------- end time : %lf ---------\n", what_time_is_it_now()-start_time);
+	if(fp){
+            fprintf(fp, "--------[%d] end time : %lf ---------\n",net->index_n, what_time_is_it_now()-start_time);
+	}
 
         if (r.data != im.data)
             free_image(r);

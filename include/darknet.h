@@ -33,7 +33,7 @@ extern "C"
 
 #define n_loop 1
 
-#define n_des 9
+#define n_des 1
 #define n_res 0
 #define n_vgg 0
 #define n_alex 0
@@ -46,7 +46,7 @@ extern "C"
     extern int *cond_i;
 #endif
 
-    double start_time;
+    extern double start_time;
     /*��Ÿ������*/
     typedef struct
     {
