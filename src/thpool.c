@@ -494,17 +494,6 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 	newjob->prev = NULL;
 
 	#ifdef PRIORITY
-	//struct job *printjob;
-	//printjob = jobqueue_p->front;
-	//fprintf(stderr, "priority : \n");
-	//while(1){
-	//    fprintf(stderr, "[%d] priority %s \n",i, ((th_arg*)printjob->arg)->pri);
-	//    if(printjob->prev){
-	//    	break;	
-	//    }
-	//    printjob = printjob->prev;		
-	//}	
-	//fprintf(stderr, "\n\n");
 		if(strcmp(my_pri, "H") == 0){
 			if(jobqueue_p->H_tail == NULL){
 				if(jobqueue_p->len == 0){
@@ -607,9 +596,12 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 	job *job_p = jobqueue_p->front;
 	#ifdef PRIORITY
 		char *my_pri;
-		my_pri = ((th_arg*)job_p->arg)->pri;
+		if(job_p != NULL)
+		    my_pri = ((th_arg*)job_p->arg)->pri;
 
-		fprintf(stderr, "jobqueue len : %d", jobqueue_p->len);
+		//fprintf(stderr, "jobqueue len : %d \n", jobqueue_p->len);
+		//fprintf(stderr, "jobqueue pri : %s \n", my_pri);
+	
 		switch (jobqueue_p->len)
 		{
 
@@ -635,6 +627,15 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 			break;
 
 		default: /* if >1 jobs in queue */
+			if(jobqueue_p->front == jobqueue_p->H_tail){
+				jobqueue_p->H_tail = NULL;
+			}
+			else if(jobqueue_p->front == jobqueue_p->M_tail){
+				jobqueue_p->M_tail = NULL;
+			}
+			jobqueue_p->front = job_p->prev;
+			jobqueue_p->len--;
+#if 0
 			if(strcmp(my_pri, "H") == 0){
 				if(jobqueue_p->front == jobqueue_p->H_tail){
 					jobqueue_p->H_tail = NULL;
@@ -653,7 +654,8 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 				jobqueue_p->front = job_p->prev;
 				jobqueue_p->len--;
 			}
-			/* more than one job in queue -> post it */
+
+#endif			/* more than one job in queue -> post it */
 			bsem_post(jobqueue_p->has_jobs);
 		}
 	#else

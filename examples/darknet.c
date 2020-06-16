@@ -633,8 +633,9 @@ int main()
             while (1)
             {
                 printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
-                //scanf("%s", d_pri[i]);
-#if 1
+#if 0
+                scanf("%s", d_pri[i]);
+#else
 		if(i < 2){
 			d_pri[i] = "L";
 		}
