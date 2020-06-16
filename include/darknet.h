@@ -25,11 +25,9 @@ extern "C"
 
 #define SECRET_NUM -1234
     extern int gpu_index;
-    #ifndef PRIORITY
-        extern threadpool thpool;
-    #endif
+    extern threadpool thpool;
 
-#define THREAD_NUM_POOL 8
+#define THREAD_NUM_POOL 1
 
 #define n_loop 1
 

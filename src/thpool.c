@@ -389,7 +389,6 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 
-	KKK:
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
 		if (threads_keepalive)
@@ -488,13 +487,24 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 {
 
 	pthread_mutex_lock(&jobqueue_p->rwmutex);
-	#ifdef PRIORIRY
+	#ifdef PRIORITY
 		char *my_pri;
 		my_pri = ((th_arg *)newjob->arg)->pri;
 	#endif
 	newjob->prev = NULL;
 
-	#ifdef PRIORIRY
+	#ifdef PRIORITY
+	//struct job *printjob;
+	//printjob = jobqueue_p->front;
+	//fprintf(stderr, "priority : \n");
+	//while(1){
+	//    fprintf(stderr, "[%d] priority %s \n",i, ((th_arg*)printjob->arg)->pri);
+	//    if(printjob->prev){
+	//    	break;	
+	//    }
+	//    printjob = printjob->prev;		
+	//}	
+	//fprintf(stderr, "\n\n");
 		if(strcmp(my_pri, "H") == 0){
 			if(jobqueue_p->H_tail == NULL){
 				if(jobqueue_p->len == 0){
@@ -597,8 +607,9 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 	job *job_p = jobqueue_p->front;
 	#ifdef PRIORITY
 		char *my_pri;
-		my_pri = ((th_arg *)job_p->arg)->pri;
+		my_pri = ((th_arg*)job_p->arg)->pri;
 
+		fprintf(stderr, "jobqueue len : %d", jobqueue_p->len);
 		switch (jobqueue_p->len)
 		{
 
@@ -609,17 +620,17 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 			if(strcmp(my_pri, "H") == 0){
 				jobqueue_p->front = NULL;
 				jobqueue_p->H_tail = NULL;
+				jobqueue_p->len = 0;
 			}
 			else if(strcmp(my_pri, "M") == 0){
 				jobqueue_p->front = NULL;
 				jobqueue_p->M_tail = NULL;
+				jobqueue_p->len = 0;
 			}
 			else if(strcmp(my_pri, "L") == 0){
 				jobqueue_p->front = NULL;
 				jobqueue_p->L_tail = NULL;
-			}
-			else{
-				return;
+				jobqueue_p->len = 0;
 			}
 			break;
 
@@ -641,9 +652,6 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 			else if(strcmp(my_pri, "L") == 0){
 				jobqueue_p->front = job_p->prev;
 				jobqueue_p->len--;
-			}
-			else{
-				return;
 			}
 			/* more than one job in queue -> post it */
 			bsem_post(jobqueue_p->has_jobs);
