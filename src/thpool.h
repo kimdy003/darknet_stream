@@ -236,6 +236,9 @@ extern "C"
 		job *rear;				 /* pointer to rear  of queue */
 		bsem *has_jobs;			 /* flag as binary semaphore  */
 		int len;				 /* number of jobs in queue   */
+		job *H_tail;
+		job *M_tail;
+		job *L_tail;
 	} jobqueue;
 
 #define CPU_FLAG 0

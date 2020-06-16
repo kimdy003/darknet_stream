@@ -155,27 +155,17 @@ struct thpool_ *thpool_init(int num_threads)
 
 	for (n = 0; n < num_threads; n++)
 	{
-#ifdef PRIORITY
-		if(M_thpool != NULL){
-			thread_init(thpool_p, &thpool_p->threads[n], H_th + M_th + n);
-		}
-		else if(H_thpool != NULL){
-			thread_init(thpool_p, &thpool_p->threads[n], H_th + n);
-		}
-		else {
-			thread_init(thpool_p, &thpool_p->threads[n], n);
-		}
-#else
 		thread_init(thpool_p, &thpool_p->threads[n], n);
-#endif
 
 #ifdef CPU
-		if(n == (num_threads-1)){
+		if (n == (num_threads - 1))
+		{
 #endif
-		thpool_p->threads[n]->flag = 1;
+			thpool_p->threads[n]->flag = 1;
 #ifdef CPU
 		}
-		else{
+		else
+		{
 			thpool_p->threads[n]->flag = 0;
 		}
 #endif
@@ -382,53 +372,6 @@ static void *thread_do(struct thread *thread_p)
 
 	while (threads_keepalive)
 	{
-		char * my_pri;
-		my_pri = thpool_p->pri;
-#if 1			
-		#ifdef PRIORITY
-		if(thpool_p->jobqueue.front != NULL && my_pri != NULL){
-	        	if(strcmp(my_pri, "M") == 0 && H_thpool->jobqueue.front == NULL){
-		    		goto KKK;
-			}
-			else if(strcmp(my_pri, "L") == 0 && H_thpool->jobqueue.front == NULL && M_thpool->jobqueue.front == NULL){
-		    		goto KKK;
-			}	
-			else if(strcmp(my_pri, "H") == 0){
-				goto KKK;
-			    }
-			 else{ 
-			        continue;
-			 }
-		  }
-		#endif
-
-#endif
-
-#if 0			
-		//if(my_pri != NULL && strcmp(my_pri, "H") )
-		//	fprintf(stderr, "sdsdsdsds %s\n", my_pri); 
-		#ifdef PRIORITY
-		if(thpool_p->jobqueue.front != NULL && my_pri != NULL){
-			while(1){
-			    //if(my_pri != NULL &&  strcmp(my_pri, "H") )
-			    //    fprintf(stderr, "while\n");
-			    if(strcmp(my_pri, "M") == 0 && H_thpool->jobqueue.front == NULL){
-				break;
-		    	    }
-			    else if(strcmp(my_pri, "L") == 0 && H_thpool->jobqueue.front == NULL && M_thpool->jobqueue.front == NULL){
-				break;
-	  		    }
-			    else if(strcmp(my_pri, "H") == 0){
-				break;
-			    }
-			    else{ 
-			        continue;
-			    }
-			}
-		}
-		#endif
-
-#endif
 
 #if 0
 		// doyoung
@@ -446,7 +389,7 @@ static void *thread_do(struct thread *thread_p)
 		}
 #endif
 
-KKK:		
+	KKK:
 		bsem_wait(thpool_p->jobqueue.has_jobs);
 
 		if (threads_keepalive)
@@ -457,31 +400,31 @@ KKK:
 
 			/* Read job from queue and execute it */
 			//2020 0311 doyoung
-#ifdef STREAM
-			void (*func_buff)(void *, int);
-			void *arg_buff;
-			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			if (job_p)
-			{
-				func_buff = job_p->function;
-				arg_buff = job_p->arg;
-				((th_arg *)arg_buff)->flag = thread_p->flag;
-				func_buff(arg_buff, thread_p->id);
-				free(job_p);
-			}
-#else
-			void (*func_buff)(void *);
-			void *arg_buff;
-			job *job_p = jobqueue_pull(&thpool_p->jobqueue);
-			if (job_p)
-			{
-				func_buff = job_p->function;
-				arg_buff = job_p->arg;
-				((th_arg *)arg_buff)->flag = thread_p->flag;
-				func_buff(arg_buff);
-				free(job_p);
-			}
-#endif
+			#ifdef STREAM
+				void (*func_buff)(void *, int);
+				void *arg_buff;
+				job *job_p = jobqueue_pull(&thpool_p->jobqueue);
+				if (job_p)
+				{
+					func_buff = job_p->function;
+					arg_buff = job_p->arg;
+					((th_arg *)arg_buff)->flag = thread_p->flag;
+					func_buff(arg_buff, thread_p->id);
+					free(job_p);
+				}
+			#else
+				void (*func_buff)(void *);
+				void *arg_buff;
+				job *job_p = jobqueue_pull(&thpool_p->jobqueue);
+				if (job_p)
+				{
+					func_buff = job_p->function;
+					arg_buff = job_p->arg;
+					((th_arg *)arg_buff)->flag = thread_p->flag;
+					func_buff(arg_buff);
+					free(job_p);
+				}
+			#endif
 			pthread_mutex_lock(&thpool_p->thcount_lock);
 			thpool_p->num_threads_working--;
 			if (!thpool_p->num_threads_working)
@@ -545,20 +488,101 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 {
 
 	pthread_mutex_lock(&jobqueue_p->rwmutex);
+	#ifdef PRIORIRY
+		char *my_pri;
+		my_pri = ((th_arg *)newjob->arg)->pri;
+	#endif
 	newjob->prev = NULL;
 
-	switch (jobqueue_p->len)
-	{
+	#ifdef PRIORIRY
+		if(strcmp(my_pri, "H") == 0){
+			if(jobqueue_p->H_tail == NULL){
+				if(jobqueue_p->len == 0){
+					jobqueue_p->front = newjob;
+					jobqueue_p->H_tail = newjob;
+				}
+				else{
+					newjob->prev = jobqueue_p->front;
+					jobqueue_p->front = newjob;
+					jobqueue_p->H_tail = newjob;
+				}
+			}
+			else{
+				newjob->prev = jobqueue_p->H_tail->prev;
+				jobqueue_p->H_tail->prev = newjob;
+				jobqueue_p->H_tail = newjob;
+			}
+		}
+		else if(strcmp(my_pri, "M") == 0){
+			if(jobqueue_p->M_tail == NULL){
+				if(jobqueue_p->len == 0){
+					jobqueue_p->front = newjob;
+					jobqueue_p->M_tail = newjob;
+				}
+				else{
+					if(jobqueue_p->H_tail != NULL && jobqueue_p->L_tail == NULL){
+						jobqueue_p->H_tail->prev = newjob;
+						jobqueue_p->M_tail = newjob;
+					}
+					else if(jobqueue_p->H_tail == NULL && jobqueue_p->L_tail != NULL){
+						newjob->prev = jobqueue_p->front;
+						jobqueue_p->front = newjob;
+						jobqueue_p->M_tail = newjob;
+					}
+					else{
+						newjob->prev = jobqueue_p->H_tail->prev;
+						jobqueue_p->H_tail->prev = newjob;
+						jobqueue_p->M_tail = newjob;
+					}
+				}
+			}
+			else{
+				newjob->prev = jobqueue_p->M_tail->prev;
+				jobqueue_p->M_tail->prev = newjob;
+				jobqueue_p->M_tail = newjob;
+			}
 
-	case 0: /* if no jobs in queue */
-		jobqueue_p->front = newjob;
-		jobqueue_p->rear = newjob;
-		break;
+		}
+		else if(strcmp(my_pri, "L") == 0){
+			if(jobqueue_p->L_tail == NULL){
+				if(jobqueue_p->len == 0){
+					jobqueue_p->front = newjob;
+					jobqueue_p->L_tail = newjob;
+				}
+				else{
+					if(jobqueue_p->M_tail != NULL){
+						jobqueue_p->M_tail->prev = newjob;
+						jobqueue_p->L_tail = newjob;
+					}
+					else if(jobqueue_p->H_tail != NULL){
+						jobqueue_p->H_tail->prev = newjob;
+						jobqueue_p->L_tail = newjob;
+					}
+				}
+			}
+			else{
+				jobqueue_p->L_tail->prev = newjob;
+				jobqueue_p->L_tail = newjob;
+			}
+		}
+		else{
+			return;
+		}
 
-	default: /* if jobs in queue */
-		jobqueue_p->rear->prev = newjob;
-		jobqueue_p->rear = newjob;
-	}
+	#else
+		switch (jobqueue_p->len)
+		{
+
+		case 0: /* if no jobs in queue */
+			jobqueue_p->front = newjob;
+			jobqueue_p->rear = newjob;
+			break;
+
+		default: /* if jobs in queue */
+			jobqueue_p->rear->prev = newjob;
+			jobqueue_p->rear = newjob;
+		}
+	#endif
 	jobqueue_p->len++;
 
 	bsem_post(jobqueue_p->has_jobs);
@@ -571,25 +595,79 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 
 	pthread_mutex_lock(&jobqueue_p->rwmutex);
 	job *job_p = jobqueue_p->front;
+	#ifdef PRIORITY
+		char *my_pri;
+		my_pri = ((th_arg *)job_p->arg)->pri;
 
-	switch (jobqueue_p->len)
-	{
+		switch (jobqueue_p->len)
+		{
 
-	case 0: /* if no jobs in queue */
-		break;
+		case 0: /* if no jobs in queue */
+			break;
 
-	case 1: /* if one job in queue */
-		jobqueue_p->front = NULL;
-		jobqueue_p->rear = NULL;
-		jobqueue_p->len = 0;
-		break;
+		case 1: /* if one job in queue */
+			if(strcmp(my_pri, "H") == 0){
+				jobqueue_p->front = NULL;
+				jobqueue_p->H_tail = NULL;
+			}
+			else if(strcmp(my_pri, "M") == 0){
+				jobqueue_p->front = NULL;
+				jobqueue_p->M_tail = NULL;
+			}
+			else if(strcmp(my_pri, "L") == 0){
+				jobqueue_p->front = NULL;
+				jobqueue_p->L_tail = NULL;
+			}
+			else{
+				return;
+			}
+			break;
 
-	default: /* if >1 jobs in queue */
-		jobqueue_p->front = job_p->prev;
-		jobqueue_p->len--;
-		/* more than one job in queue -> post it */
-		bsem_post(jobqueue_p->has_jobs);
-	}
+		default: /* if >1 jobs in queue */
+			if(strcmp(my_pri, "H") == 0){
+				if(jobqueue_p->front == jobqueue_p->H_tail){
+					jobqueue_p->H_tail = NULL;
+				}
+				jobqueue_p->front = job_p->prev;
+				jobqueue_p->len--;
+			}
+			else if(strcmp(my_pri, "M") == 0){
+				if(jobqueue_p->front == jobqueue_p->M_tail){
+					jobqueue_p->M_tail = NULL;
+				}
+				jobqueue_p->front = job_p->prev;
+				jobqueue_p->len--;
+			}
+			else if(strcmp(my_pri, "L") == 0){
+				jobqueue_p->front = job_p->prev;
+				jobqueue_p->len--;
+			}
+			else{
+				return;
+			}
+			/* more than one job in queue -> post it */
+			bsem_post(jobqueue_p->has_jobs);
+		}
+	#else
+		switch (jobqueue_p->len)
+		{
+
+		case 0: /* if no jobs in queue */
+			break;
+
+		case 1: /* if one job in queue */
+			jobqueue_p->front = NULL;
+			jobqueue_p->rear = NULL;
+			jobqueue_p->len = 0;
+			break;
+
+		default: /* if >1 jobs in queue */
+			jobqueue_p->front = job_p->prev;
+			jobqueue_p->len--;
+			/* more than one job in queue -> post it */
+			bsem_post(jobqueue_p->has_jobs);
+		}
+	#endif
 
 	pthread_mutex_unlock(&jobqueue_p->rwmutex);
 	return job_p;

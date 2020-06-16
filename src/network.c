@@ -354,47 +354,9 @@ void forward_network(network *netp)
             input.pri = net.priority;
 
         #ifdef STREAM
-	    #ifdef PRIORITY
-                if(strcmp(net.priority, "H") == 0){
-                    //fprintf(stderr, "[%d] index High\n", net.index_n);
-                    thpool_add_work(H_thpool, forward_function_stream, &input);
-                }
-                else if(strcmp(net.priority, "M") == 0){
-                    //fprintf(stderr, "[%d] index Middle\n", net.index_n);
-                    thpool_add_work(M_thpool, forward_function_stream, &input);
-                }
-                else if(strcmp(net.priority, "L") == 0){
-                    //fprintf(stderr, "[%d] index Low\n", net.index_n);
-                    thpool_add_work(L_thpool, forward_function_stream, &input);
-                }
-                else {
-                    fprintf(stderr, "Please enter priority again OR Please enter in capital letters\n");
-                    assert(0);
-                }
-            #else
-                thpool_add_work(thpool, forward_function_stream, &input);
-	    #endif
+            thpool_add_work(thpool, forward_function_stream, &input);
         #else
-            #ifdef PRIORITY
-                if(strcmp(net.priority, "H") == 0){
-                    //fprintf(stderr, "[%d] index High\n", net.index_n);
-                    thpool_add_work(H_thpool, forward_function, &input);
-                }
-                else if(strcmp(net.priority, "M") == 0){
-                    //fprintf(stderr, "[%d] index Middle\n", net.index_n);
-                    thpool_add_work(M_thpool, forward_function, &input);
-                }
-                else if(strcmp(net.priority, "L") == 0){
-                    //fprintf(stderr, "[%d] index Low\n", net.index_n);
-                    thpool_add_work(L_thpool, forward_function, &input);
-                }
-                else {
-                    fprintf(stderr, "Please enter priority again OR Please enter in capital letters\n");
-                    assert(0);
-                }
-            #else
-                thpool_add_work(thpool, forward_function, &input);
-            #endif
+            thpool_add_work(thpool, forward_function, &input);
         #endif
 
             while (cond_i[net.index_n] == 1)
