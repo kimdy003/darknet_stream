@@ -494,7 +494,7 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 	newjob->prev = NULL;
 
 	#ifdef PRIORITY
-		if(strcmp(my_pri, "H") == 0){
+		if(strcmp(my_pri, "h") == 0){
 			if(jobqueue_p->H_tail == NULL){
 				if(jobqueue_p->len == 0){
 					jobqueue_p->front = newjob;
@@ -512,7 +512,7 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 				jobqueue_p->H_tail = newjob;
 			}
 		}
-		else if(strcmp(my_pri, "M") == 0){
+		else if(strcmp(my_pri, "m") == 0){
 			if(jobqueue_p->M_tail == NULL){
 				if(jobqueue_p->len == 0){
 					jobqueue_p->front = newjob;
@@ -542,7 +542,7 @@ static void jobqueue_push(jobqueue *jobqueue_p, struct job *newjob)
 			}
 
 		}
-		else if(strcmp(my_pri, "L") == 0){
+		else if(strcmp(my_pri, "l") == 0){
 			if(jobqueue_p->L_tail == NULL){
 				if(jobqueue_p->len == 0){
 					jobqueue_p->front = newjob;
@@ -609,20 +609,23 @@ static struct job *jobqueue_pull(jobqueue *jobqueue_p)
 			break;
 
 		case 1: /* if one job in queue */
-			if(strcmp(my_pri, "H") == 0){
+			if(strcmp(my_pri, "h") == 0){
 				jobqueue_p->front = NULL;
 				jobqueue_p->H_tail = NULL;
 				jobqueue_p->len = 0;
 			}
-			else if(strcmp(my_pri, "M") == 0){
+			else if(strcmp(my_pri, "m") == 0){
 				jobqueue_p->front = NULL;
 				jobqueue_p->M_tail = NULL;
 				jobqueue_p->len = 0;
 			}
-			else if(strcmp(my_pri, "L") == 0){
+			else if(strcmp(my_pri, "l") == 0){
 				jobqueue_p->front = NULL;
 				jobqueue_p->L_tail = NULL;
 				jobqueue_p->len = 0;
+			}
+			else{
+			    break;
 			}
 			break;
 

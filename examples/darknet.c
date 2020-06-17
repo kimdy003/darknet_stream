@@ -633,7 +633,7 @@ int main()
             while (1)
             {
                 printf("[%d] Densenet priority : ", denseNetwork[i]->index_n);
-#if 0
+#if 1
                 scanf("%s", d_pri[i]);
 #else
 		if(i < 2){
@@ -657,7 +657,7 @@ int main()
         {
             while (1)
             {
-                printf(" [%d] Resnet priority : ", resNetwork[i]->index_n);
+                printf("[%d] Resnet priority : ", resNetwork[i]->index_n);
                 scanf("%s", r_pri[i]);
                 if (!r_pri)
                     continue;
@@ -669,7 +669,7 @@ int main()
         {
             while (1)
             {
-                printf(" [%d] Resnet priority : ", vggNetwork[i]->index_n);
+                printf("[%d] vgg priority : ", vggNetwork[i]->index_n);
                 scanf("%s", v_pri[i]);
                 if (!v_pri)
                     continue;
@@ -681,7 +681,7 @@ int main()
         {
             while (1)
             {
-                printf(" [%d] Resnet priority : ", alexNetwork[i]->index_n);
+                printf("[%d] alex priority : ", alexNetwork[i]->index_n);
                 scanf("%s", a_pri[i]);
                 if (!a_pri)
                     continue;

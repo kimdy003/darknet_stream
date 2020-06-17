@@ -707,6 +707,7 @@ void *predict_classifier2(test *input)
         
         image r = letterbox_image(im, net->w, net->h);
         float *X = r.data;
+	//fprintf(stderr, "[%d]classifier \n", net->index_n);
 
         float *predictions = network_predict(net, X);
 
@@ -734,7 +735,7 @@ void *predict_classifier2(test *input)
             printf("%5.2f%%: %s\n", predictions[index] * 100, names[index]);
         }
 	if(fp){
-            fprintf(fp, "--------[%d] end time : %lf ---------\n",net->index_n, what_time_is_it_now()-start_time);
+            fprintf(fp, "--------[%d - %s] end time : %lf ---------\n",net->index_n, net->priority ,what_time_is_it_now()-start_time);
 	}
 
         if (r.data != im.data)
