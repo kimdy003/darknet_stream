@@ -636,14 +636,14 @@ int main()
 #if 1
                 scanf("%s", d_pri[i]);
 #else
-		if(i < 2){
-			d_pri[i] = "L";
+		if(i < 7){
+			d_pri[i] = "l";
 		}
-		else if(2 <= i && i < 4){
-			d_pri[i] = "M";
+		else if(7 <= i && i < 14){
+			d_pri[i] = "m";
 		}
-		else if(4 <= i){
-			d_pri[i] = "H";
+		else if(14 <= i){
+			d_pri[i] = "h";
 		}
 #endif
 
@@ -658,7 +658,19 @@ int main()
             while (1)
             {
                 printf("[%d] Resnet priority : ", resNetwork[i]->index_n);
+#if 1
                 scanf("%s", r_pri[i]);
+#else
+		if(i < 5){
+			r_pri[i] = "l";
+		}
+		else if(5 <= i && i < 10){
+			r_pri[i] = "m";
+		}
+		else if(10 <= i){
+			r_pri[i] = "h";
+		}
+#endif
                 if (!r_pri)
                     continue;
                 break;
@@ -670,7 +682,19 @@ int main()
             while (1)
             {
                 printf("[%d] vgg priority : ", vggNetwork[i]->index_n);
-                scanf("%s", v_pri[i]);
+#if 1
+		scanf("%s", v_pri[i]);
+#else
+		if(i < 5){
+			v_pri[i] = "l";
+		}
+		else if(5 <= i && i < 10){
+			v_pri[i] = "m";
+		}
+		else if(10 <= i){
+			v_pri[i] = "h";
+		}
+#endif
                 if (!v_pri)
                     continue;
                 break;
@@ -682,7 +706,20 @@ int main()
             while (1)
             {
                 printf("[%d] alex priority : ", alexNetwork[i]->index_n);
+#if 1
                 scanf("%s", a_pri[i]);
+#else
+		if(i < 7){
+			a_pri[i] = "l";
+		}
+		else if(7 <= i && i < 14){
+			a_pri[i] = "m";
+		}
+		else if(14 <= i){
+			a_pri[i] = "h";
+		}
+#endif
+
                 if (!a_pri)
                     continue;
                 break;
@@ -723,7 +760,7 @@ int main()
             net_input_res[i]->net->priority = r_pri[i];
         #endif
 
-        printf("\n It's turn for res i = %d\n", i);
+        printf(" It's turn for res i = %d\n", i);
         if (pthread_create(&networkArray_res[i], NULL, (void *)predict_classifier2, net_input_res[i]) < 0)
         {
             perror("thread error");
