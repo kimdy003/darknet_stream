@@ -31,10 +31,10 @@ extern "C"
 
 #define n_loop 1
 
-#define n_des 0
-#define n_res 0
-#define n_vgg 15
-#define n_alex 0
+#define n_des 5
+#define n_res 5
+#define n_vgg 4
+#define n_alex 4
 
 #define n_a n_des+n_res+n_vgg+n_alex
 

@@ -636,13 +636,13 @@ int main()
 #if 1
                 scanf("%s", d_pri[i]);
 #else
-		if(i < 7){
+		if(i < 6){
 			d_pri[i] = "l";
 		}
-		else if(7 <= i && i < 14){
+		else if(6 <= i && i < 12){
 			d_pri[i] = "m";
 		}
-		else if(14 <= i){
+		else if(12 <= i){
 			d_pri[i] = "h";
 		}
 #endif
@@ -661,13 +661,13 @@ int main()
 #if 1
                 scanf("%s", r_pri[i]);
 #else
-		if(i < 5){
+		if(i < 4){
 			r_pri[i] = "l";
 		}
-		else if(5 <= i && i < 10){
+		else if(4 <= i && i < 8){
 			r_pri[i] = "m";
 		}
-		else if(10 <= i){
+		else if(8 <= i){
 			r_pri[i] = "h";
 		}
 #endif

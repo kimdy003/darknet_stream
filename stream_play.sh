@@ -1,14 +1,19 @@
 #!/bin/bash
 
 
-./dens_8_4
+./Multi_16_serial
 
 sleep 3
-./dens_12_4
+./Multi_16_stream
 
 sleep 3
 
-./dens_16_4
+./Multi_16_serial
+
+sleep 3
+
+./Multi_16_stream
+
 
 
 
